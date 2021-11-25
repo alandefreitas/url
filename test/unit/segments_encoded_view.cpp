@@ -21,6 +21,20 @@
 namespace boost {
 namespace urls {
 
+template <typename T>
+void print_expected(string_view name, const T& exp) {
+    std::cout << name << ':';
+    std::cout << '[';
+    for (auto it = exp.begin(); it != exp.end(); ++it) {
+        std::cout << *it;
+        if (it != std::prev(exp.end())) {
+            std::cout << ',';
+        }
+    }
+    std::cout << ']';
+    std::cout << '\n';
+};
+
 class segments_encoded_view_test
 {
 public:
@@ -58,32 +72,55 @@ public:
 
     void
     check(
-        string_view s,
+        string_view input_url,
         std::vector<
-            string_view> const& v0,
+            string_view> const& expected,
         result<segments_encoded_view>(
             *f)(string_view))
     {
-        segments_encoded_view sv;
-        BOOST_TEST_NO_THROW(sv = f(s).value());
+        segments_encoded_view parsed;
+
+        BOOST_TEST_NO_THROW(parsed = f(input_url).value());
         // forward
         {
-            std::vector<string_view> v1;
+            std::vector<string_view> parsed_copy;
             std::copy(
-                sv.begin(),
-                sv.end(),
-                std::back_inserter(v1));
-            BOOST_TEST(v0 == v1);
+                parsed.begin(),
+                parsed.end(),
+                std::back_inserter(parsed_copy));
+            BOOST_TEST(expected == parsed_copy);
         }
         // reverse
         {
-            std::vector<string_view> v1;
+            // reverse copy from parsed_copy and reverse copy again
+            std::vector<string_view> parsed_copy;
+
+            std::cout << "Initial\n";
+            std::cout << "input_url: " << input_url << '\n';
+            print_expected("parsed", parsed);
+            print_expected("parsed_copy", parsed_copy);
+
+            // each char in parsed becomes a string view in parsed_copy
             std::copy(
-                reverse(sv.end()),
-                reverse(sv.begin()),
-                std::back_inserter(v1));
-            std::reverse(v1.begin(), v1.end());
-            BOOST_TEST(v0 == v1);
+                reverse(parsed.end()),
+                reverse(parsed.begin()),
+                std::back_inserter(parsed_copy));
+
+            std::cout << "Reverse copy\n";
+            print_expected("parsed", parsed);
+            print_expected("parsed_copy", parsed_copy);
+
+            // reverse parsed_copy
+            std::reverse(parsed_copy.begin(), parsed_copy.end());
+
+            std::cout << "Reversed reverse copy\n";
+            print_expected("parsed", parsed);
+            print_expected("parsed_copy", parsed_copy);
+
+            // This should not fail!
+            // Two vectors of string views
+            BOOST_TEST(expected == parsed_copy);
+            std::cout << '\n';
         }
     }
 

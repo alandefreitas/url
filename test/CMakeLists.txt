@@ -13,6 +13,6 @@ if(NOT TARGET tests)
     set_property(TARGET tests PROPERTY FOLDER _deps)
 endif()
 
-add_subdirectory(limits)
+#add_subdirectory(limits)
 add_subdirectory(unit)
-add_subdirectory(wpt)
+#add_subdirectory(wpt)
