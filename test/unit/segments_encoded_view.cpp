@@ -9,14 +9,16 @@
 
 // Test that header file is self-contained.
 #include <boost/url/segments_encoded_view.hpp>
-
 #include <boost/url/url_view.hpp>
+#include "iterator.h"
+
 #include "test_suite.hpp"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <utility>
 #include <vector>
+
 
 namespace boost {
 namespace urls {
@@ -52,10 +54,10 @@ public:
 
     template<class It>
     static
-    std::reverse_iterator<It>
+    boost::url::reverse_iterator<It>
     reverse(It const& it)
     {
-        return std::reverse_iterator<It>(it);
+         return boost::url::reverse_iterator<It>(it);
     }
 
     void
