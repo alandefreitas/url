@@ -93,6 +93,12 @@ public:
             std::size_t nv,
             const_string::factory const& a);
 
+        BOOST_URL_DECL
+        reference(
+            const_string&& key,
+            const_string&& value,
+            bool has_value);
+
     public:
         /** The query key.
 
@@ -220,39 +226,6 @@ public:
     // Element Access
     //
     //--------------------------------------------
-
-    /** Return indexed element with bounds checking
-
-        @return Reference to query parameter at specified position
-
-        @param pos Position
-
-     */
-    const_reference
-    at(std::size_t pos) const;
-
-    /** Return first element matching key with bounds checking
-
-        @return Reference to mapped value of a query parameter
-
-        @param key Element key
-
-     */
-    BOOST_URL_DECL
-    const_string
-    at(string_view key) const;
-
-    /** Return indexed element
-
-        @return Reference to query parameter at specified position
-
-        @param pos Element position
-
-     */
-    BOOST_URL_DECL
-    const_reference
-    operator[](
-        std::size_t pos) const;
 
     /** Return the first element
 

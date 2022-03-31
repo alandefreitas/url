@@ -1,5 +1,6 @@
 //
 // Copyright (c) 2019 Vinnie Falco (vinnie.falco@gmail.com)
+// Copyright (c) 2022 Alan de Freitas (alandefreitas@gmail.com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,7 @@
 #define BOOST_URL_IMPL_PARAMS_VIEW_HPP
 
 #include <boost/url/detail/except.hpp>
+#include <boost/url/detail/params_iterator_impl.hpp>
 #include <boost/assert.hpp>
 
 namespace boost {
@@ -20,43 +22,49 @@ namespace urls {
 
 class params_view::iterator
 {
-    char const* end_ = nullptr;
-    char const* p_ = nullptr;
-    std::size_t nk_ = 0;
-    std::size_t nv_ = 0;
-    const_string::factory a_;
-    bool first_ = true;
+    detail::params_iterator_impl impl_;
 
     friend class params_view;
 
-    void scan() noexcept;
-
     iterator(
         string_view s,
-        const_string::factory a) noexcept;
+        const_string::factory a) noexcept
+        : impl_(s, a)
+    {
+    }
 
     // end
     iterator(
         string_view s,
+        std::size_t nparam,
         int,
-        const_string::factory a) noexcept;
+        const_string::factory a) noexcept
+        : impl_(s, nparam, 0, a)
+    {
+    }
 
     string_view
-    encoded_key() const noexcept;
+    encoded_key() const noexcept
+    {
+        return impl_.encoded_key();
+    }
 
 public:
-    using value_type = params_view::value_type;
+    using value_type = query_param;
     using reference = params_view::value_type;
     using pointer = void const*;
     using difference_type = std::ptrdiff_t;
     using iterator_category =
-        std::forward_iterator_tag;
+        std::bidirectional_iterator_tag;
 
     iterator() = default;
 
-    BOOST_URL_DECL
     iterator&
-    operator++() noexcept;
+    operator++() noexcept
+    {
+        impl_.increment();
+        return *this;
+    }
 
     iterator
     operator++(int) noexcept
@@ -66,24 +74,43 @@ public:
         return tmp;
     }
 
-    BOOST_URL_DECL
-    value_type
-    operator*() const;
+    iterator&
+    operator--() noexcept
+    {
+        impl_.decrement();
+        return *this;
+    }
 
-    BOOST_URL_DECL
+    iterator
+    operator--(int) noexcept
+    {
+        auto tmp = *this;
+        --*this;
+        return tmp;
+    }
+
+    reference
+    operator*() const
+    {
+        return impl_.dereference();
+    }
+
     friend
     bool
     operator==(
-        iterator a,
-        iterator b) noexcept;
+        iterator const& a,
+        iterator const& b) noexcept
+    {
+        return a.impl_.equal(b.impl_);
+    }
 
     friend
     bool
     operator!=(
-        iterator a,
-        iterator b) noexcept
+        iterator const& a,
+        iterator const& b) noexcept
     {
-        return !(a == b);
+        return !a.impl_.equal(b.impl_);
     }
 };
 

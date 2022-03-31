@@ -23,6 +23,10 @@ namespace urls {
 #ifndef BOOST_URL_DOCS
 class url_view;
 class params_encoded_view;
+namespace detail
+{
+    struct params_iterator_impl;
+}
 #endif
 
 class params_view
@@ -91,6 +95,7 @@ public:
     private:
         friend class params_view;
         friend class iterator;
+        friend struct detail::params_iterator_impl;
 
         BOOST_URL_DECL
         value_type(
