@@ -9,6 +9,8 @@
 
 #include "test_suite.hpp"
 
+#include <boost/container/string.hpp>
+
 //[snippet_headers_1
 #include <boost/url.hpp>
 //]
@@ -20,6 +22,8 @@
 #include <boost/url.hpp>
 namespace urls = boost::urls;
 //]
+
+#include <iostream>
 
 void
 using_url_views()
@@ -827,7 +831,7 @@ grammar_parse()
             if (urls::grammar::parse(it, s.end(), ec, r2))
             {
                 std::cout << "query: " << r1.query_part << '\n';
-                std::cout << "fragment: " << r2.fragment.str << '\n';
+                std::cout << "fragment: " << r2.fragment.encoded() << '\n';
             }
         }
         //]
@@ -843,7 +847,7 @@ grammar_parse()
         if (urls::grammar::parse(it, s.end(), ec, r1, r2))
         {
             std::cout << "query: " << r1.query_part << '\n';
-            std::cout << "fragment: " << r2.fragment.str << '\n';
+            std::cout << "fragment: " << r2.fragment.encoded() << '\n';
         }
         //]
     }
@@ -958,8 +962,8 @@ grammar_charset()
         urls::error_code ec;
         if (urls::grammar::parse_string(s, ec, r))
         {
-            std::cout << "query:        " << r.s.str << '\n';
-            std::cout << "decoded size: " << r.s.decoded_size << '\n';
+            std::cout << "query:        " << r.s.encoded() << '\n';
+            std::cout << "decoded size: " << r.s.size() << '\n';
         }
         //]
     }
@@ -1093,7 +1097,7 @@ using_static_pool()
 {
     {
         //[snippet_using_static_pool_1
-        using pool_string = std::basic_string<
+        using pool_string = boost::container::basic_string<
             char, std::char_traits<char>,
                 urls::static_pool_allocator<char>>;
         urls::static_pool<4096> pool;

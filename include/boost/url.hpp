@@ -23,7 +23,6 @@
 #include <boost/url/params_encoded_view.hpp>
 #include <boost/url/params_view.hpp>
 #include <boost/url/pct_encoding.hpp>
-#include <boost/url/pct_encoding_types.hpp>
 #include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/query_param.hpp>
 #include <boost/url/scheme.hpp>

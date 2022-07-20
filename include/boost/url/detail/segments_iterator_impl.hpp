@@ -26,7 +26,7 @@ struct segments_iterator_impl
     char const* pos_ = nullptr;
     char const* next_ = nullptr;
     char const* end_ = nullptr;
-    pct_encoded_str t_;
+    pct_encoded_view t_;
 
     BOOST_URL_DECL
     segments_iterator_impl(

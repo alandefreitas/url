@@ -63,7 +63,7 @@ dereference() const noexcept
 {
     pct_decode_opts opt;
     opt.plus_to_space = false;
-    return pct_encoded_view(t_.str, opt);
+    return pct_encoded_view(t_.encoded(), opt);
 }
 
 

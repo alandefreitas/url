@@ -572,7 +572,7 @@ apply(
         urls::host_type::name)
     {
         decoded_[id_host] =
-            t.name.decoded_size;
+            t.name.size();
     }
     else if(t.host_type ==
         urls::host_type::ipv4)
@@ -612,8 +612,8 @@ apply(
         // leading "//" for authority
         set_size(
             id_user,
-            u.user.str.size() + 2);
-        decoded_[id_user] = u.user.decoded_size;
+            u.user.encoded().size() + 2);
+        decoded_[id_user] = u.user.size();
 
         if(u.has_password)
         {
@@ -621,9 +621,9 @@ apply(
             // trailing '@' for userinfo
             set_size(
                 id_pass,
-                u.password.str.size() + 2);
+                u.password.encoded().size() + 2);
             decoded_[id_pass] =
-                u.password.decoded_size;
+                u.password.size();
         }
         else
         {
@@ -693,9 +693,9 @@ apply(
     {
         set_size(
             id_frag,
-            t.fragment.str.size() + 1);
+            t.fragment.encoded().size() + 1);
         decoded_[id_frag] =
-            t.fragment.decoded_size;
+            t.fragment.size();
     }
     else
     {

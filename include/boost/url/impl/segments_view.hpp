@@ -11,7 +11,6 @@
 #ifndef BOOST_URL_IMPL_SEGMENTS_VIEW_HPP
 #define BOOST_URL_IMPL_SEGMENTS_VIEW_HPP
 
-#include <boost/url/pct_encoding_types.hpp>
 #include <boost/url/detail/segments_iterator_impl.hpp>
 #include <cstddef>
 

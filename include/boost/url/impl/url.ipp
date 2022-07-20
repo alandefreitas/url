@@ -616,14 +616,14 @@ set_encoded_userinfo(
         detail::throw_invalid_argument(
             BOOST_CURRENT_LOCATION);
     auto dest = set_userinfo_impl(s.size());
-    split(id_user, 2 + t.user.str.size());
+    split(id_user, 2 + t.user.encoded().size());
     if(! s.empty())
         std::memcpy(dest, s.data(), s.size());
     decoded_[id_user] =
-        t.user.decoded_size;
+        t.user.size();
     if(t.has_password)
         decoded_[id_pass] =
-            t.password.decoded_size;
+            t.password.size();
     else
         decoded_[id_pass] = 0;
     check_invariants();
@@ -768,7 +768,7 @@ set_encoded_host(string_view s)
         std::memcpy(
             dest, s.data(), s.size());
         decoded_[id_host] =
-            t.name.decoded_size;
+            t.name.size();
         break;
     }
         BOOST_FALLTHROUGH;
@@ -939,17 +939,17 @@ set_encoded_authority(string_view s)
     {
         auto const& t0 = t.userinfo;
         split(id_user,
-            2 + t0.user.str.size());
-        n -= 2 + t0.user.str.size();
+            2 + t0.user.encoded().size());
+        n -= 2 + t0.user.encoded().size();
         decoded_[id_user] =
-            t0.user.decoded_size;
+            t0.user.size();
         if(t0.has_password)
         {
             split(id_pass, 2 +
-                t0.password.str.size());
+                t0.password.encoded().size());
             decoded_[id_pass] =
-                t0.password.decoded_size;
-            n -= 2 + t0.password.str.size();
+                t0.password.size();
+            n -= 2 + t0.password.encoded().size();
         }
         else
         {
@@ -997,7 +997,7 @@ set_encoded_authority(string_view s)
     else
     {
         decoded_[id_host] =
-            t.host.name.decoded_size;
+            t.host.name.size();
     }
     if(need_slash)
         split(id_port, n - 1);
@@ -1778,7 +1778,7 @@ set_encoded_fragment(
         detail::throw_invalid_argument(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
-    decoded_[id_frag] = t.s.decoded_size;
+    decoded_[id_frag] = t.s.size();
     if(! s.empty())
         std::memcpy(
             dest, s.data(), s.size());
