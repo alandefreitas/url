@@ -113,8 +113,7 @@ public:
         {
             segments_encoded_view sev = parse_path(
                 "/%70%61%74%68/%74%6f/%66%69%6c%65%2e%74%78%74").value();
-            segments_view sv = sev.decoded(
-                std::allocator<char>{});
+            segments_view sv = sev.decoded();
             BOOST_TEST_EQ(sv.size(), 3u);
             BOOST_TEST(sv.is_absolute());
         }
@@ -226,16 +225,16 @@ public:
             BOOST_TEST_NE(it++, sv.end());
         }
 
-        // value_type outlives reference
+        // value_type does not outlive reference
+        // as both are views
         {
-            segments_encoded_view::value_type v;
+            std::string v;
             {
                 segments_encoded_view sv = parse_path(
                     "/path/to/file.txt").value();
                 segments_encoded_view::reference r =
                     *sv.begin();
-                v = segments_encoded_view::value_type(
-                    r, std::allocator<char>{});
+                v = segments_encoded_view::value_type(r);
             }
             BOOST_TEST_EQ(v, "path");
         }

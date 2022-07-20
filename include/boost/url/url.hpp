@@ -1140,12 +1140,10 @@ public:
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.3"
             >3.3. Path (rfc3986)</a>
     */
-    template<class Allocator =
-        std::allocator<char>>
     urls::segments
-    segments(Allocator const& alloc = {}) noexcept
+    segments() noexcept
     {
-        return urls::segments(*this, alloc);
+        return {*this};
     }
 
     //--------------------------------------------
@@ -1294,17 +1292,11 @@ public:
         query-param     = key [ "=" value ]
         @endcode
 
-        @param alloc An optional allocator the
-        container will use when returning
-        percent-decoded strings. If omitted,
-        the default allocator is used.
     */
-    template<class Allocator =
-        std::allocator<char>>
     urls::params
-    params(Allocator const& alloc = {})
+    params()
     {
-        return urls::params(*this, alloc);
+        return {*this};
     }
 
     //--------------------------------------------

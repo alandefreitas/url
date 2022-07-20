@@ -190,16 +190,16 @@ public:
             BOOST_TEST_NE(it, cs.begin());
         }
 
-        // value_type outlives reference
+        // value_type does not outlive reference
+        // as both are views
         {
-            segments_encoded::value_type v;
+            std::string v;
             {
                 url u = u0;
                 segments_encoded se = u.encoded_segments();
                 segments_encoded::reference r =
                     *se.begin();
-                v = segments_encoded::value_type(
-                    r, std::allocator<char>{});
+                v = segments_encoded::value_type(r);
             }
             BOOST_TEST_EQ(v, "path");
         }

@@ -13,7 +13,7 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/string_view.hpp>
-#include <boost/url/const_string.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 
 namespace boost {
 namespace urls {
@@ -99,7 +99,7 @@ struct query_param
 {
     /** The key.
     */
-    const_string key;
+    pct_encoded_view key;
 
     /** The value.
 
@@ -108,7 +108,7 @@ struct query_param
         A value that is present with an empty string
         is distinct from a value that is absent.
     */
-    const_string value;
+    pct_encoded_view value;
 
     /** True if the value is present
 
@@ -140,8 +140,8 @@ struct query_param
     /** Constructor
     */
     query_param(
-        const_string const& key_,
-        const_string const& value_,
+        pct_encoded_view const& key_,
+        pct_encoded_view const& value_,
         bool has_value_)
         : key(key_)
         , value(value_)
@@ -154,8 +154,8 @@ struct query_param
     operator query_param_view() const noexcept
     {
         if(has_value)
-            return { key, value, true };
-        return { key, string_view(), false };
+            return { key.encoded(), value.encoded(), true };
+        return { key.encoded(), string_view(), false };
     }
 
 private:
@@ -167,8 +167,7 @@ private:
     query_param(
         char const* s,
         std::size_t nk,
-        std::size_t nv,
-        const_string::factory const& a);
+        std::size_t nv);
 };
 
 } // urls

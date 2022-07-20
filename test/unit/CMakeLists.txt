@@ -18,7 +18,6 @@ set(BOOST_URL_TESTS_FILES
     Jamfile
     test_rule.hpp
     authority_view.cpp
-    const_string.cpp
     error.cpp
     error_code.cpp
     grammar.cpp

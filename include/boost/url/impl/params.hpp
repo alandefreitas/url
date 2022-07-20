@@ -27,9 +27,8 @@ class params::iterator
     friend class params;
 
     iterator(
-        string_view s,
-        const_string::factory a) noexcept
-        : impl_(s, a)
+        string_view s) noexcept
+        : impl_(s)
     {
     }
 
@@ -37,9 +36,8 @@ class params::iterator
     iterator(
         string_view s,
         std::size_t nparam,
-        int,
-        const_string::factory a) noexcept
-        : impl_(s, nparam, 0, a)
+        int) noexcept
+        : impl_(s, nparam, 0)
     {
     }
 
@@ -110,15 +108,6 @@ public:
 //
 //------------------------------------------------
 
-template<class Allocator>
-params::
-params(
-    url& u,
-    Allocator const& a)
-    : u_(&u)
-    , a_(a)
-{
-}
 
 inline
 params&
@@ -179,7 +168,7 @@ begin() const noexcept ->
     iterator
 {
     if (u_->nparam_ > 0)
-        return { u_->encoded_query(), a_ };
+        return { u_->encoded_query() };
     return end();
 }
 
@@ -192,7 +181,7 @@ end() const noexcept ->
     return {
         u_->encoded_query(),
         u_->nparam_,
-        0, a_ };
+        0};
 }
 
 //------------------------------------------------

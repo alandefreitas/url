@@ -15,6 +15,7 @@
 #include <boost/url/ipv4_address.hpp>
 #include <boost/url/ipv6_address.hpp>
 #include <boost/url/pct_encoding.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/detail/except.hpp>
 #include <boost/assert.hpp>
 #include <cstddef>
@@ -518,7 +519,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
+        @return A @ref pct_encoded_view using the
         specified allocator.
 
         @par Specification
@@ -529,26 +530,13 @@ public:
             @ref has_userinfo,
             @ref encoded_userinfo.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    userinfo(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    userinfo() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_userinfo();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-                pct_decode_unchecked(
-                    dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_userinfo(), opt);
     }
 
     //--------------------------------------------
@@ -619,7 +607,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
+        @return A @ref pct_encoded_view using the
         specified allocator.
 
         @par Specification
@@ -632,26 +620,13 @@ public:
             @ref has_password,
             @ref password.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    user(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    user() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_user();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_user(), opt);
     }
 
     /** Return true if this contains a password
@@ -744,7 +719,7 @@ public:
         allocator is used, and the return type of
         the function becomes `std::string`.
 
-        @return A @ref const_string using the
+        @return A @ref pct_encoded_view using the
         specified allocator.
 
         @par Specification
@@ -757,26 +732,13 @@ public:
             @ref has_password,
             @ref password.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    password(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    password() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_password();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_password(), opt);
     }
 
     //--------------------------------------------
@@ -905,7 +867,7 @@ public:
         the default allocator is used, and the return
         type of the function becomes `std::string`.
 
-        @return A @ref const_string using the
+        @return A @ref pct_encoded_view using the
         specified allocator.
 
         @par Specification
@@ -920,25 +882,13 @@ public:
             @ref port,
             @ref port_number.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    host(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    host() const
     {
-        auto const s0 =
-            encoded_host();
-        if(host_type_ !=
-            urls::host_type::name)
-        {
-            // no decoding
-            return const_string(s0, a);
-        }
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_decode_unchecked(
-            s0, opt, a, decoded_[id_host]);
+        return pct_encoded_view(
+            encoded_host(), opt);
     }
 
     /** Return the host as an IPv4 address

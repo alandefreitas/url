@@ -83,8 +83,8 @@ using_url_views()
         //[snippet_allocators_1
         urls::static_pool< 1024 > sp;
         std::cout <<
-            "query    : " << u.query(sp.allocator())    << "\n"
-            "fragment : " << u.fragment(sp.allocator()) << "\n";
+            "query    : " << u.query()    << "\n"
+            "fragment : " << u.fragment() << "\n";
         //]
     }
 
@@ -111,9 +111,7 @@ using_url_views()
 
     {
         //[snippet_encoded_compound_elements_2
-        urls::static_pool< 1024 > pool;
-
-        urls::segments_view segs = u.segments( pool.allocator() );
+        urls::segments_view segs = u.segments();
 
         for( auto v : segs )
         {
@@ -137,9 +135,7 @@ using_url_views()
 
     {
         //[snippet_encoded_compound_elements_4
-        urls::static_pool< 1024 > pool;
-
-        urls::params_view params = u.params( pool.allocator() );
+        urls::params_view params = u.params();
 
         for( auto v : params )
         {
@@ -1097,12 +1093,19 @@ using_static_pool()
 {
     {
         //[snippet_using_static_pool_1
+        using pool_string = std::basic_string<
+            char, std::char_traits<char>,
+                urls::static_pool_allocator<char>>;
         urls::static_pool<4096> pool;
+        pool_string k(pool.allocator());
+        pool_string v(pool.allocator());
         urls::url_view u = urls::parse_uri_reference(
                 "?k0=0&k1=1&k2=&k3&k4=4444#f").value();
-        urls::params_view params = u.params(pool.allocator());
+        urls::params_view params = u.params();
         for (auto p: params) {
-            std::cout << p.key << ": " << p.value << "\n";
+            p.key.assign_to(k);
+            p.key.assign_to(v);
+            std::cout << k << ": " << v << "\n";
         }
         //]
         BOOST_TEST_NOT(u.is_path_absolute());

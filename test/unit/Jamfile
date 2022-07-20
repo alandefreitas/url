@@ -22,7 +22,6 @@ project
 local SOURCES =
     ../../extra/test_main.cpp
     authority_view.cpp
-    const_string.cpp
     error.cpp
     error_code.cpp
     grammar.cpp

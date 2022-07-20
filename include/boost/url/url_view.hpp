@@ -769,26 +769,13 @@ public:
             @ref has_userinfo,
             @ref encoded_userinfo.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    userinfo(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    userinfo() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_userinfo();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_userinfo(), opt);
     }
 
     //--------------------------------------------
@@ -870,26 +857,13 @@ public:
             @ref has_password,
             @ref password.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    user(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    user() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_user();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_user(), opt);
     }
 
     /** Return true if this contains a password
@@ -995,26 +969,13 @@ public:
             @ref has_password,
             @ref password.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    password(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    password() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        string_view s = encoded_password();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_password(), opt);
     }
 
     //--------------------------------------------
@@ -1158,25 +1119,13 @@ public:
             @ref port,
             @ref port_number.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    host(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    host() const
     {
-        auto const s0 =
-            encoded_host();
-        if(host_type_ !=
-            urls::host_type::name)
-        {
-            // no decoding
-            return const_string(s0, a);
-        }
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_decode_unchecked(
-            s0, opt, a, decoded_[id_host]);
+        return pct_encoded_view(
+            encoded_host(), opt);
     }
 
     /** Return the host as an IPv4 address
@@ -1504,13 +1453,10 @@ public:
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.3"
             >3.3. Path (rfc3986)</a>
     */
-    template<class Allocator =
-        std::allocator<char>>
     segments_view
-    segments(Allocator const& alloc = {}) const noexcept
+    segments() const noexcept
     {
-        return segments_view(
-            encoded_path(), nseg_, alloc);
+        return {encoded_path(), nseg_};
     }
 
     //--------------------------------------------
@@ -1604,26 +1550,13 @@ public:
             @ref encoded_query,
             @ref has_query.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    query(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    query() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = true;
-        string_view s = encoded_query();
-        std::size_t n =
-            pct_decode_bytes_unchecked(s);
-        return const_string(
-            n, a,
-            [&s, &opt](
-                std::size_t n, char* dest)
-            {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-            });
+        return pct_encoded_view(
+            encoded_query(), opt);
     }
 
     /** Return the query parameters
@@ -1666,12 +1599,9 @@ public:
         percent-decoded strings. If omitted,
         the default allocator is used.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
+    BOOST_URL_DECL
     params_view
-    params(Allocator const&
-        alloc = {}) const noexcept;
+    params() const noexcept;
 
     //--------------------------------------------
     //
@@ -1765,18 +1695,13 @@ public:
             @ref encoded_fragment,
             @ref has_fragment.
     */
-    template<
-        class Allocator =
-            std::allocator<char>>
-    const_string
-    fragment(
-        Allocator const& a = {}) const
+    pct_encoded_view
+    fragment() const
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_decode_unchecked(
-            encoded_fragment(),
-            opt, a, decoded_[id_frag]);
+        return pct_encoded_view(
+            encoded_fragment(), opt);
     }
 
     //--------------------------------------------

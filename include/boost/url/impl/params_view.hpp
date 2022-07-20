@@ -27,9 +27,8 @@ class params_view::iterator
     friend class params_view;
 
     iterator(
-        string_view s,
-        const_string::factory a) noexcept
-        : impl_(s, a)
+        string_view s) noexcept
+        : impl_(s)
     {
     }
 
@@ -37,9 +36,8 @@ class params_view::iterator
     iterator(
         string_view s,
         std::size_t nparam,
-        int,
-        const_string::factory a) noexcept
-        : impl_(s, nparam, 0, a)
+        int) noexcept
+        : impl_(s, nparam, 0)
     {
     }
 
@@ -98,24 +96,6 @@ public:
         return !a.impl_.equal(b.impl_);
     }
 };
-
-//------------------------------------------------
-//
-// Members
-//
-//------------------------------------------------
-
-template<class Allocator>
-params_view::
-params_view(
-    string_view s,
-    std::size_t n,
-    Allocator const& a)
-    : s_(s)
-    , n_(n)
-    , a_(a)
-{
-}
 
 //------------------------------------------------
 //

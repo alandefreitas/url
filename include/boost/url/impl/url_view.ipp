@@ -436,6 +436,18 @@ encoded_params() const noexcept
     return params_encoded_view(s, nparam_);
 }
 
+params_view
+url_view::
+params() const noexcept
+{
+    auto s = get(id_query);
+    if(s.empty())
+        return {s, 0};
+    BOOST_ASSERT(s[0] == '?');
+    s.remove_prefix(1);
+    return {s, nparam_};
+}
+
 //----------------------------------------------------------
 //
 // Fragment
