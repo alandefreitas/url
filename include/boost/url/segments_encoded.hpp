@@ -94,11 +94,10 @@ public:
 
     /** A type which can represent a segment as a value
 
-        This type allows for making a copy of
-        a segment where ownership is retained
-        in the copy.
+        This type does not make a copy of a segment
+        and ownership is retained by the container.
     */
-    using value_type = const_string;
+    using value_type = string_view;
 
     /** A type which can represent a segment as a const reference
 

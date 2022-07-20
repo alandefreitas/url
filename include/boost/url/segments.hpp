@@ -12,7 +12,7 @@
 #define BOOST_URL_SEGMENTS_HPP
 
 #include <boost/url/detail/config.hpp>
-#include <boost/url/const_string.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/detail/parts_base.hpp>
 #include <initializer_list>
 #include <iterator>
@@ -68,15 +68,12 @@ class segments
     : private detail::parts_base
 {
     url* u_ = nullptr;
-    const_string::factory a_;
 
     friend class url;
 
-    template<class Allocator>
-    explicit
-    segments(
-        url& u,
-        Allocator const& a);
+    segments(url& u)
+        : u_(&u)
+    {}
 
 public:
     /** A read-only bidirectional iterator to a decoded segment.
@@ -100,13 +97,13 @@ public:
         a segment where ownership is retained
         in the copy.
     */
-    using value_type = const_string;
+    using value_type = pct_encoded_view;
 
     /// @copydoc value_type
-    using reference = const_string;
+    using reference = pct_encoded_view;
 
     /// @copydoc value_type
-    using const_reference = const_string;
+    using const_reference = pct_encoded_view;
 
     /** An unsigned integer type
     */
@@ -235,12 +232,12 @@ public:
 
     /** Return the first element
     */
-    const_string
+    pct_encoded_view
     front() const;
 
     /** Return the last element
     */
-    const_string
+    pct_encoded_view
     back() const;
 
     //--------------------------------------------

@@ -13,6 +13,7 @@
 #include <boost/url/detail/config.hpp>
 #include <boost/url/string_view.hpp>
 #include <boost/url/pct_encoding.hpp>
+#include <boost/url/detail/pct_encoded_view.hpp>
 #include <type_traits>
 #include <iterator>
 #include <iosfwd>
@@ -72,6 +73,16 @@ class pct_encoded_view
 
     using traits_type = std::char_traits<char>;
 
+    friend detail::access;
+
+    // unchecked constructor
+    BOOST_URL_DECL
+    explicit
+    pct_encoded_view(
+        string_view s,
+        std::size_t n,
+        pct_decode_opts opt = {}) noexcept;
+
 public:
     /** Type of a decoded character
     */
@@ -113,7 +124,6 @@ public:
         Default-constructed objects represent
         the empty string.
     */
-    explicit
     pct_encoded_view() noexcept = default;
 
     /** Constructor
@@ -1049,6 +1059,22 @@ private:
 };
 
 } // urls
+
+#ifndef BOOST_URL_DOCS
+namespace filesystem {
+namespace path_traits {
+template <class T>
+struct is_pathable;
+
+template <>
+struct is_pathable<urls::pct_encoded_view>
+{
+    static const bool value = true;
+};
+} // path_traits
+} // filesystem
+#endif
+
 } // boost
 
 #include <boost/url/impl/pct_encoded_view.hpp>

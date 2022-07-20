@@ -113,14 +113,6 @@ params_encoded_view(
 {
 }
 
-template<class Allocator>
-params_view
-params_encoded_view::
-decoded(Allocator const& alloc) const
-{
-    return params_view(s_, n_, alloc);
-}
-
 //------------------------------------------------
 //
 // Capacity

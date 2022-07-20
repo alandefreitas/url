@@ -154,10 +154,11 @@ public:
         this parameter is ommitted, the default
         allocator will be used.
     */
-    template<class Allocator =
-        std::allocator<char>>
     params_view
-    decoded(Allocator const& alloc = {}) const;
+    decoded() const
+    {
+        return {s_, n_};
+    }
 
     /** Constructor
 

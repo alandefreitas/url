@@ -14,6 +14,7 @@
 #include <boost/url/detail/config.hpp>
 #include <boost/url/detail/parts_base.hpp>
 #include <boost/url/query_param.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 #include <iterator>
 #include <type_traits>
 
@@ -33,13 +34,13 @@ class params_view
 
     string_view s_;
     std::size_t n_;
-    const_string::factory a_;
 
-    template<class Allocator>
     params_view(
         string_view s,
-        std::size_t n,
-        Allocator const& a);
+        std::size_t n)
+        : s_(s)
+        , n_(n)
+    {}
 
 public:
     /** A read-only forward iterator to a decoded query parameter.
@@ -101,7 +102,7 @@ public:
     //--------------------------------------------
 
     BOOST_URL_DECL
-    const_string
+    pct_encoded_view
     at(string_view key) const;
 
     //--------------------------------------------

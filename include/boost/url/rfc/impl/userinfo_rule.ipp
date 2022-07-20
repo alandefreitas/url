@@ -63,7 +63,7 @@ parse(
         *it != ':')
     {
         t.has_password = false;
-        t.password = {};
+        t.password = pct_encoded_view("");
         return;
     }
     ++it;

@@ -418,6 +418,13 @@ set_user(string_view s)
 
 url&
 url::
+set_user(pct_encoded_view s)
+{
+    return set_encoded_user(s.encoded());
+}
+
+url&
+url::
 set_encoded_user(
     string_view s)
 {
@@ -515,6 +522,13 @@ set_password(string_view s)
 
 url&
 url::
+set_password(pct_encoded_view s)
+{
+    return set_password(s.encoded());
+}
+
+url&
+url::
 set_encoded_password(
     string_view s)
 {
@@ -596,9 +610,30 @@ set_userinfo(
         get(id_host).data() - 1,
         s,
         detail::userinfo_chars);
-    decoded_[id_user] = s.size();
+    auto pct_s = get(id_user, id_host);
+    auto pct_sep = pct_s.find_first_of(':');
+    if (pct_sep != string_view::npos)
+    {
+        split(id_user, pct_sep);
+        auto sep = s.find_first_of(':');
+        decoded_[id_user] = sep - 1;
+        decoded_[id_pass] = s.size() - sep;
+    }
+    else
+    {
+        decoded_[id_user] = s.size();
+        decoded_[id_pass] = 0;
+    }
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_userinfo(
+    pct_encoded_view s)
+{
+    return set_userinfo(s.encoded());
 }
 
 url&
@@ -616,14 +651,14 @@ set_encoded_userinfo(
         detail::throw_invalid_argument(
             BOOST_CURRENT_LOCATION);
     auto dest = set_userinfo_impl(s.size());
-    split(id_user, 2 + t.user.str.size());
+    split(id_user, 2 + t.user.encoded().size());
     if(! s.empty())
         std::memcpy(dest, s.data(), s.size());
     decoded_[id_user] =
-        t.user.decoded_size;
+        t.user.size();
     if(t.has_password)
         decoded_[id_pass] =
-            t.password.decoded_size;
+            t.password.size();
     else
         decoded_[id_pass] = 0;
     check_invariants();
@@ -738,6 +773,14 @@ set_host(
 
 url&
 url::
+set_host(
+    pct_encoded_view s)
+{
+    return set_encoded_host(s.encoded());
+}
+
+url&
+url::
 set_encoded_host(string_view s)
 {
     detail::copied_strings buf(
@@ -768,7 +811,7 @@ set_encoded_host(string_view s)
         std::memcpy(
             dest, s.data(), s.size());
         decoded_[id_host] =
-            t.name.decoded_size;
+            t.name.size();
         break;
     }
         BOOST_FALLTHROUGH;
@@ -939,17 +982,17 @@ set_encoded_authority(string_view s)
     {
         auto const& t0 = t.userinfo;
         split(id_user,
-            2 + t0.user.str.size());
-        n -= 2 + t0.user.str.size();
+            2 + t0.user.encoded().size());
+        n -= 2 + t0.user.encoded().size();
         decoded_[id_user] =
-            t0.user.decoded_size;
+            t0.user.size();
         if(t0.has_password)
         {
             split(id_pass, 2 +
-                t0.password.str.size());
+                t0.password.encoded().size());
             decoded_[id_pass] =
-                t0.password.decoded_size;
-            n -= 2 + t0.password.str.size();
+                t0.password.size();
+            n -= 2 + t0.password.encoded().size();
         }
         else
         {
@@ -997,7 +1040,7 @@ set_encoded_authority(string_view s)
     else
     {
         decoded_[id_host] =
-            t.host.name.decoded_size;
+            t.host.name.size();
     }
     if(need_slash)
         split(id_port, n - 1);
@@ -1505,6 +1548,14 @@ set_path(
     return *this;
 }
 
+url&
+url::
+set_path(
+    pct_encoded_view s)
+{
+    return set_encoded_path(s.encoded());
+}
+
 segments_encoded
 url::
 encoded_segments() noexcept
@@ -1698,6 +1749,7 @@ remove_query() noexcept
 {
     resize_impl(id_query, 0);
     nparam_ = 0;
+    decoded_[id_query] = 0;
     return *this;
 }
 
@@ -1716,6 +1768,9 @@ set_encoded_query(
         detail::enc_query_iter(s),
         detail::enc_query_iter(s),
         true);
+    decoded_[id_query] =
+        pct_decode_bytes_unchecked(
+            encoded_query());
     check_invariants();
     return *this;
 }
@@ -1734,7 +1789,18 @@ set_query(
         detail::plain_query_iter(s),
         detail::plain_query_iter(s),
         true);
+    decoded_[id_query] =
+        pct_decode_bytes_unchecked(
+            encoded_query());
     return *this;
+}
+
+url&
+url::
+set_query(
+    pct_encoded_view s)
+{
+    return set_encoded_query(s.encoded());
 }
 
 //------------------------------------------------
@@ -1778,7 +1844,7 @@ set_encoded_fragment(
         detail::throw_invalid_argument(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
-    decoded_[id_frag] = t.s.decoded_size;
+    decoded_[id_frag] = t.s.size();
     if(! s.empty())
         std::memcpy(
             dest, s.data(), s.size());
@@ -1806,6 +1872,14 @@ set_fragment(
     decoded_[id_frag] = s.size();
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_fragment(
+    pct_encoded_view s)
+{
+    return set_encoded_fragment(s.encoded());
 }
 
 //------------------------------------------------

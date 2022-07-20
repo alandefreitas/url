@@ -150,29 +150,6 @@ pct_decode(
 
 //------------------------------------------------
 
-template<class Allocator>
-const_string
-pct_decode_unchecked(
-    string_view s,
-    pct_decode_opts const& opt,
-    Allocator const& a,
-    std::size_t decoded_size)
-{
-    if(decoded_size == std::size_t(-1))
-        decoded_size =
-            pct_decode_bytes_unchecked(s);
-    return const_string(
-        decoded_size, a,
-        [&s, &opt](
-            std::size_t n, char* dest)
-        {
-            pct_decode_unchecked(
-                dest, dest + n, s, opt);
-        });
-}
-
-//------------------------------------------------
-
 template<class CharSet>
 std::size_t
 pct_encode_bytes(

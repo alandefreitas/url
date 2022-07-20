@@ -13,7 +13,7 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/query_param.hpp>
-#include <boost/url/const_string.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/detail/parts_base.hpp>
 #include <initializer_list>
 #include <iterator>
@@ -44,12 +44,9 @@ class params
 
     url* u_ = nullptr;
 
-    const_string::factory a_;
-
-    template<class Allocator>
-    params(
-        url& u,
-        Allocator const& a);
+    params(url& u) noexcept
+        : u_(&u)
+    {}
 
 public:
     /** A read-only forward iterator to a decoded query parameter.
