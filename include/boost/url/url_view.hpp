@@ -770,12 +770,14 @@ public:
             @ref encoded_userinfo.
     */
     pct_encoded_view
-    userinfo() const
+    userinfo() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_userinfo(), opt);
+        string_view s = encoded_userinfo();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     //--------------------------------------------
@@ -858,12 +860,14 @@ public:
             @ref password.
     */
     pct_encoded_view
-    user() const
+    user() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_user(), opt);
+        string_view s = encoded_user();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     /** Return true if this contains a password
@@ -970,12 +974,14 @@ public:
             @ref password.
     */
     pct_encoded_view
-    password() const
+    password() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_password(), opt);
+        string_view s = encoded_password();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     //--------------------------------------------
@@ -1120,12 +1126,14 @@ public:
             @ref port_number.
     */
     pct_encoded_view
-    host() const
+    host() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_host(), opt);
+        string_view s = encoded_host();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     /** Return the host as an IPv4 address
@@ -1551,12 +1559,14 @@ public:
             @ref has_query.
     */
     pct_encoded_view
-    query() const
+    query() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = true;
-        return pct_encoded_view(
-            encoded_query(), opt);
+        string_view s = encoded_query();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     /** Return the query parameters
@@ -1696,12 +1706,14 @@ public:
             @ref has_fragment.
     */
     pct_encoded_view
-    fragment() const
+    fragment() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_fragment(), opt);
+        string_view s = encoded_fragment();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, pct_decode_bytes_unchecked(s), opt);
     }
 
     //--------------------------------------------
