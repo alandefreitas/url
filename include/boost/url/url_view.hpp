@@ -776,7 +776,7 @@ public:
         string_view s = encoded_userinfo();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_user] + has_password() + decoded_[id_pass], opt);
     }
 
     //--------------------------------------------
@@ -865,7 +865,7 @@ public:
         string_view s = encoded_user();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_user], opt);
     }
 
     /** Return true if this contains a password
@@ -978,7 +978,7 @@ public:
         string_view s = encoded_password();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_pass], opt);
     }
 
     //--------------------------------------------
@@ -1129,7 +1129,7 @@ public:
         string_view s = encoded_host();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_host], opt);
     }
 
     /** Return the host as an IPv4 address
@@ -1561,7 +1561,7 @@ public:
         string_view s = encoded_query();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_query], opt);
     }
 
     /** Return the query parameters
@@ -1707,7 +1707,7 @@ public:
         string_view s = encoded_fragment();
         return
             detail::unchecked_encoded_view::construct(
-                s, pct_decode_bytes_unchecked(s), opt);
+                s, decoded_[id_frag], opt);
     }
 
     //--------------------------------------------

@@ -631,6 +631,18 @@ public:
         Any special or reserved characters in the
         string are automatically percent-encoded.
 
+        If the input string has a ":" character,
+        its first occurrence will be considered
+        the separator between the user and the
+        password fields. Other occurrences of
+        the separator character will be encoded.
+
+        If the username might contains a ":", the
+        functions @ref set_user and
+        @ref set_password should be used
+        separately so that the character can be
+        unambiguously encoded.
+
         @par Exception Safety
         Strong guarantee.
         Calls to allocate may throw.

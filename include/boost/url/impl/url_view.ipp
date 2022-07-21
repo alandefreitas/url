@@ -579,6 +579,7 @@ apply(
     {
         auto const bytes =
             t.ipv4.to_bytes();
+        decoded_[id_host] = t.host_part.size();
         std::memcpy(
             &ip_addr_[0],
             bytes.data(), 4);
@@ -588,9 +589,14 @@ apply(
     {
         auto const bytes =
             t.ipv6.to_bytes();
+        decoded_[id_host] = t.host_part.size();
         std::memcpy(
             &ip_addr_[0],
             bytes.data(), 16);
+    }
+    else
+    {
+        decoded_[id_host] = t.host_part.size();
     }
 
     if(t.host_type !=
@@ -648,7 +654,7 @@ apply(
         set_size(
             id_port,
             t.port.port.size() + 1);
-
+        decoded_[id_port] = t.port.port.size();
         if(t.port.has_number)
             port_number_ =
                 t.port.port_number;
@@ -662,6 +668,8 @@ apply(
 {
     auto s = t.path;
     set_size(id_path, s.size());
+    decoded_[id_path] =
+        pct_decode_bytes_unchecked(t.path);
     nseg_ = detail::path_segments(
         t.path, t.count);
 }
@@ -676,10 +684,14 @@ apply(
         set_size(
             id_query,
             t.query_part.size());
+        decoded_[id_query] =
+            pct_decode_bytes_unchecked(
+                t.query_part.substr(1));
         nparam_ = t.query.v.size();
     }
     else
     {
+        decoded_[id_query] = 0;
         nparam_ = 0;
     }
 }

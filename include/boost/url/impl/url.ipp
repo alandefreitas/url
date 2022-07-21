@@ -605,19 +605,17 @@ url::
 set_userinfo(
     string_view s)
 {
-    detail::copied_strings buf(
-        this->string());
-    s = buf.maybe_copy(s);
-    check_invariants();
-    auto const n = pct_encode_bytes(
-        s, detail::userinfo_chars);
-    auto dest = set_userinfo_impl(n);
-    pct_encode(
-        dest,
-        get(id_host).data() - 1,
-        s,
-        detail::userinfo_chars);
-    decoded_[id_user] = s.size();
+    auto sep = s.find_first_of(':');
+    if (sep == string_view::npos)
+    {
+        set_user(s);
+        remove_password();
+    }
+    else
+    {
+        set_user(s.substr(0, sep));
+        set_password(s.substr(sep + 1));
+    }
     check_invariants();
     return *this;
 }
@@ -1750,6 +1748,7 @@ remove_query() noexcept
 {
     resize_impl(id_query, 0);
     nparam_ = 0;
+    decoded_[id_query] = 0;
     return *this;
 }
 
@@ -1768,6 +1767,9 @@ set_encoded_query(
         detail::enc_query_iter(s),
         detail::enc_query_iter(s),
         true);
+    decoded_[id_query] =
+        pct_decode_bytes_unchecked(
+            encoded_query());
     check_invariants();
     return *this;
 }
@@ -1786,6 +1788,9 @@ set_query(
         detail::plain_query_iter(s),
         detail::plain_query_iter(s),
         true);
+    decoded_[id_query] =
+        pct_decode_bytes_unchecked(
+            encoded_query());
     return *this;
 }
 
