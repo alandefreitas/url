@@ -356,6 +356,13 @@ set_scheme(string_view s)
 
 url&
 url::
+set_scheme(pct_encoded_view s)
+{
+    return set_scheme(s.encoded());
+}
+
+url&
+url::
 set_scheme(urls::scheme id)
 {
     if(id == urls::scheme::unknown)
@@ -414,6 +421,13 @@ set_user(string_view s)
     decoded_[id_user] = s.size();
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_user(pct_encoded_view s)
+{
+    return set_encoded_user(s.encoded());
 }
 
 url&
@@ -515,6 +529,13 @@ set_password(string_view s)
 
 url&
 url::
+set_password(pct_encoded_view s)
+{
+    return set_password(s.encoded());
+}
+
+url&
+url::
 set_encoded_password(
     string_view s)
 {
@@ -599,6 +620,14 @@ set_userinfo(
     decoded_[id_user] = s.size();
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_userinfo(
+    pct_encoded_view s)
+{
+    return set_userinfo(s.encoded());
 }
 
 url&
@@ -738,6 +767,14 @@ set_host(
 
 url&
 url::
+set_host(
+    pct_encoded_view s)
+{
+    return set_encoded_host(s.encoded());
+}
+
+url&
+url::
 set_encoded_host(string_view s)
 {
     detail::copied_strings buf(
@@ -868,6 +905,13 @@ set_port(string_view s)
         port_number_ = 0;
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_port(pct_encoded_view s)
+{
+    return set_port(s.encoded());
 }
 
 //------------------------------------------------
@@ -1505,6 +1549,14 @@ set_path(
     return *this;
 }
 
+url&
+url::
+set_path(
+    pct_encoded_view s)
+{
+    return set_encoded_path(s.encoded());
+}
+
 segments_encoded
 url::
 encoded_segments() noexcept
@@ -1737,6 +1789,14 @@ set_query(
     return *this;
 }
 
+url&
+url::
+set_query(
+    pct_encoded_view s)
+{
+    return set_encoded_query(s.encoded());
+}
+
 //------------------------------------------------
 //
 // Fragment
@@ -1806,6 +1866,14 @@ set_fragment(
     decoded_[id_frag] = s.size();
     check_invariants();
     return *this;
+}
+
+url&
+url::
+set_fragment(
+    pct_encoded_view s)
+{
+    return set_encoded_fragment(s.encoded());
 }
 
 //------------------------------------------------

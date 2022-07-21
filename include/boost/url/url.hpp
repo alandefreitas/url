@@ -377,6 +377,11 @@ public:
     url&
     set_scheme(string_view s);
 
+    /// @copydoc set_scheme()
+    BOOST_URL_DECL
+    url&
+    set_scheme(pct_encoded_view s);
+
     /** Set the scheme
 
         This function sets the scheme to the specified
@@ -448,6 +453,12 @@ public:
     set_user(
         string_view s);
 
+    /// @copydoc set_user()
+    BOOST_URL_DECL
+    url&
+    set_user(
+        pct_encoded_view s);
+
     /** Set the user.
 
         The user is set to the specified string,
@@ -516,6 +527,12 @@ public:
     url&
     set_password(
         string_view s);
+
+    /// @copydoc set_password()
+    BOOST_URL_DECL
+    url&
+    set_password(
+        pct_encoded_view s);
 
     /** Set the password.
 
@@ -630,6 +647,12 @@ public:
     set_userinfo(
         string_view s);
 
+    /// @copydoc set_userinfo()
+    BOOST_URL_DECL
+    url&
+    set_userinfo(
+        pct_encoded_view s);
+
     //--------------------------------------------
 
 private:
@@ -742,6 +765,12 @@ public:
     url&
     set_host(
         string_view s);
+
+    /// @copydoc set_host()
+    BOOST_URL_DECL
+    url&
+    set_host(
+        pct_encoded_view s);
 
     /** Set the host
 
@@ -904,6 +933,10 @@ public:
     BOOST_URL_DECL
     url&
     set_port(string_view s);
+
+    /// @copydoc set_port()
+    url&
+    set_port(pct_encoded_view s);
 
     //--------------------------------------------
 
@@ -1097,6 +1130,11 @@ public:
     set_path(
         string_view s);
 
+    /// @copydoc set_path()
+    url&
+    set_path(
+        pct_encoded_view s);
+
     /** Return the path segments
 
         This function returns the path segments as
@@ -1255,6 +1293,11 @@ public:
     set_query(
         string_view s);
 
+    /// @copydoc set_query()
+    url&
+    set_query(
+        pct_encoded_view s);
+
     /** Return the query parameters
 
         This function returns the query
@@ -1382,6 +1425,11 @@ public:
     url&
     set_fragment(
         string_view s);
+
+    /// @copydoc set_fragment()
+    url&
+    set_fragment(
+        pct_encoded_view s);
 
     //--------------------------------------------
     //
