@@ -65,7 +65,6 @@
 [def __result__                 [link url.ref.boost__urls__result `result`]]
 [def __static_pool__            [link url.ref.boost__urls__static_pool `static_pool`]]
 [def __static_url__             [link url.ref.boost__urls__static_url `static_url`]]
-[def __const_string__           [link url.ref.boost__urls__const_string `const_string`]]
 [def __pct_encoded_view__       [link url.ref.boost__urls__pct_encoded_view `pct_encoded_view`]]
 [def __string_view__            [link url.ref.boost__urls__string_view `string_view`]]
 [def __url__                    [link url.ref.boost__urls__url `url`]]

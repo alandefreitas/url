@@ -758,8 +758,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -846,8 +845,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -960,8 +958,7 @@ public:
         allocator is used, and the return type of
         the function becomes `std::string`.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -1110,8 +1107,7 @@ public:
         the default allocator is used, and the return
         type of the function becomes `std::string`.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2"
@@ -1547,8 +1543,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
@@ -1698,8 +1693,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A @ref pct_encoded_view.
 
         @see
             @ref encoded_fragment,

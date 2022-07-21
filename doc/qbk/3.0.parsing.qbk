@@ -68,7 +68,7 @@ URI partitioning:
     [`https://www.boost.org`]
     [URL]
 ][
-    [`mailto:mduerst@ifi.unizh.ch`]
+    [[teletype]`mailto:mduerst@ifi.unizh.ch`]
     [URL]
 ][
     [`telnet://melvyl.ucop.edu/`]
@@ -135,7 +135,7 @@ interchangeably in that regard.
     [`melvyl.ucop.edu`]
     []
 ][
-    [`mailto:mduerst@ifi.unizh.ch`]
+    [[teletype]`mailto:mduerst@ifi.unizh.ch`]
     [`mailto`]
     []
     [`mduerst@ifi.unizh.ch`]

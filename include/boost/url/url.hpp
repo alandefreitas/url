@@ -715,7 +715,7 @@ public:
         @param addr The address to set.
     */
 #ifdef BOOST_URL_DOCS
-    url& set_host( urls::ipv6_address const& addr );
+    url& set_host( ipv6_address const& addr );
 #else
     BOOST_URL_DECL
     url&
@@ -766,7 +766,7 @@ public:
     set_host(
         string_view s);
 
-    /// @copydoc set_host()
+    /// @copydoc set_host(string_view)
     BOOST_URL_DECL
     url&
     set_host(
@@ -934,7 +934,7 @@ public:
     url&
     set_port(string_view s);
 
-    /// @copydoc set_port()
+    /// @copydoc set_port(string_view)
     url&
     set_port(pct_encoded_view s);
 

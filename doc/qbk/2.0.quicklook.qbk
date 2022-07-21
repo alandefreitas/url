@@ -185,7 +185,7 @@ function without the word `encoded`:
 ```
 ]]]
 
-The decoded functions return a __const_string__, which is a library type
+The decoded functions return a __pct_encoded_view__, which is a library type
 that models a read-only string. This class retains ownership of the
 underlying buffer and uses a type-erased allocator.
 
@@ -286,7 +286,7 @@ of key/value pairs.
 
 [h3 Allocators]
 
-All functions that return __const_string__ accept an optional __Allocator__.
+All functions that return __pct_encoded_view__ accept an optional __Allocator__.
 When omitted, this parameter defaults to the standard allocator.
 
 Here is the same code which prints the query with percent-decoding applied,

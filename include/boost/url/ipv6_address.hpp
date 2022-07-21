@@ -186,8 +186,7 @@ public:
         string will use. If this parameter is omitted,
         the default allocator is used.
 
-        @return A @ref const_string using the
-        specified allocator.
+        @return A string using the specified allocator.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc4291#section-2.2">
