@@ -166,29 +166,32 @@ parse_string(
 
 /** Parse a sequence of grammar rules and throw on failure
 
-   This function parses a complete string into the specified sequence
-   of grammar rules. If the string is not completely consumed, an
-   error is thrown.
+    This function parses a complete string into
+    the specified sequence of grammar rules. If
+    the string is not completely consumed, 
+    error is thrown.
 
-   @par Example
+    @par Example
 
-   @code
-   try {
-      parse(str, ec, r1, r2, r3);
-   } catch (boost::urls::system_error& e) {
-      std::cout << e.what() << '\n';
-   }
-   @endcode
+    @code
+    try
+    {
+        parse( str, ec, r1, r2, r3 );
+    }
+    catch( std::exception const& e )
+    {
+        std::cout << e.what() << '\n';
+    }
+    @endcode
 
-   @par Exception Safety
+    @par Exception Safety
+    Exceptions thrown on invalid input.
 
-     Exceptions thrown on invalid input.
+    @param s The input string
 
-   @param s The input string
+    @param rn Grammar rule objects
 
-   @param rn Grammar rule objects
-
-   @throws boost::system::system_error Thrown on failure.
+    @throws boost::system::system_error Thrown on failure.
 
  */
 template<class... Rn>
@@ -196,6 +199,73 @@ void
 parse_string(
     string_view s,
     Rn&&... rn);
+
+//------------------------------------------------
+
+template<class T, class = void>
+struct is_rule : std::false_type {};
+
+template<class T>
+struct is_rule<T, boost::void_t<
+    typename T::type,
+    decltype(1
+            ) > > :
+    std::integral_constant<bool,
+        std::is_default_constructible<
+            typename T::type>::value &&
+        std::is_copy_assignable<
+            typename T::type>::value>
+{
+};
+
+/** Parse part of a string into values using rules
+*/
+template<class R>
+auto
+parse(
+    char const*& it,
+    char const* end,
+    error_code& ec,
+    R const& r)
+        -> typename R::type
+{
+    static_assert(
+        is_rule<R>::value,
+        "Rule requirements not met");
+
+    typename R::type t;
+    tag_invoke(parse_tag{},
+        it, end, ec, r, t);
+    return t;
+}
+
+/** Parse parta string into values using rules
+*/
+template<class R>
+auto
+parse(
+    string_view s,
+    error_code& ec,
+    R const& r)
+        -> typename R::type
+{
+    static_assert(
+        is_rule<R>::value,
+        "Rule requirements not met");
+
+    typename R::type t;
+    auto it = s.data();
+    auto const end = it + s.size();
+    tag_invoke(parse_tag{},
+        it, end, ec, r, t);
+    if( ! ec.failed() &&
+        it != end)
+    {
+        ec = error::leftover;
+        return {};
+    }
+    return t;
+}
 
 } // grammar
 } // urls
