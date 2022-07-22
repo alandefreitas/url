@@ -211,6 +211,12 @@ public:
         return {s_, n_};
     }
 
+    /// @copydoc decoded()
+    operator segments_view() const
+    {
+        return decoded();
+    }
+
     /** Returns true if this contains an absolute path.
 
         Absolute paths always start with a

@@ -41,7 +41,8 @@ if(BOOST_URL_IS_ROOT)
     endif()
 
     # container comes from json
-    set(BOOST_INCLUDE_LIBRARIES url json container)
+    set(BOOST_URL_UNIT_TEST_LIBRARIES container filesystem)
+    set(BOOST_INCLUDE_LIBRARIES url json ${BOOST_URL_UNIT_TEST_LIBRARIES})
     set(BOOST_EXCLUDE_LIBRARIES url)
     set(CMAKE_FOLDER _deps)
     if (BOOST_URL_FIND_PACKAGE_BOOST)

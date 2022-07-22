@@ -1059,6 +1059,20 @@ private:
 };
 
 } // urls
+
+namespace filesystem {
+namespace path_traits {
+template <class T>
+struct is_pathable;
+
+template <>
+struct is_pathable<urls::pct_encoded_view>
+{
+    static const bool value = true;
+};
+} // path_traits
+} // filesystem
+
 } // boost
 
 #include <boost/url/impl/pct_encoded_view.hpp>

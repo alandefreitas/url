@@ -947,8 +947,7 @@ public:
     /** Return the password
 
         This function returns the password from the
-        userinfo with percent-decoding applied,
-        using the optionally specified allocator.
+        userinfo with percent-decoding applied.
 
         @par Exception Safety
         Calls to allocate may throw.
@@ -1411,6 +1410,46 @@ public:
         return get(id_path);
     }
 
+    /** Return the path
+
+        This function returns the path as a
+        string with percent-decoding applied.
+
+        @par BNF
+        @code
+        query           = *( pchar / "/" / "?" )
+
+        query-part      = [ "?" query ]
+        @endcode
+
+        @par Exception Safety
+        Calls to allocate may throw.
+
+        @param a An optional allocator the returned
+        string will use. If this parameter is omitted,
+        the default allocator is used
+
+        @return A @ref pct_encoded_view.
+
+        @par Specification
+        @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
+            >3.4. Query (rfc3986)</a>
+
+        @see
+            @ref encoded_query,
+            @ref has_query.
+    */
+    pct_encoded_view
+    path() const noexcept
+    {
+        pct_decode_opts opt;
+        opt.plus_to_space = false;
+        string_view s = encoded_path();
+        return
+            detail::unchecked_encoded_view::construct(
+                s, decoded_[id_path], opt);
+    }
+
     /** Return the path segments
 
         This function returns the path segments as
@@ -1526,8 +1565,13 @@ public:
     /** Return the query
 
         This function returns the query as a
-        string with percent-decoding applied,
-        using the optionally specified allocator.
+        string with percent-decoding applied.
+
+        When plus signs appear in the query
+        portion of the URL, they are converted
+        to spaces automatically upon decoding.
+        This behavior can be changed by setting
+        decode options.
 
         @par BNF
         @code
@@ -1672,8 +1716,7 @@ public:
     /** Return the fragment.
 
         This function returns the fragment as a
-        string with percent-decoding applied,
-        using the optionally specified allocator.
+        string with percent-decoding applied.
 
         @par BNF
         @code
