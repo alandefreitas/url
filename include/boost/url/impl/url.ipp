@@ -220,13 +220,8 @@ set_scheme_impl(
     urls::scheme id)
 {
     check_invariants();
-    scheme_rule b;
-    error_code ec;
-    grammar::parse_string(s, ec, b);
-    if(ec.failed())
-        detail::throw_invalid_argument(
-            BOOST_CURRENT_LOCATION);
-
+    grammar::parse_(
+        s, scheme_rule()).value();
     auto const n = s.size();
     auto const p = offset(id_path);
 
@@ -895,12 +890,8 @@ set_port(string_view s)
         this->string());
     s = buf.maybe_copy(s);
     check_invariants();
-    port_rule t;
-    error_code ec;
-    if(! grammar::parse_string(
-            s, ec, t))
-        detail::throw_invalid_argument(
-            BOOST_CURRENT_LOCATION);
+    auto t = grammar::parse_(
+        s, port_rule{}).value();
     auto dest =
         set_port_impl(t.str.size());
     std::memcpy(dest,
@@ -1838,13 +1829,11 @@ set_encoded_fragment(
         this->string());
     s = buf.maybe_copy(s);
     check_invariants();
-    error_code ec;
-    fragment_rule t;
-    if(! grammar::parse_string(s, ec, t))
-        detail::throw_invalid_argument(
+    auto t = grammar::parse_(
+        s, fragment_rule).value(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
-    decoded_[id_frag] = t.s.size();
+    decoded_[id_frag] = t.size();
     if(! s.empty())
         std::memcpy(
             dest, s.data(), s.size());

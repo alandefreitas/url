@@ -11,7 +11,7 @@
 #define BOOST_URL_RFC_PORT_RULE_HPP
 
 #include <boost/url/detail/config.hpp>
-#include <boost/url/error_code.hpp>
+#include <boost/url/result.hpp>
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
 #include <cstdint>
@@ -35,35 +35,18 @@ namespace urls {
 */
 struct port_rule
 {
-    using number_type =
-        std::uint16_t;
-
-    string_view str;
-    std::uint16_t number;
-    bool has_number = false;
-
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
-        char const*& it,
-        char const* const end,
-        error_code& ec,
-        port_rule& t) noexcept
+    struct value_type
     {
-        parse(it, end, ec, t);
-    }
+        string_view str;
+        std::uint16_t number = 0;
+        bool has_number = false;
+    };
 
-private:
     BOOST_URL_DECL
-    static
-    void
+    result<value_type>
     parse(
         char const*& it,
-        char const* const end,
-        error_code& ec,
-        port_rule& t) noexcept;
-
+        char const* end) const noexcept;
 };
 
 /** Rule for port-part

@@ -943,7 +943,7 @@ public:
 
         @param s The port string to set.
 
-        @throw std::invalid_argument `s` is not a valid port string.
+        @throw std::exception `s` is not a valid port string.
     */
     BOOST_URL_DECL
     url&
@@ -1400,7 +1400,7 @@ public:
 
         @param s The string to set.
 
-        @throws std::invalid_argument bad encoding.
+        @throws std::exception bad encoding.
 
         @see
             @ref has_fragment,

@@ -40,10 +40,10 @@ namespace urls {
 */
 struct uri_rule
 {
-    scheme_part_rule     scheme_part;
+    scheme_part_rule::value_type     scheme_part;
     hier_part_rule       hier_part;
     query_part_rule      query_part;
-    fragment_part_rule   fragment_part;
+    decltype(fragment_part_rule)::value_type fragment_part;
 
     friend
     void

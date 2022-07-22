@@ -14,6 +14,8 @@
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
+#include <boost/url/grammar/error.hpp>
+#include <boost/url/grammar/type_traits.hpp>
 #include <boost/type_traits/make_void.hpp>
 #include <type_traits>
 
@@ -130,31 +132,32 @@ parse_all(
 
 /** Parse a sequence of grammar rules
 
-   This function parses a complete string into the sequence of
-   specified grammar rules. The function returns an error if
-   some characters are left unparsed.
+    This function parses a complete string into the sequence of
+    specified grammar rules. The function returns an error if
+    some characters are left unparsed.
 
-   @par Example
+    @par Example
 
-   @code
-   if (parse(str, ec, r1, r2, r3)) {
-     std::cout << "String " << str << " parsed successfully\n";
-   }
-   @endcode
+    @code
+    if( parse( str, ec, r1, r2, r3 ) )
+    {
+      std::cout << "String " << str << " parsed successfully\n";
+    }
+    @endcode
 
-   @par Exception Safety
+    @par Exception Safety
 
-     Defined by the types of the rule objects.
+      Defined by the types of the rule objects.
 
-   @return `true` if the string matches the rules successfully and all
-   chars are consumed
+    @return `true` if the string matches the rules successfully and all
+    chars are consumed
 
-   @param s The input string
+    @param s The input string
 
-   @param ec Set to the error, if any occurred. If the string is not completely consumed,
-   but the beginning of the string matches the elements, `ec` is set to @ref error::leftover.
+    @param ec Set to the error, if any occurred. If the string is not completely consumed,
+    but the beginning of the string matches the elements, `ec` is set to @ref error::leftover.
 
-   @param rn Grammar rule objects
+    @param rn Grammar rule objects
 
 */
 template<class... Rn>
@@ -166,29 +169,32 @@ parse_string(
 
 /** Parse a sequence of grammar rules and throw on failure
 
-   This function parses a complete string into the specified sequence
-   of grammar rules. If the string is not completely consumed, an
-   error is thrown.
+    This function parses a complete string into
+    the specified sequence of grammar rules. If
+    the string is not completely consumed, 
+    error is thrown.
 
-   @par Example
+    @par Example
 
-   @code
-   try {
-      parse(str, ec, r1, r2, r3);
-   } catch (boost::urls::system_error& e) {
-      std::cout << e.what() << '\n';
-   }
-   @endcode
+    @code
+    try
+    {
+        parse( str, ec, r1, r2, r3 );
+    }
+    catch( std::exception const& e )
+    {
+        std::cout << e.what() << '\n';
+    }
+    @endcode
 
-   @par Exception Safety
+    @par Exception Safety
+    Exceptions thrown on invalid input.
 
-     Exceptions thrown on invalid input.
+    @param s The input string
 
-   @param s The input string
+    @param rn Grammar rule objects
 
-   @param rn Grammar rule objects
-
-   @throws boost::system::system_error Thrown on failure.
+    @throws boost::system::system_error Thrown on failure.
 
  */
 template<class... Rn>
@@ -196,6 +202,39 @@ void
 parse_string(
     string_view s,
     Rn&&... rn);
+
+//------------------------------------------------
+
+/** Parse part of a string into values using rules
+*/
+template<class R>
+auto
+parse_(
+    char const*& it,
+    char const* end,
+    R const& r) ->
+        result<typename R::value_type>
+{
+    return r.parse(it, end);
+}
+
+/** Parse a string into values using rules
+*/
+template<class R>
+auto
+parse_(
+    string_view s,
+    R const& r) ->
+        result<typename R::value_type>
+{
+    auto it = s.data();
+    auto const end = it + s.size();
+    auto rv = (parse_)(it, end, r);
+    if( rv.has_value() &&
+        it != end)
+        return error::leftover;
+    return rv;
+}
 
 } // grammar
 } // urls

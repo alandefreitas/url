@@ -26,11 +26,15 @@ parse(
     error_code& ec,
     segment_rule const& t) noexcept
 {
-    pct_encoded_rule<pchars_t> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
+    auto rv = grammar::parse_(
+        it, end,
+        pct_encoded_rule(pchars));
+    if(! rv)
+    {
+        ec = rv.error();
         return;
-    t.v = t0.s;
+    }
+    t.v = rv.value();
 }
 
 //------------------------------------------------
@@ -43,11 +47,15 @@ parse(
     error_code& ec,
     segment_nz_rule const& t) noexcept
 {
-    pct_encoded_rule<pchars_t> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
+    auto rv = grammar::parse_(
+        it, end,
+        pct_encoded_rule(pchars));
+    if(! rv)
+    {
+        ec = rv.error();
         return;
-    t.v = t0.s;
+    }
+    t.v = rv.value();
     if(t.v.empty())
     {
         // can't be empty
@@ -66,60 +74,69 @@ parse(
     error_code& ec,
     segment_nz_nc_rule const& t) noexcept
 {
-    struct seg_chars
-        : grammar::lut_chars
+    static constexpr auto seg_chars =
+        pchars - ':';
+    auto rv = grammar::parse_(it, end,
+        pct_encoded_rule(seg_chars));
+    if(! rv)
     {
-        constexpr
-        seg_chars() noexcept
-            : lut_chars(
-                pchars - ':')
-        {
-        }
-    };
-    pct_encoded_rule<seg_chars> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
+        ec = rv.error();
         return;
-    if(t0.s.empty())
+    }
+    t.v = rv.value();
+    if(t.v.empty())
     {
         // can't be empty
         ec = error::empty_path_segment;
         return;
     }
-    t.v = t0.s;
 }
 
 //------------------------------------------------
 
-bool
+auto
+path_abempty_rule::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    return grammar::parse_range(
+        it, end, *this,
+        &path_abempty_rule::begin,
+        &path_abempty_rule::increment);
+}
+
+auto
 path_abempty_rule::
 begin(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end) const noexcept ->
+        result<pct_encoded_view>
 {
-    return increment(
-        it, end, ec, t);
+    return increment(it, end);
 }
 
-bool
+auto
 path_abempty_rule::
 increment(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end) const noexcept ->
+        result<pct_encoded_view>
 {
-    auto const start = it;
+    error_code ec;
+    pct_encoded_view t;
+    auto it0 = it;
     if(grammar::parse(
         it, end, ec,
         '/', segment_rule{t}))
-        return true;
-    ec = BOOST_URL_ERR(
+    {
+        return t;
+    }
+    it = it0;
+    return BOOST_URL_ERR(
         grammar::error::end);
-    it = start;
-    return false;
 }
 
 //------------------------------------------------

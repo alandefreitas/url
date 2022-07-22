@@ -20,33 +20,19 @@
 namespace boost {
 namespace urls {
 
-struct query_rule::key_chars
-    : grammar::lut_chars
-{
-    constexpr
-    key_chars() noexcept
-        : grammar::lut_chars(
-            pchars
-            + '/' + '?' + '[' + ']'
-            - '&' - '=')
-    {
-    }
-};
+static
+constexpr
+auto
+key_chars = pchars
+    + '/' + '?' + '[' + ']'
+    - '&' - '=';
 
-struct query_rule::value_chars
-    : grammar::lut_chars
-{
-    constexpr
-    value_chars() noexcept
-        : grammar::lut_chars(
-            pchars
-            + '/' + '?'
-            - '&')
-    {
-    }
-};
-
-//------------------------------------------------
+static
+constexpr
+auto
+value_chars = pchars
+    + '/' + '?'
+    - '&';
 
 bool
 query_rule::
@@ -56,15 +42,16 @@ begin(
     error_code& ec,
     query_param_view& t) noexcept
 {
-    pct_encoded_rule<
-        query_rule::key_chars> t0;
-    pct_encoded_rule<
-        query_rule::value_chars> t1;
-
     // key
-    if(! grammar::parse(it, end, ec, t0))
+    // VFALCO Why not pct_encoded_view?
+    auto rv = grammar::parse_(it, end,
+        pct_encoded_rule(key_chars));
+    if(! rv)
+    {
+        ec = rv.error();
         return false;
-    t.key = t0.s;
+    }
+    t.key = rv.value();
 
     // "="
     t.has_value = grammar::parse(
@@ -72,10 +59,14 @@ begin(
     if(t.has_value)
     {
         // value
-        if(! grammar::parse(
-            it, end, ec, t1))
+        rv = grammar::parse_(it, end,
+            pct_encoded_rule(value_chars));
+        if(! rv)
+        {
+            ec = rv.error();
             return false;
-        t.value = t1.s;
+        }
+        t.value = rv.value();
     }
     else
     {
@@ -93,11 +84,6 @@ increment(
     error_code& ec,
     query_param_view& t) noexcept
 {
-    pct_encoded_rule<
-        query_rule::key_chars> t0;
-    pct_encoded_rule<
-        query_rule::value_chars> t1;
-
     if(! grammar::parse(
         it, end, ec, '&'))
     {
@@ -107,10 +93,14 @@ increment(
     }
 
     // key
-    if(! grammar::parse(
-        it, end, ec, t0))
+    auto rv = grammar::parse_(it, end,
+        pct_encoded_rule(key_chars));
+    if(! rv)
+    {
+        ec = rv.error();
         return false;
-    t.key = t0.s;
+    }
+    t.key = rv.value();
 
     // "="
     t.has_value = grammar::parse(
@@ -118,10 +108,14 @@ increment(
     if(t.has_value)
     {
         // value
-        if(! grammar::parse(
-                it, end, ec, t1))
+        rv = grammar::parse_(it, end,
+            pct_encoded_rule(value_chars));
+        if(! rv)
+        {
+            ec = rv.error();
             return false;
-        t.value = t1.s;
+        }
+        t.value = rv.value();
     }
     else
     {

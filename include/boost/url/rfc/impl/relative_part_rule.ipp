@@ -69,13 +69,19 @@ parse(
     if(! grammar::parse(
         it, end, ec, t.authority))
         return;
-    path_abempty_rule t0;
-    if(! grammar::parse(
-            it, end, ec, t0))
-        return;
-    t.path.path = t0.str;
-    t.path.count = t0.count;
-    t.has_authority = true;
+    {
+        auto rv = grammar::parse_(
+            it, end, path_abempty_rule{});
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        auto const& v = rv.value();
+        t.path.path = v.string();
+        t.path.count = v.size();
+        t.has_authority = true;
+    }
 }
 
 } // urls

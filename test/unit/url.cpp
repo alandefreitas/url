@@ -222,7 +222,7 @@ public:
 
         BOOST_TEST_THROWS(
             url().set_scheme(""),
-            std::invalid_argument);
+            std::exception);
 
         BOOST_TEST_THROWS(
             url().set_scheme(scheme::unknown),
@@ -893,7 +893,7 @@ public:
 
         BOOST_TEST_THROWS(
             url().set_port("x"),
-            std::invalid_argument);
+            std::exception);
 
         remove("", "");
         remove("/", "/");
@@ -1597,10 +1597,10 @@ public:
                 url u;
                 BOOST_TEST_THROWS(
                     u.set_encoded_fragment("%%"),
-                    std::invalid_argument);
+                    std::exception);
                 BOOST_TEST_THROWS(
                     u.set_encoded_fragment("%fg"),
-                    std::invalid_argument);
+                    std::exception);
             }
         }
 

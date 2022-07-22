@@ -552,7 +552,7 @@ compare(const url_view& other) const noexcept
 void
 url_view::
 apply(
-    scheme_part_rule const& t) noexcept
+    scheme_part_rule::value_type const& t) noexcept
 {
     scheme_ = t.scheme_id;
     if(t.scheme_id !=
@@ -698,15 +698,15 @@ apply(
 void
 url_view::
 apply(
-    fragment_part_rule const& t) noexcept
+    decltype(fragment_part_rule)::value_type const& t) noexcept
 {
-    if(t.has_fragment)
+    if(t.has_value())
     {
         set_size(
             id_frag,
-            t.fragment.encoded().size() + 1);
+            std::get<1>(*t).encoded().size() + 1);
         decoded_[id_frag] =
-            t.fragment.size();
+            std::get<1>(*t).size();
     }
     else
     {

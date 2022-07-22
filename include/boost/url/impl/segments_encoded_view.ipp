@@ -76,13 +76,16 @@ result<segments_encoded_view>
 parse_path_abempty(
     string_view s) noexcept
 {
-    error_code ec;
-    path_abempty_rule t;
-    if(! grammar::parse_string(s, ec, t))
-        return ec;
+    auto rv = grammar::parse_(
+        s, path_abempty_rule{});
+    if(! rv)
+        return rv.error();
+    auto const& t = rv.value();
     return segments_encoded_view(
-        t.str, detail::path_segments(
-            t.str, t.count));
+        t.string(),
+        detail::path_segments(
+            t.string(),
+            t.size()));
 }
 
 result<segments_encoded_view>

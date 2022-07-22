@@ -183,7 +183,6 @@
       <entry valign="top">
         <bridgehead renderas="sect3">Classes</bridgehead>
         <simplelist type="vert" columns="1">
-          <member><link linkend="url.ref.boost__urls__grammar__char_literal">char_literal</link></member>
           <member><link linkend="url.ref.boost__urls__grammar__parse_tag">parse_tag</link></member>
           <member><link linkend="url.ref.boost__urls__grammar__lut_chars">lut_chars</link></member>
           <member><link linkend="url.ref.boost__urls__grammar__range">range</link></member>
@@ -222,9 +221,10 @@
         </simplelist>
         <bridgehead renderas="sect3">Type Traits</bridgehead>
         <simplelist type="vert" columns="1">
-          <member><link linkend="url.ref.boost__urls__grammar__is_mutable_string">is_mutable_string</link></member>
           <member><link linkend="url.ref.boost__urls__grammar__is_charset">is_charset</link></member>
+          <member><link linkend="url.ref.boost__urls__grammar__is_mutable_string">is_mutable_string</link></member>
           <member><link linkend="url.ref.boost__urls__grammar__is_range">is_range</link></member>
+          <member><link linkend="url.ref.boost__urls__grammar__is_rule">is_rule</link></member>
         </simplelist>
       </entry>
     </row></tbody>

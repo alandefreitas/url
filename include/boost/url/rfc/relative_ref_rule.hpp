@@ -40,7 +40,7 @@ struct relative_ref_rule
 {
     relative_part_rule   relative_part;
     query_part_rule      query_part;
-    fragment_part_rule   fragment_part;
+    decltype(fragment_part_rule)::value_type   fragment_part;
 
     friend
     void

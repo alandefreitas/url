@@ -40,10 +40,14 @@ parse(
         return;
 
     // [ "#" fragment ]
-    if(! grammar::parse(
-        it, end, ec,
-            t.fragment_part))
+    auto rv = grammar::parse_(
+        it, end, fragment_part_rule);
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
+    t.fragment_part = rv.value();
 }
 
 } // urls

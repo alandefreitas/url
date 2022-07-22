@@ -59,8 +59,8 @@ public:
     {
         check("", {{}});
         check("&", {{},{}});
-        check("x", {{"x"}});
-        check("x&", {{"x"},{}});
+        check("x", {{"x","",false}});
+        check("x&", {{"x","",false},{}});
         check("x=", {{"x","",true}});
         check("x=y", {{"x","y",true}});
         check("a=b&c=d", {{"a","b",true},{"c","d",true}});

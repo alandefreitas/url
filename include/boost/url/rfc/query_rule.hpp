@@ -82,10 +82,6 @@ struct query_rule
         char const* const end,
         error_code& ec,
         reference& t) noexcept;
-
-private:
-    struct key_chars;
-    struct value_chars;
 };
 
 //------------------------------------------------

@@ -20,15 +20,15 @@
 namespace boost {
 namespace urls {
 
-void
+auto
 port_rule::
 parse(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    port_rule& t) noexcept
+    char const* end) const noexcept ->
+        result<value_type>
 {
-    port_rule::number_type u = 0;
+    value_type t;
+    std::uint16_t u = 0;
     auto const start = it;
     while(it != end)
     {
@@ -44,8 +44,7 @@ parse(
             t.str = string_view(
                 start, it - start);
             t.has_number = false;
-            ec = {};
-            return;
+            return t;
         }
         ++it;
     }
@@ -60,6 +59,7 @@ parse(
     {
         t.has_number = false;
     }
+    return t;
 }
 
 void
@@ -78,14 +78,17 @@ parse(
         return;
     }
     ++it;
-    port_rule t0;
-    if(! grammar::parse(
-            it, end, ec, t0))
+    auto rv = grammar::parse_(
+        it, end, port_rule{});
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
     t.has_port = true;
-    t.port = t0.str;
-    t.has_number = t0.has_number;
-    t.port_number = t0.number;
+    t.port = rv.value().str;
+    t.has_number = rv.value().has_number;
+    t.port_number = rv.value().number;
 }
 
 } // urls

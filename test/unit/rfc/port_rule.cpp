@@ -25,14 +25,11 @@ public:
         std::uint16_t v,
         bool has_number = true)
     {
-        port_rule t;
-        error_code ec;
-        if(! BOOST_TEST(
-            grammar::parse_string(
-                s, ec, t)))
+        auto rv = grammar::parse_(
+            s, port_rule{});
+        if(! BOOST_TEST(rv.has_value()))
             return;
-        if(! BOOST_TEST(! ec))
-            return;
+        auto t = rv.value();
         BOOST_TEST(
             t.has_number == has_number);
         BOOST_TEST_EQ(t.str, s);
@@ -45,9 +42,9 @@ public:
     {
         using T = port_rule;
 
-        bad<T>("x");
-        bad<T>("80x");
-        bad<T>(":443");
+        bad("x", T{});
+        bad("80x", T{});
+        bad(":443", T{});
 
         check("", 0, false);
         check("0", 0);
