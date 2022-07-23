@@ -28,37 +28,19 @@ parse(
     error_code& ec,
     userinfo_rule& t) noexcept
 {
-    struct uchars
-        : grammar::lut_chars
-    {
-        constexpr
-        uchars() noexcept
-            : lut_chars(
-                unreserved_chars +
-                subdelim_chars)
-        {
-        }
-    };
+    static constexpr auto uchars =
+        unreserved_chars +
+        subdelim_chars;
+    static constexpr auto pwchars =
+        uchars + ':';
 
-    struct pwchars
-        : grammar::lut_chars
-    {
-        constexpr
-        pwchars() noexcept
-            : lut_chars(
-                unreserved_chars +
-                subdelim_chars + ':')
-        {
-        }
-    };
-
-    pct_encoded_rule<uchars> t0;
-    pct_encoded_rule<pwchars> t1;
-
-    if(! grammar::parse(
-        it, end, ec, t0))
+    auto t0 = grammar::parse_(
+        it, end, ec,
+        pct_encoded_rule(uchars));
+    if(ec.failed())
         return;
-    t.user = t0.s;
+
+    t.user = t0;
     if( it == end ||
         *it != ':')
     {
@@ -67,11 +49,13 @@ parse(
         return;
     }
     ++it;
-    if(! grammar::parse(
-        it, end, ec, t1))
+    auto t1 = grammar::parse_(
+        it, end, ec,
+        pct_encoded_rule(pwchars));
+    if(ec.failed())
         return;
     t.has_password = true;
-    t.password = t1.s;
+    t.password = t1;
 }
 
 } // urls

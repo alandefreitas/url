@@ -21,6 +21,22 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
+template<class T, class = void>
+struct is_rule : std::false_type {};
+
+template<class T>
+struct is_rule<T, boost::void_t<
+    typename T::type,
+    decltype(1
+            ) > > :
+    std::integral_constant<bool,
+        std::is_default_constructible<
+            typename T::type>::value &&
+        std::is_copy_assignable<
+            typename T::type>::value>
+{
+};
+
 /** Parse a literal character
 
     This function parses the first char in a
@@ -130,31 +146,32 @@ parse_all(
 
 /** Parse a sequence of grammar rules
 
-   This function parses a complete string into the sequence of
-   specified grammar rules. The function returns an error if
-   some characters are left unparsed.
+    This function parses a complete string into the sequence of
+    specified grammar rules. The function returns an error if
+    some characters are left unparsed.
 
-   @par Example
+    @par Example
 
-   @code
-   if (parse(str, ec, r1, r2, r3)) {
-     std::cout << "String " << str << " parsed successfully\n";
-   }
-   @endcode
+    @code
+    if( parse( str, ec, r1, r2, r3 ) )
+    {
+      std::cout << "String " << str << " parsed successfully\n";
+    }
+    @endcode
 
-   @par Exception Safety
+    @par Exception Safety
 
-     Defined by the types of the rule objects.
+      Defined by the types of the rule objects.
 
-   @return `true` if the string matches the rules successfully and all
-   chars are consumed
+    @return `true` if the string matches the rules successfully and all
+    chars are consumed
 
-   @param s The input string
+    @param s The input string
 
-   @param ec Set to the error, if any occurred. If the string is not completely consumed,
-   but the beginning of the string matches the elements, `ec` is set to @ref error::leftover.
+    @param ec Set to the error, if any occurred. If the string is not completely consumed,
+    but the beginning of the string matches the elements, `ec` is set to @ref error::leftover.
 
-   @param rn Grammar rule objects
+    @param rn Grammar rule objects
 
 */
 template<class... Rn>
@@ -202,32 +219,18 @@ parse_string(
 
 //------------------------------------------------
 
-template<class T, class = void>
-struct is_rule : std::false_type {};
-
-template<class T>
-struct is_rule<T, boost::void_t<
-    typename T::type,
-    decltype(1
-            ) > > :
-    std::integral_constant<bool,
-        std::is_default_constructible<
-            typename T::type>::value &&
-        std::is_copy_assignable<
-            typename T::type>::value>
-{
-};
-
 /** Parse part of a string into values using rules
 */
 template<class R>
 auto
-parse(
+parse_(
     char const*& it,
     char const* end,
     error_code& ec,
     R const& r)
-        -> typename R::type
+        -> typename std::enable_if<
+            is_rule<R>::value,
+            typename R::type>::type
 {
     static_assert(
         is_rule<R>::value,
@@ -239,15 +242,17 @@ parse(
     return t;
 }
 
-/** Parse parta string into values using rules
+/** Parse a string into values using rules
 */
 template<class R>
 auto
-parse(
+parse_(
     string_view s,
     error_code& ec,
     R const& r)
-        -> typename R::type
+        -> typename std::enable_if<
+            is_rule<R>::value,
+            typename R::type>::type
 {
     static_assert(
         is_rule<R>::value,

@@ -35,9 +35,16 @@ namespace urls {
         2.1. Percent-Encoding (rfc3986)</a>
 */
 template<class CharSet>
-struct pct_encoded_rule
+struct pct_encoded_rule_t
 {
-    pct_encoded_view s;
+    using type = pct_encoded_view;
+
+    template<class CharSet_>
+    friend
+    auto
+    pct_encoded_rule(
+        CharSet_ const& cs) noexcept ->
+            pct_encoded_rule_t<CharSet_>;
 
     friend
     void
@@ -46,20 +53,37 @@ struct pct_encoded_rule
         char const*& it,
         char const* end,
         error_code& ec,
-        pct_encoded_rule& t) noexcept
+        pct_encoded_rule_t const& r,
+        type& t) noexcept
     {
-        parse(it, end, ec, t);
+        r.parse(it, end, ec, t);
     }
 
 private:
-    static
+    CharSet cs_;
+
+    pct_encoded_rule_t(
+        CharSet const& cs) noexcept
+        : cs_(cs)
+    {
+    }
+
     void
     parse(
         char const*& it,
         char const* end,
         error_code& ec,
-        pct_encoded_rule& t) noexcept;
+        type& t) const noexcept;
 };
+
+template<class CharSet>
+auto
+pct_encoded_rule(
+    CharSet const& cs) noexcept ->
+        pct_encoded_rule_t<CharSet>
+{
+    return pct_encoded_rule_t<CharSet>(cs);
+}
 
 } // urls
 } // boost

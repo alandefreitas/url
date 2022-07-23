@@ -26,11 +26,9 @@ parse(
     error_code& ec,
     segment_rule const& t) noexcept
 {
-    pct_encoded_rule<pchars_t> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
-        return;
-    t.v = t0.s;
+    t.v = grammar::parse_(
+        it, end, ec,
+            pct_encoded_rule(pchars));
 }
 
 //------------------------------------------------
@@ -43,12 +41,12 @@ parse(
     error_code& ec,
     segment_nz_rule const& t) noexcept
 {
-    pct_encoded_rule<pchars_t> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
+    t.v = grammar::parse_(
+        it, end, ec,
+            pct_encoded_rule(pchars));
+    if(ec.failed())
         return;
-    t.v = t0.s;
-    if(t.v.encoded().empty())
+    if(t.v.empty())
     {
         // can't be empty
         ec = grammar::error::syntax;
@@ -66,27 +64,18 @@ parse(
     error_code& ec,
     segment_nz_nc_rule const& t) noexcept
 {
-    struct seg_chars
-        : grammar::lut_chars
-    {
-        constexpr
-        seg_chars() noexcept
-            : lut_chars(
-                pchars - ':')
-        {
-        }
-    };
-    pct_encoded_rule<seg_chars> t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
+    static constexpr auto seg_chars =
+        pchars - ':';
+    t.v = grammar::parse_(it, end, ec,
+        pct_encoded_rule(seg_chars));
+    if(ec.failed())
         return;
-    if(t0.s.encoded().empty())
+    if(t.v.empty())
     {
         // can't be empty
         ec = error::empty_path_segment;
         return;
     }
-    t.v = t0.s;
 }
 
 //------------------------------------------------

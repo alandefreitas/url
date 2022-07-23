@@ -1036,12 +1036,13 @@ grammar_charset()
     {
         //[snippet_charset_3
         urls::string_view s = "key=the%20value";
-        urls::pct_encoded_rule<urls::query_chars_t> r;
+        
         urls::error_code ec;
-        if (urls::grammar::parse_string(s, ec, r))
+        urls::pct_encoded_view es = urls::grammar::parse_(s, ec, urls::pct_encoded_rule(urls::query_chars));
+        if( ! ec.failed() )
         {
-            std::cout << "query:        " << r.s.encoded() << '\n';
-            std::cout << "decoded size: " << r.s.size() << '\n';
+            std::cout << "query:        " << es.encoded() << '\n';
+            std::cout << "decoded size: " << es.size() << '\n';
         }
         //]
     }

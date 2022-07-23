@@ -22,6 +22,7 @@
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse.hpp>
+#include <boost/url/detail/optional.hpp>
 #include <type_traits>
 
 namespace boost {
@@ -44,6 +45,46 @@ using grammar::parse_tag;
 
 struct none
 {
+};
+
+//------------------------------------------------
+
+template<class Rule>
+struct not_empty_rule
+{
+    using type =
+        typename Rule::type;
+
+    explicit
+    not_empty_rule(
+        Rule const& r)
+        : r_(r)
+    {
+    }
+
+    friend
+    void
+    parse(
+        parse_tag const&,
+        char const*& it,
+        char const* end,
+        error_code& ec,
+        not_empty_rule const& r,
+        type& t)
+    {
+        auto const it0 = it;
+        t = grammar::parse(
+            it, end, ec, r.r_);
+        if( ! ec.failed() &&
+            it == it0)
+        {
+            // can't be empty
+            ec = error::syntax;
+        }
+    }
+
+private:
+    Rule r_;
 };
 
 //------------------------------------------------
@@ -594,21 +635,21 @@ private:
         // *( OWS "," OWS )
         for(;;)
         {
-            grammar::parse(
+            parse_(
                 it, end, ec,
                     ows_comma_ows_rule);
             if(ec.failed())
                 break;
         }
         // element
-        t = grammar::parse(
+        t = parse_(
             it, end, ec, r);
         if(! ec.failed())
         {
             // *( OWS "," OWS )
             for(;;)
             {
-                grammar::parse(
+                parse_(
                     it, end, ec,
                         ows_comma_ows_rule);
                 if(ec.failed())
@@ -655,7 +696,7 @@ struct grammar_test
             string_view s)
         {
             error_code ec;
-            parse(
+            parse_(
                 s, ec, transfer_encoding);
             BOOST_TEST(ec.failed());
         };
@@ -666,7 +707,7 @@ struct grammar_test
                 string_view> init)
         {
             error_code ec;
-            auto v = parse(
+            auto v = parse_(
                 s, ec, transfer_encoding);
             if(! BOOST_TEST(! ec.failed()))
                 return;
@@ -716,7 +757,7 @@ struct grammar_test
 
 TEST_SUITE(
     grammar_test,
-    "boost.url.grammar_");
+    "boost.url.grammar");
 
 } // grammar_
 } // urls

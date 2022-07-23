@@ -50,11 +50,12 @@ parse(
         }
     };
 
-    pct_encoded_rule<
-        reg_name_chars> t0;
-    grammar::parse(
-        it, end, ec, t0);
-    t.v = t0.s;
+    static constexpr auto reg_name_chars =
+        unreserved_chars + '-' + '.';
+
+    t.v = grammar::parse_(
+        it, end, ec,
+        pct_encoded_rule(reg_name_chars));
 }
 
 } // urls

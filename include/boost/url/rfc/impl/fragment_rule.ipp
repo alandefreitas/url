@@ -26,10 +26,10 @@ parse(
     error_code& ec,
     fragment_rule& t) noexcept
 {
-    pct_encoded_rule<
-        fragment_chars_t> t0;
-    grammar::parse(it, end, ec, t0);
-    t.s = t0.s;
+    t.s = grammar::parse_(
+        it, end, ec,
+        pct_encoded_rule(
+            fragment_chars));
 }
 
 void
