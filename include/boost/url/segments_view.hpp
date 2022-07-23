@@ -93,7 +93,7 @@ public:
         Default constructed views represent an
         empty path.
     */
-    segments_view() noexcept;
+    segments_view() noexcept = default;
 
     /** Constructor
 

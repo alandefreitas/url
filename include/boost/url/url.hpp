@@ -377,11 +377,6 @@ public:
     url&
     set_scheme(string_view s);
 
-    /// @copydoc set_scheme()
-    BOOST_URL_DECL
-    url&
-    set_scheme(pct_encoded_view s);
-
     /** Set the scheme
 
         This function sets the scheme to the specified
@@ -631,13 +626,21 @@ public:
         Any special or reserved characters in the
         string are automatically percent-encoded.
 
+        The interpretation of userinfo as
+        individual user and password components
+        is scheme-dependent. Transmitting
+        passwords in URLs is deprecated.
+
+        This function treats userinfo as a unit
+        independent of the user and password
+        components.
+
         If the input string has a ":" character,
         its first occurrence will be considered
         the separator between the user and the
-        password fields. Other occurrences of
-        the separator character will be encoded.
+        password fields.
 
-        If the username might contains a ":", the
+        If the username might contain a ":", the
         functions @ref set_user and
         @ref set_password should be used
         separately so that the character can be
@@ -945,10 +948,6 @@ public:
     BOOST_URL_DECL
     url&
     set_port(string_view s);
-
-    /// @copydoc set_port(string_view)
-    url&
-    set_port(pct_encoded_view s);
 
     //--------------------------------------------
 

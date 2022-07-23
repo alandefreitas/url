@@ -73,7 +73,7 @@ class pct_encoded_view
 
     using traits_type = std::char_traits<char>;
 
-    friend detail::unchecked_encoded_view;
+    friend detail::access;
 
     // unchecked constructor
     BOOST_URL_DECL
@@ -1060,6 +1060,7 @@ private:
 
 } // urls
 
+#ifndef BOOST_URL_DOCS
 namespace filesystem {
 namespace path_traits {
 template <class T>
@@ -1072,6 +1073,7 @@ struct is_pathable<urls::pct_encoded_view>
 };
 } // path_traits
 } // filesystem
+#endif
 
 } // boost
 

@@ -37,7 +37,7 @@ class params_view::iterator
         string_view s,
         std::size_t nparam,
         int) noexcept
-        : impl_(s, nparam, 0)
+        : impl_(s, nparam)
     {
     }
 

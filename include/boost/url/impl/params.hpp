@@ -35,9 +35,8 @@ class params::iterator
     // end
     iterator(
         string_view s,
-        std::size_t nparam,
-        int) noexcept
-        : impl_(s, nparam, 0)
+        std::size_t nparam) noexcept
+        : impl_(s, nparam)
     {
     }
 
@@ -178,10 +177,7 @@ params::
 end() const noexcept ->
     iterator
 {
-    return {
-        u_->encoded_query(),
-        u_->nparam_,
-        0};
+    return {u_->encoded_query(), u_->nparam_};
 }
 
 //------------------------------------------------

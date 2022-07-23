@@ -78,7 +78,7 @@ skip:
             goto skip;
     }
 finish:
-    t.s = detail::unchecked_encoded_view::construct(
+    t.s = detail::access::construct(
         string_view(start, it - start), n);
 }
 

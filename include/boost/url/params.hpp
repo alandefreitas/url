@@ -44,7 +44,7 @@ class params
 
     url* u_ = nullptr;
 
-    params(url& u)
+    params(url& u) noexcept
         : u_(&u)
     {}
 

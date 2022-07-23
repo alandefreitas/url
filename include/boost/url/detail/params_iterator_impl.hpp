@@ -39,8 +39,7 @@ struct params_iterator_impl
     BOOST_URL_DECL
     params_iterator_impl(
         string_view s,
-        std::size_t nparam,
-        int) noexcept;
+        std::size_t nparam) noexcept;
 
     params_iterator_impl() = default;
 

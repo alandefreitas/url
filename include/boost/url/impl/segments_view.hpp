@@ -113,10 +113,6 @@ public:
 //------------------------------------------------
 
 inline
-segments_view::
-segments_view() noexcept = default;
-
-inline
 bool
 segments_view::
 is_absolute() const noexcept

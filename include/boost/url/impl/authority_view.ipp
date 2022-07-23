@@ -302,6 +302,8 @@ apply(
         std::memcpy(
             &ip_addr_[0],
             bytes.data(), 4);
+        decoded_[id_host] =
+            t.host_part.size();
         break;
     }
     case urls::host_type::ipv6:
@@ -311,10 +313,14 @@ apply(
         std::memcpy(
             &ip_addr_[0],
             bytes.data(), 16);
+        decoded_[id_host] =
+            t.host_part.size();
         break;
     }
     case urls::host_type::ipvfuture:
     {
+        decoded_[id_host] =
+            t.host_part.size();
         break;
     }
     }

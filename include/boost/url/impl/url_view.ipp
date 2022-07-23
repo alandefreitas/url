@@ -654,7 +654,6 @@ apply(
         set_size(
             id_port,
             t.port.port.size() + 1);
-        decoded_[id_port] = t.port.port.size();
         if(t.port.has_number)
             port_number_ =
                 t.port.port_number;

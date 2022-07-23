@@ -17,7 +17,7 @@ class pct_encoded_view;
 
 namespace detail {
 
-struct unchecked_encoded_view
+struct access
 {
     // construct unchecked pct_encoded_view
     BOOST_URL_DECL

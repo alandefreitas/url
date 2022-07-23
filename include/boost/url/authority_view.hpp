@@ -531,12 +531,15 @@ public:
             @ref encoded_userinfo.
     */
     pct_encoded_view
-    userinfo() const
+    userinfo() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_userinfo(), opt);
+        return detail::access::construct(
+            encoded_userinfo(),
+            decoded_[id_user] +
+                has_password() + decoded_[id_pass],
+            opt);
     }
 
     //--------------------------------------------
@@ -621,12 +624,12 @@ public:
             @ref password.
     */
     pct_encoded_view
-    user() const
+    user() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_user(), opt);
+        return detail::access::construct(
+            encoded_user(), decoded_[id_user], opt);
     }
 
     /** Return true if this contains a password
@@ -733,12 +736,12 @@ public:
             @ref password.
     */
     pct_encoded_view
-    password() const
+    password() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_password(), opt);
+        return detail::access::construct(
+            encoded_password(), decoded_[id_pass], opt);
     }
 
     //--------------------------------------------
@@ -883,12 +886,12 @@ public:
             @ref port_number.
     */
     pct_encoded_view
-    host() const
+    host() const noexcept
     {
         pct_decode_opts opt;
         opt.plus_to_space = false;
-        return pct_encoded_view(
-            encoded_host(), opt);
+        return detail::access::construct(
+            encoded_host(), decoded_[id_host], opt);
     }
 
     /** Return the host as an IPv4 address

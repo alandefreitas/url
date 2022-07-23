@@ -752,13 +752,7 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used.
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -775,7 +769,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_userinfo();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_user] + has_password() + decoded_[id_pass], opt);
     }
 
@@ -839,13 +833,7 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used.
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -864,7 +852,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_user();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_user], opt);
     }
 
@@ -950,14 +938,7 @@ public:
         userinfo with percent-decoding applied.
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An allocator to use for the string.
-        If this parameter is omitted, the default
-        allocator is used, and the return type of
-        the function becomes `std::string`.
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -976,7 +957,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_password();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_pass], opt);
     }
 
@@ -1099,14 +1080,7 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used, and the return
-        type of the function becomes `std::string`.
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2"
@@ -1127,7 +1101,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_host();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_host], opt);
     }
 
@@ -1423,13 +1397,7 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
@@ -1446,7 +1414,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_path();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_path], opt);
     }
 
@@ -1486,11 +1454,6 @@ public:
 
         @par Exception Safety
         Throws nothing.
-
-        @param alloc An optional allocator the
-        container will use when returning
-        percent-decoded strings. If omitted,
-        the default allocator is used.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.3"
@@ -1581,13 +1544,7 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used
-
-        @return A @ref pct_encoded_view.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
@@ -1604,7 +1561,7 @@ public:
         opt.plus_to_space = true;
         string_view s = encoded_query();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_query], opt);
     }
 
@@ -1643,10 +1600,6 @@ public:
         query-param     = key [ "=" value ]
         @endcode
 
-        @param alloc An optional allocator the
-        container will use when returning
-        percent-decoded strings. If omitted,
-        the default allocator is used.
     */
     BOOST_URL_DECL
     params_view
@@ -1726,17 +1679,11 @@ public:
         @endcode
 
         @par Exception Safety
-        Calls to allocate may throw.
+        Throws nothing
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.5"
             >3.5. Fragment (rfc3986)</a>
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used.
-
-        @return A @ref pct_encoded_view.
 
         @see
             @ref encoded_fragment,
@@ -1749,7 +1696,7 @@ public:
         opt.plus_to_space = false;
         string_view s = encoded_fragment();
         return
-            detail::unchecked_encoded_view::construct(
+            detail::access::construct(
                 s, decoded_[id_frag], opt);
     }
 

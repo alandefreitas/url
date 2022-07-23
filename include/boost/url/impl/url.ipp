@@ -356,13 +356,6 @@ set_scheme(string_view s)
 
 url&
 url::
-set_scheme(pct_encoded_view s)
-{
-    return set_scheme(s.encoded());
-}
-
-url&
-url::
 set_scheme(urls::scheme id)
 {
     if(id == urls::scheme::unknown)
@@ -605,16 +598,31 @@ url::
 set_userinfo(
     string_view s)
 {
-    auto sep = s.find_first_of(':');
-    if (sep == string_view::npos)
+    detail::copied_strings buf(
+        this->string());
+    s = buf.maybe_copy(s);
+    check_invariants();
+    auto const n = pct_encode_bytes(
+        s, detail::userinfo_chars);
+    auto dest = set_userinfo_impl(n);
+    pct_encode(
+        dest,
+        get(id_host).data() - 1,
+        s,
+        detail::userinfo_chars);
+    auto pct_s = get(id_user, id_host);
+    auto pct_sep = pct_s.find_first_of(':');
+    if (pct_sep != string_view::npos)
     {
-        set_user(s);
-        remove_password();
+        split(id_user, pct_sep);
+        auto sep = s.find_first_of(':');
+        decoded_[id_user] = sep - 1;
+        decoded_[id_pass] = s.size() - sep;
     }
     else
     {
-        set_user(s.substr(0, sep));
-        set_password(s.substr(sep + 1));
+        decoded_[id_user] = s.size();
+        decoded_[id_pass] = 0;
     }
     check_invariants();
     return *this;
@@ -903,13 +911,6 @@ set_port(string_view s)
         port_number_ = 0;
     check_invariants();
     return *this;
-}
-
-url&
-url::
-set_port(pct_encoded_view s)
-{
-    return set_port(s.encoded());
 }
 
 //------------------------------------------------

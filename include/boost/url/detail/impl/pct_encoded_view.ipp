@@ -22,7 +22,7 @@ namespace detail {
 
 // construct unchecked pct_encoded_view
 pct_encoded_view
-unchecked_encoded_view::
+access::
 construct(
     string_view s,
     std::size_t n,

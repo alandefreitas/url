@@ -63,8 +63,7 @@ params_iterator_impl(
 params_iterator_impl::
 params_iterator_impl(
     string_view s,
-    std::size_t nparam,
-    int) noexcept
+    std::size_t nparam) noexcept
     : i_(nparam)
     , begin_(s.data())
     , pos_(s.data() + s.size())

@@ -30,7 +30,7 @@ parse(
     {
         t.host_type =
             urls::host_type::name;
-        t.name = pct_encoded_view("");
+        t.name = {};
         t.host_part = {};
         return;
     }
