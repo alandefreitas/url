@@ -32,12 +32,12 @@ struct is_rule : std::false_type {};
 
 template<class T>
 struct is_rule<T, boost::void_t<
-    typename T::type> > :
+    typename T::value_type> > :
     std::integral_constant<bool,
         std::is_default_constructible<
-            typename T::type>::value &&
+            typename T::value_type>::value &&
         std::is_copy_assignable<
-            typename T::type>::value>
+            typename T::value_type>::value>
 {
 };
 #endif
@@ -237,7 +237,7 @@ parse_(
     R const& r)
         -> typename std::enable_if<
             is_rule<R>::value,
-            typename R::type>::type
+            typename R::value_type>::type
 {
     static_assert(
         is_rule<R>::value,
@@ -249,7 +249,7 @@ parse_(
     // to clear `ec`.
     ec = {};
 
-    typename R::type t;
+    typename R::value_type t;
     tag_invoke(parse_tag{},
         it, end, ec, r, t);
     return t;
@@ -265,7 +265,7 @@ parse_(
     R const& r)
         -> typename std::enable_if<
             is_rule<R>::value,
-            typename R::type>::type
+            typename R::value_type>::type
 {
     static_assert(
         is_rule<R>::value,
@@ -277,7 +277,7 @@ parse_(
     // to clear `ec`.
     ec = {};
 
-    typename R::type t;
+    typename R::value_type t;
     auto it = s.data();
     auto const end = it + s.size();
     tag_invoke(parse_tag{},

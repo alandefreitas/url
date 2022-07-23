@@ -52,8 +52,8 @@ struct none
 template<class Rule>
 struct not_empty_rule
 {
-    using type =
-        typename Rule::type;
+    using value_type =
+        typename Rule::value_type;
 
     explicit
     not_empty_rule(
@@ -70,7 +70,7 @@ struct not_empty_rule
         char const* end,
         error_code& ec,
         not_empty_rule const& r,
-        type& t)
+        value_type& t)
     {
         auto const it0 = it;
         t = grammar::parse(
@@ -96,7 +96,7 @@ private:
 template<class CharSet>
 struct token_rule_t
 {
-    using type = string_view;
+    using value_type = string_view;
 
     BOOST_STATIC_ASSERT(
         grammar::is_charset<CharSet>::value);
@@ -178,7 +178,7 @@ constexpr ws_t ws{};
 */
 struct ows_comma_ows_rule_t
 {
-    using type = none;
+    using value_type = none;
 
     constexpr
     ows_comma_ows_rule_t() = default;
@@ -290,9 +290,9 @@ class range
         "Rule requirements not met");
 
 public:
-    using type = typename R::type;
-    using reference = type;
-    using const_reference = type;
+    using value_type = typename R::value_type;
+    using reference = value_type;
+    using const_reference = value_type;
     using pointer = void const*;
     using size_type = std::size_t;
     using difference_type =
@@ -303,7 +303,7 @@ public:
         char const*,
         error_code&,
         R const&,
-        type&);
+        value_type&);
 
     class iterator;
     using const_iterator = iterator;
@@ -381,8 +381,8 @@ template<class R>
 class range<R>::iterator
 {
 public:
-    using type = typename R::type;
-    using reference = type const&;
+    using value_type = typename R::value_type;
+    using reference = value_type const&;
     using pointer = void const*;
     using difference_type = std::ptrdiff_t;
     using iterator_category =
@@ -448,7 +448,7 @@ private:
 
     range<R> const* r_ = nullptr;
     char const* p_ = nullptr;
-    typename R::type t_;
+    typename R::value_type t_;
 
     iterator(
         range<R> const& r) noexcept
@@ -507,7 +507,7 @@ parse_range(
     std::size_t N = 0,
     std::size_t M = std::size_t(-1))
 {
-    typename R::type t;
+    typename R::value_type t;
     std::size_t n = 0;
     auto const it0 = it;
     begin(it, end, ec, r, t);
@@ -595,7 +595,7 @@ struct list_rule_t
 {
     BOOST_STATIC_ASSERT(M >= N);
 
-    using type = range<R>;
+    using value_type = range<R>;
 
     constexpr
     list_rule_t(
@@ -612,7 +612,7 @@ struct list_rule_t
         char const* end,
         error_code& ec,
         list_rule_t const& r,
-        type& t)
+        value_type& t)
     {
         t = parse_range(
             it, end, ec, r.r_,
@@ -630,7 +630,7 @@ private:
         char const* end,
         error_code& ec,
         R const& r,
-        typename R::type& t)
+        typename R::value_type& t)
     {
         // *( OWS "," OWS )
         for(;;)

@@ -24,7 +24,7 @@ parse(
     char const*& it,
     char const* end,
     error_code& ec,
-    type& t) const noexcept
+    value_type& t) const noexcept
 {
     auto const start = it;
     // VFALCO TODO

@@ -37,7 +37,7 @@ namespace urls {
 template<class CharSet>
 struct pct_encoded_rule_t
 {
-    using type = pct_encoded_view;
+    using value_type = pct_encoded_view;
 
     template<class CharSet_>
     friend
@@ -55,7 +55,7 @@ struct pct_encoded_rule_t
         char const* end,
         error_code& ec,
         pct_encoded_rule_t const& r,
-        type& t) noexcept
+        value_type& t) noexcept
     {
         r.parse(it, end, ec, t);
     }
@@ -75,7 +75,7 @@ private:
         char const*& it,
         char const* end,
         error_code& ec,
-        type& t) const noexcept;
+        value_type& t) const noexcept;
 };
 
 template<class CharSet>
