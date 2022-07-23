@@ -698,7 +698,7 @@ apply(
 void
 url_view::
 apply(
-    fragment_part_rule const& t) noexcept
+    fragment_part_rule_t::value_type const& t) noexcept
 {
     if(t.has_fragment)
     {

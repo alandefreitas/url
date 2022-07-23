@@ -19,26 +19,12 @@ namespace boost {
 namespace urls {
 
 void
-fragment_rule::
+fragment_part_rule_t::
 parse(
     char const*& it,
     char const* const end,
     error_code& ec,
-    fragment_rule& t) noexcept
-{
-    t.s = grammar::parse_(
-        it, end, ec,
-        pct_encoded_rule(
-            fragment_chars));
-}
-
-void
-fragment_part_rule::
-parse(
-    char const*& it,
-    char const* const end,
-    error_code& ec,
-    fragment_part_rule& t) noexcept
+    value_type& t) noexcept
 {
     if(it == end)
     {
@@ -51,11 +37,11 @@ parse(
         return;
     }
     ++it;
-    fragment_rule t0;
-    if(! grammar::parse(it, end, ec, t0))
+    t.fragment = grammar::parse_(
+        it, end, ec, fragment_rule);
+    if(ec.failed())
         return;
     t.has_fragment = true;
-    t.fragment = t0.s;
 }
 
 } // urls

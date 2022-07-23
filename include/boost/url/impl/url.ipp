@@ -1839,12 +1839,13 @@ set_encoded_fragment(
     s = buf.maybe_copy(s);
     check_invariants();
     error_code ec;
-    fragment_rule t;
-    if(! grammar::parse_string(s, ec, t))
+    auto t = grammar::parse_(
+        s, ec, fragment_rule);
+    if(ec.failed())
         detail::throw_invalid_argument(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
-    decoded_[id_frag] = t.s.size();
+    decoded_[id_frag] = t.size();
     if(! s.empty())
         std::memcpy(
             dest, s.data(), s.size());

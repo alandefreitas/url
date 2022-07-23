@@ -43,7 +43,7 @@ struct uri_rule
     scheme_part_rule     scheme_part;
     hier_part_rule       hier_part;
     query_part_rule      query_part;
-    fragment_part_rule   fragment_part;
+    fragment_part_rule_t::value_type   fragment_part;
 
     friend
     void

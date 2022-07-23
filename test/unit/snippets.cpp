@@ -901,12 +901,12 @@ grammar_parse()
         //[snippet_parse_2
         urls::string_view s = "?key=value#anchor";
         urls::query_part_rule r1;
-        urls::fragment_part_rule r2;
         const char* it = s.begin();
         urls::error_code ec;
         if (urls::grammar::parse(it, s.end(), ec, r1))
         {
-            if (urls::grammar::parse(it, s.end(), ec, r2))
+            auto r2 = urls::grammar::parse_( it, s.end(), ec, urls::fragment_part_rule );
+            if( ! ec.failed() )
             {
                 std::cout << "query: " << r1.query_part << '\n';
                 std::cout << "fragment: " << r2.fragment.encoded() << '\n';
@@ -917,16 +917,19 @@ grammar_parse()
 
     {
         //[snippet_parse_3
+        // VFALCO This needs refactoring
+        /*
         urls::string_view s = "?key=value#anchor";
         urls::query_part_rule r1;
-        urls::fragment_part_rule r2;
         const char* it = s.begin();
         urls::error_code ec;
-        if (urls::grammar::parse(it, s.end(), ec, r1, r2))
+        auto r2 = urls::grammar::parse_( it, s.end(), ec, urls::fragment_part_rule );
+        if( ! ec.failed() )
         {
             std::cout << "query: " << r1.query_part << '\n';
             std::cout << "fragment: " << r2.fragment.encoded() << '\n';
         }
+        */
         //]
     }
 

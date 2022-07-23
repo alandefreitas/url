@@ -68,9 +68,11 @@ parse(
         return;
 
     // [ "#" fragment ]
-    if(! grammar::parse(
-        it, end, ec,
-            t.fragment_part))
+    t.fragment_part =
+        grammar::parse_(
+            it, end, ec,
+            fragment_part_rule);
+    if(ec.failed())
         return;
 }
 

@@ -50,7 +50,7 @@ struct uri_reference_rule
     authority_rule       authority;
     parsed_path         path;
     query_part_rule      query_part;
-    fragment_part_rule   fragment_part;
+    fragment_part_rule_t::value_type   fragment_part;
 
     friend
     void

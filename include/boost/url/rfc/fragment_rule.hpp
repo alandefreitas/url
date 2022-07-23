@@ -12,8 +12,8 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/error_code.hpp>
-#include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
+#include <boost/url/rfc/pct_encoded_rule.hpp>
 
 namespace boost {
 namespace urls {
@@ -32,32 +32,8 @@ namespace urls {
     @see
         @ref fragment_part_rule.
 */
-struct fragment_rule
-{
-    pct_encoded_view s;
-
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
-        char const*& it,
-        char const* const end,
-        error_code& ec,
-        fragment_rule& t) noexcept
-    {
-        parse(it, end, ec, t);
-    }
-
-private:
-    BOOST_URL_DECL
-    static
-    void
-    parse(
-        char const*& it,
-        char const* const end,
-        error_code& ec,
-        fragment_rule& t) noexcept;
-};
+constexpr auto fragment_rule =
+    pct_encoded_rule(pchars + '/' + '?');
 
 /** Rule for fragment-part
 
@@ -75,10 +51,13 @@ private:
     @see
         @ref fragment_rule.
 */
-struct fragment_part_rule
+struct fragment_part_rule_t
 {
-    bool has_fragment = false;
-    pct_encoded_view fragment;
+    struct value_type
+    {
+        bool has_fragment = false;
+        pct_encoded_view fragment;
+    };
 
     friend
     void
@@ -87,7 +66,8 @@ struct fragment_part_rule
         char const*& it,
         char const* const end,
         error_code& ec,
-        fragment_part_rule& t) noexcept
+        fragment_part_rule_t const&,
+        value_type& t) noexcept
     {
         parse(it, end, ec, t);
     }
@@ -100,8 +80,10 @@ private:
         char const*& it,
         char const* const end,
         error_code& ec,
-        fragment_part_rule& t) noexcept;
+        value_type& t) noexcept;
 };
+
+constexpr fragment_part_rule_t fragment_part_rule{};
 
 } // urls
 } // boost
