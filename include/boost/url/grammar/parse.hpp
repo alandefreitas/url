@@ -14,35 +14,13 @@
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
+#include <boost/url/grammar/type_traits.hpp>
 #include <boost/type_traits/make_void.hpp>
 #include <type_traits>
 
 namespace boost {
 namespace urls {
 namespace grammar {
-
-/** Determine if T meets the requirements of Rule
-*/
-#ifdef BOOST_URL_DOCS
-template<class T>
-using is_rule = __see_below__
-#else
-template<class T, class = void>
-struct is_rule : std::false_type {};
-
-template<class T>
-struct is_rule<T, boost::void_t<
-    typename T::value_type> > :
-    std::integral_constant<bool,
-        std::is_default_constructible<
-            typename T::value_type>::value &&
-        std::is_copy_assignable<
-            typename T::value_type>::value>
-{
-};
-#endif
-
-//------------------------------------------------
 
 /** Parse a literal character
 

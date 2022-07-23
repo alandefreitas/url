@@ -7,9 +7,11 @@
 // Official repository: https://github.com/CPPAlliance/url
 //
 
-#ifndef BOOST_URL_IS_MUTABLE_STRING_HPP
-#define BOOST_URL_IS_MUTABLE_STRING_HPP
+#ifndef BOOST_URL_GRAMMAR_TYPE_TRAITS_HPP
+#define BOOST_URL_GRAMMAR_TYPE_TRAITS_HPP
 
+#include <boost/url/detail/config.hpp>
+#include <boost/type_traits/make_void.hpp>
 #include <type_traits>
 
 namespace boost {
@@ -51,6 +53,29 @@ struct is_mutable_string<T, I, boost::void_t<
                 )>>
     : std::true_type
 {};
+#endif
+
+//------------------------------------------------
+
+/** Determine if T meets the requirements of Rule
+*/
+#ifdef BOOST_URL_DOCS
+template<class T>
+using is_rule = __see_below__
+#else
+template<class T, class = void>
+struct is_rule : std::false_type {};
+
+template<class T>
+struct is_rule<T, boost::void_t<
+    typename T::value_type> > :
+    std::integral_constant<bool,
+        std::is_default_constructible<
+            typename T::value_type>::value &&
+        std::is_copy_assignable<
+            typename T::value_type>::value>
+{
+};
 #endif
 
 } // grammar
