@@ -13,6 +13,7 @@
 #include <boost/url/detail/config.hpp>
 
 #include <boost/url/grammar/ascii.hpp>
+#include <boost/url/grammar/char_rule.hpp>
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/elements_rule.hpp>
 #include <boost/url/grammar/error.hpp>
