@@ -76,14 +76,10 @@ parse(
         it = start;
     }
     // reg-name
-    reg_name_rule t0;
-    if(! grammar::parse(
-        it, end, ec, t0))
-    {
-        // bad reg-name
+    t.name = grammar::parse_(
+        it, end, ec, reg_name_rule);
+    if(ec.failed())
         return;
-    }
-    t.name = t0.v;
 
     t.host_type =
         urls::host_type::name;

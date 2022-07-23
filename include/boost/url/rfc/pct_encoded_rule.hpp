@@ -41,6 +41,7 @@ struct pct_encoded_rule_t
 
     template<class CharSet_>
     friend
+    constexpr
     auto
     pct_encoded_rule(
         CharSet_ const& cs) noexcept ->
@@ -62,6 +63,7 @@ struct pct_encoded_rule_t
 private:
     CharSet cs_;
 
+    constexpr
     pct_encoded_rule_t(
         CharSet const& cs) noexcept
         : cs_(cs)
@@ -77,6 +79,7 @@ private:
 };
 
 template<class CharSet>
+constexpr
 auto
 pct_encoded_rule(
     CharSet const& cs) noexcept ->

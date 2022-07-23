@@ -21,14 +21,18 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
+/** Determine if T meets the requirements of Rule
+*/
+#ifdef BOOST_URL_DOCS
+template<class T>
+using is_rule = __see_below__
+#else
 template<class T, class = void>
 struct is_rule : std::false_type {};
 
 template<class T>
 struct is_rule<T, boost::void_t<
-    typename T::type,
-    decltype(1
-            ) > > :
+    typename T::type> > :
     std::integral_constant<bool,
         std::is_default_constructible<
             typename T::type>::value &&
@@ -36,6 +40,9 @@ struct is_rule<T, boost::void_t<
             typename T::type>::value>
 {
 };
+#endif
+
+//------------------------------------------------
 
 /** Parse a literal character
 
@@ -236,6 +243,12 @@ parse_(
         is_rule<R>::value,
         "Rule requirements not met");
 
+    // VFALCO This should not be needed,
+    // it is the responsibility of any
+    // function that originates a success,
+    // to clear `ec`.
+    ec = {};
+
     typename R::type t;
     tag_invoke(parse_tag{},
         it, end, ec, r, t);
@@ -257,6 +270,12 @@ parse_(
     static_assert(
         is_rule<R>::value,
         "Rule requirements not met");
+
+    // VFALCO This should not be needed,
+    // it is the responsibility of any
+    // function that originates a success,
+    // to clear `ec`.
+    ec = {};
 
     typename R::type t;
     auto it = s.data();

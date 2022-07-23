@@ -74,7 +74,6 @@ in a translation unit of the program.
 #include <boost/url/rfc/impl/paths_rule.ipp>
 #include <boost/url/rfc/impl/port_rule.ipp>
 #include <boost/url/rfc/impl/query_rule.ipp>
-#include <boost/url/rfc/impl/reg_name_rule.ipp>
 #include <boost/url/rfc/impl/relative_part_rule.ipp>
 #include <boost/url/rfc/impl/relative_ref_rule.ipp>
 #include <boost/url/rfc/impl/scheme_rule.ipp>
