@@ -76,10 +76,15 @@ parse(
         it = start;
     }
     // reg-name
-    t.name = grammar::parse_(
-        it, end, ec, reg_name_rule);
-    if(ec.failed())
+    auto rv = grammar::parse_(
+        it, end, reg_name_rule);
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
+    ec = {}; // VFALCO REMOVE THIS
+    t.name = rv.value();
 
     t.host_type =
         urls::host_type::name;

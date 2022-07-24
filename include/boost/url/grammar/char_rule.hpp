@@ -13,7 +13,6 @@
 #include <boost/url/detail/config.hpp>
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/error.hpp>
-#include <boost/url/grammar/parse_tag.hpp>
 
 namespace boost {
 namespace urls {
@@ -36,28 +35,17 @@ struct char_rule
     {
     }
 
-#ifndef BOOST_URL_DOCS
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
+    result<string_view>
+    parse(
         char const*& it,
-        char const* end,
-        error_code& ec,
-        char_rule const& r,
-        value_type& t) noexcept
+        char const* end) const noexcept
     {
         if( it != end &&
-            *it == r.c_)
-        {
-            t = { it, 1 };
-            ++it;
-            ec = {};
-            return;
-        }
-        ec = error::syntax;
+            *it == c_)
+            return string_view(
+                it++, 1);
+        return error::syntax;
     }
-#endif
 
 private:
     char c_;

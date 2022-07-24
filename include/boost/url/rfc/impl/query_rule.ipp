@@ -44,10 +44,14 @@ begin(
 {
     // key
     // VFALCO Why not pct_encoded_view?
-    t.key = grammar::parse_(it, end, ec,
-        pct_encoded_rule(key_chars)).encoded();
-    if(ec.failed())
+    auto rv = grammar::parse_(it, end,
+        pct_encoded_rule(key_chars));
+    if(! rv)
+    {
+        ec = rv.error();
         return false;
+    }
+    t.key = rv.value().encoded();
 
     // "="
     t.has_value = grammar::parse(
@@ -55,10 +59,14 @@ begin(
     if(t.has_value)
     {
         // value
-        t.value = grammar::parse_(it, end, ec,
-            pct_encoded_rule(value_chars)).encoded();
-        if(ec.failed())
+        rv = grammar::parse_(it, end,
+            pct_encoded_rule(value_chars));
+        if(! rv)
+        {
+            ec = rv.error();
             return false;
+        }
+        t.value = rv.value().encoded();
     }
     else
     {
@@ -85,10 +93,14 @@ increment(
     }
 
     // key
-    t.key = grammar::parse_(it, end, ec,
-        pct_encoded_rule(key_chars)).encoded();
-    if(ec.failed())
+    auto rv = grammar::parse_(it, end,
+        pct_encoded_rule(key_chars));
+    if(! rv)
+    {
+        ec = rv.error();
         return false;
+    }
+    t.key = rv.value().encoded();
 
     // "="
     t.has_value = grammar::parse(
@@ -96,10 +108,14 @@ increment(
     if(t.has_value)
     {
         // value
-        t.value = grammar::parse_(it, end, ec,
-            pct_encoded_rule(value_chars)).encoded();
-        if(ec.failed())
+        rv = grammar::parse_(it, end,
+            pct_encoded_rule(value_chars));
+        if(! rv)
+        {
+            ec = rv.error();
             return false;
+        }
+        t.value = rv.value().encoded();
     }
     else
     {

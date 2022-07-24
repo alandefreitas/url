@@ -12,7 +12,6 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/grammar/error.hpp>
-#include <boost/url/grammar/parse_tag.hpp>
 #include <tuple>
 
 namespace boost {
@@ -39,22 +38,10 @@ public:
         Rn_ const&... rn) noexcept ->
             elements_rule_t<R0_, Rn_...>;
 
-    template<
-        class R0_,
-        class... Rn_>
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
+    result<value_type>
+    parse(
         char const*& it,
-        char const* end,
-        error_code& ec,
-        elements_rule_t<
-            R0_, Rn_...> const& r,
-        value_type& t) noexcept
-    {
-        r.parse(it, end, ec, t);
-    }
+        char const* end) const;
 
 private:
     elements_rule_t(
@@ -63,13 +50,6 @@ private:
         : rn_(r0, rn...)
     {
     }
-
-    void
-    parse(
-        char const*& it,
-        char const* end,
-        error_code& ec,
-        value_type& t) const;
 
     std::tuple<R0, Rn...> rn_;
 };

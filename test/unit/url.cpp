@@ -1578,10 +1578,10 @@ public:
                 url u;
                 BOOST_TEST_THROWS(
                     u.set_encoded_fragment("%%"),
-                    std::invalid_argument);
+                    std::exception);
                 BOOST_TEST_THROWS(
                     u.set_encoded_fragment("%fg"),
-                    std::invalid_argument);
+                    std::exception);
             }
         }
 

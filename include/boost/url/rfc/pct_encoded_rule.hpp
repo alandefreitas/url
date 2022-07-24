@@ -11,15 +11,15 @@
 #define BOOST_URL_RFC_PCT_ENCODED_RULE_HPP
 
 #include <boost/url/detail/config.hpp>
-#include <boost/url/string_view.hpp>
 #include <boost/url/pct_encoded_view.hpp>
+#include <boost/url/pct_encoding.hpp>
+#include <boost/url/result.hpp>
+#include <boost/url/string_view.hpp>
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
-#include <boost/static_assert.hpp>
-
-#include <boost/url/pct_encoding.hpp>
 #include <boost/url/grammar/detail/charset.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost {
 namespace urls {
@@ -47,18 +47,10 @@ struct pct_encoded_rule_t
         CharSet_ const& cs) noexcept ->
             pct_encoded_rule_t<CharSet_>;
 
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
+    result<value_type>
+    parse(
         char const*& it,
-        char const* end,
-        error_code& ec,
-        pct_encoded_rule_t const& r,
-        value_type& t) noexcept
-    {
-        r.parse(it, end, ec, t);
-    }
+        char const* end) const noexcept;
 
 private:
     CharSet cs_;
@@ -69,13 +61,6 @@ private:
         : cs_(cs)
     {
     }
-
-    void
-    parse(
-        char const*& it,
-        char const* end,
-        error_code& ec,
-        value_type& t) const noexcept;
 };
 
 template<class CharSet>

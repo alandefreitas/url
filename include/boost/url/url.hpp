@@ -1400,7 +1400,7 @@ public:
 
         @param s The string to set.
 
-        @throws std::invalid_argument bad encoding.
+        @throws std::exception bad encoding.
 
         @see
             @ref has_fragment,

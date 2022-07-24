@@ -18,30 +18,32 @@
 namespace boost {
 namespace urls {
 
-void
+auto
 fragment_part_rule_t::
 parse(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    value_type& t) noexcept
+    char const* const end) const noexcept ->
+        result<value_type>
 {
+    value_type t;
     if(it == end)
     {
         t.has_fragment = false;
-        return;
+        return t;
     }
     if(*it != '#')
     {
         t.has_fragment = false;
-        return;
+        return t;
     }
     ++it;
-    t.fragment = grammar::parse_(
-        it, end, ec, fragment_rule);
-    if(ec.failed())
-        return;
+    auto rv = grammar::parse_(
+        it, end, fragment_rule);
+    if(! rv)
+        return rv.error();
+    t.fragment = rv.value();
     t.has_fragment = true;
+    return t;
 }
 
 } // urls

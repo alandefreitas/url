@@ -25,9 +25,9 @@ struct char_rule_test
     ok( string_view s,
         R const& r)
     {
-        error_code ec;
-        grammar::parse_(s, ec, r);
-        BOOST_TEST(! ec.failed());
+        BOOST_TEST(
+            grammar::parse_(
+                s, r).has_value());
     }
 
     template<class R>
@@ -36,9 +36,9 @@ struct char_rule_test
     bad(string_view s,
         R const& r)
     {
-        error_code ec;
-        grammar::parse_(s, ec, r);
-        BOOST_TEST(ec.failed());
+        BOOST_TEST(
+            grammar::parse_(
+                s, r).has_error());
     }
 
     void

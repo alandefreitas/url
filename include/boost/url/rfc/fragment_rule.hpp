@@ -59,28 +59,11 @@ struct fragment_part_rule_t
         pct_encoded_view fragment;
     };
 
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
-        char const*& it,
-        char const* const end,
-        error_code& ec,
-        fragment_part_rule_t const&,
-        value_type& t) noexcept
-    {
-        parse(it, end, ec, t);
-    }
-
-private:
     BOOST_URL_DECL
-    static
-    void
+    result<value_type>
     parse(
         char const*& it,
-        char const* const end,
-        error_code& ec,
-        value_type& t) noexcept;
+        char const* const end) const noexcept;
 };
 
 constexpr fragment_part_rule_t fragment_part_rule{};

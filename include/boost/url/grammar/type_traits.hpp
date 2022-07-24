@@ -11,6 +11,8 @@
 #define BOOST_URL_GRAMMAR_TYPE_TRAITS_HPP
 
 #include <boost/url/detail/config.hpp>
+#include <boost/url/error_code.hpp>
+#include <boost/url/result.hpp>
 #include <boost/type_traits/make_void.hpp>
 #include <type_traits>
 
@@ -68,8 +70,7 @@ struct is_mutable_string<T, I, boost::void_t<
         result<value_type>
         parse(
             char const*& it,
-            char const* end,
-            error_code& ec) const;
+            char const* end) const;
     };
     @endcode
 */
@@ -81,13 +82,12 @@ template<class T, class = void>
 struct is_rule : std::false_type {};
 
 template<class T>
-struct is_rule<T, boost::void_t<
-    typename T::value_type > > :
-    std::integral_constant<bool,
-        std::is_default_constructible<
-            typename T::value_type>::value &&
-        std::is_copy_assignable<
-            typename T::value_type>::value>
+struct is_rule<T, boost::void_t<decltype(
+    std::declval<result<typename T::value_type>&>() =
+        std::declval<T const&>().parse(
+            std::declval<char const*&>(),
+            std::declval<char const*>())
+    )>> : std::true_type
 {
 };
 #endif

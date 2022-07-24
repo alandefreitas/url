@@ -7,7 +7,7 @@
 // Official repository: https://github.com/CPPAlliance/url
 //
 
-#if 0
+#if 1
 // Test that header file is self-contained.
 #include <boost/url/grammar.hpp>
 

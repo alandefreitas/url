@@ -44,12 +44,14 @@ parse(
         return;
 
     // [ "#" fragment ]
-    t.fragment_part =
-        grammar::parse_(
-            it, end, ec,
-            fragment_part_rule);
-    if(ec.failed())
+    auto rv = grammar::parse_(
+        it, end, fragment_part_rule);
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
+    t.fragment_part = rv.value();
 }
 
 } // urls

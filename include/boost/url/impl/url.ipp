@@ -1838,11 +1838,8 @@ set_encoded_fragment(
         this->string());
     s = buf.maybe_copy(s);
     check_invariants();
-    error_code ec;
     auto t = grammar::parse_(
-        s, ec, fragment_rule);
-    if(ec.failed())
-        detail::throw_invalid_argument(
+        s, fragment_rule).value(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
     decoded_[id_frag] = t.size();

@@ -12,6 +12,7 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/error_code.hpp>
+#include <boost/url/result.hpp>
 
 namespace boost {
 namespace urls {

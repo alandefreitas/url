@@ -14,6 +14,7 @@
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
+#include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/type_traits.hpp>
 #include <boost/type_traits/make_void.hpp>
 #include <type_traits>
@@ -211,26 +212,10 @@ auto
 parse_(
     char const*& it,
     char const* end,
-    error_code& ec,
-    R const& r)
-        -> typename std::enable_if<
-            is_rule<R>::value,
-            typename R::value_type>::type
+    R const& r) ->
+        result<typename R::value_type>
 {
-    static_assert(
-        is_rule<R>::value,
-        "Rule requirements not met");
-
-    // VFALCO This should not be needed,
-    // it is the responsibility of any
-    // function that originates a success,
-    // to clear `ec`.
-    ec = {};
-
-    typename R::value_type t;
-    tag_invoke(parse_tag{},
-        it, end, ec, r, t);
-    return t;
+    return r.parse(it, end);
 }
 
 /** Parse a string into values using rules
@@ -239,34 +224,16 @@ template<class R>
 auto
 parse_(
     string_view s,
-    error_code& ec,
-    R const& r)
-        -> typename std::enable_if<
-            is_rule<R>::value,
-            typename R::value_type>::type
+    R const& r) ->
+        result<typename R::value_type>
 {
-    static_assert(
-        is_rule<R>::value,
-        "Rule requirements not met");
-
-    // VFALCO This should not be needed,
-    // it is the responsibility of any
-    // function that originates a success,
-    // to clear `ec`.
-    ec = {};
-
-    typename R::value_type t;
     auto it = s.data();
     auto const end = it + s.size();
-    tag_invoke(parse_tag{},
-        it, end, ec, r, t);
-    if( ! ec.failed() &&
+    auto rv = (parse_)(it, end, r);
+    if( ! rv &&
         it != end)
-    {
-        ec = error::leftover;
-        return {};
-    }
-    return t;
+        return error::leftover;
+    return rv;
 }
 
 } // grammar

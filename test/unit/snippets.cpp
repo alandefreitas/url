@@ -905,11 +905,11 @@ grammar_parse()
         urls::error_code ec;
         if (urls::grammar::parse(it, s.end(), ec, r1))
         {
-            auto r2 = urls::grammar::parse_( it, s.end(), ec, urls::fragment_part_rule );
-            if( ! ec.failed() )
+            auto r2 = urls::grammar::parse_( it, s.end(), urls::fragment_part_rule );
+            if( r2 )
             {
                 std::cout << "query: " << r1.query_part << '\n';
-                std::cout << "fragment: " << r2.fragment.encoded() << '\n';
+                std::cout << "fragment: " << r2.value().fragment.encoded() << '\n';
             }
         }
         //]
@@ -1041,11 +1041,11 @@ grammar_charset()
         urls::string_view s = "key=the%20value";
         
         urls::error_code ec;
-        urls::pct_encoded_view es = urls::grammar::parse_(s, ec, urls::pct_encoded_rule(urls::query_chars));
-        if( ! ec.failed() )
+        urls::result<urls::pct_encoded_view> rv = urls::grammar::parse_(s, urls::pct_encoded_rule(urls::query_chars));
+        if( ! rv.has_error() )
         {
-            std::cout << "query:        " << es.encoded() << '\n';
-            std::cout << "decoded size: " << es.size() << '\n';
+            std::cout << "query:        " << rv->encoded() << '\n';
+            std::cout << "decoded size: " << rv->size() << '\n';
         }
         //]
     }

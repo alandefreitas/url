@@ -34,13 +34,15 @@ parse(
     static constexpr auto pwchars =
         uchars + ':';
 
-    auto t0 = grammar::parse_(
-        it, end, ec,
-        pct_encoded_rule(uchars));
-    if(ec.failed())
+    auto rv = grammar::parse_(
+        it, end, pct_encoded_rule(uchars));
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
+    t.user = rv.value();
 
-    t.user = t0;
     if( it == end ||
         *it != ':')
     {
@@ -49,13 +51,16 @@ parse(
         return;
     }
     ++it;
-    auto t1 = grammar::parse_(
-        it, end, ec,
+    rv = grammar::parse_(
+        it, end,
         pct_encoded_rule(pwchars));
-    if(ec.failed())
+    if(! rv)
+    {
+        ec = rv.error();
         return;
+    }
     t.has_password = true;
-    t.password = t1;
+    t.password = rv.value();
 }
 
 } // urls

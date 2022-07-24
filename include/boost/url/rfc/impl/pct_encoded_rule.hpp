@@ -18,13 +18,12 @@ namespace boost {
 namespace urls {
 
 template<class CharSet>
-void
+auto
 pct_encoded_rule_t<CharSet>::
 parse(
     char const*& it,
-    char const* end,
-    error_code& ec,
-    value_type& t) const noexcept
+    char const* end) const noexcept ->
+        result<value_type>
 {
     auto const start = it;
     // VFALCO TODO
@@ -46,28 +45,24 @@ skip:
         if(it == end)
         {
             // missing HEXDIG
-            ec = grammar::error::syntax;
-            return;
+            return grammar::error::syntax;
         }
         char r;
         if(!grammar::hexdig_value(*it, r))
         {
             // expected HEXDIG
-            ec = grammar::error::syntax;
-            return;
+            return grammar::error::syntax;
         }
         ++it;
         if(it == end)
         {
             // missing HEXDIG
-            ec = grammar::error::syntax;
-            return;
+            return grammar::error::syntax;
         }
         if(!grammar::hexdig_value(*it, r))
         {
             // expected HEXDIG
-            ec = grammar::error::syntax;
-            return;
+            return grammar::error::syntax;
         }
         ++n;
         ++it;
@@ -77,7 +72,7 @@ skip:
             goto skip;
     }
 finish:
-    t = detail::access::construct(
+    return detail::access::construct(
         string_view(start, it - start), n);
 }
 
