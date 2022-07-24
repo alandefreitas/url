@@ -18,6 +18,27 @@ namespace grammar {
 
 namespace detail {
 
+// must come first
+template<
+    class R0,
+    class... Rn,
+    std::size_t I>
+void
+parse_element(
+    char const*&,
+    char const*,
+    error_code&,
+    std::tuple<R0, Rn...> const&,
+    std::tuple<
+        typename R0::value_type,
+        typename Rn::value_type...>&,
+    std::integral_constant<
+        std::size_t, I> const&,
+    std::false_type const&)
+{
+    // end
+}
+
 template<
     class R0,
     class... Rn,
@@ -46,27 +67,8 @@ parse_element(
         std::integral_constant<
             std::size_t, I + 1>{},
         std::integral_constant<bool,
-            I + 1 < (1 + sizeof...(Rn))>{});
-}
-
-template<
-    class R0,
-    class... Rn,
-    std::size_t I>
-void
-parse_element(
-    char const*&,
-    char const*,
-    error_code&,
-    std::tuple<R0, Rn...> const&,
-    std::tuple<
-        typename R0::value_type,
-        typename Rn::value_type...>&,
-    std::integral_constant<
-        std::size_t, I> const&,
-    std::false_type const&)
-{
-    // end
+            ((I + 1) < (
+                1 + sizeof...(Rn)))>{});
 }
 
 } // detail
