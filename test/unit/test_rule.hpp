@@ -147,6 +147,14 @@ bad(string_view s)
     BOOST_TEST(! is_valid<T>(s));
 }
 
+template<class R>
+void
+bad(string_view s, R const& r)
+{
+    BOOST_TEST(grammar::parse_(
+        s, r).has_error());
+}
+
 template<class T>
 void
 bad(std::initializer_list<

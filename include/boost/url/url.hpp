@@ -943,7 +943,7 @@ public:
 
         @param s The port string to set.
 
-        @throw std::invalid_argument `s` is not a valid port string.
+        @throw std::exception `s` is not a valid port string.
     */
     BOOST_URL_DECL
     url&

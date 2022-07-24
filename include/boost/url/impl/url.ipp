@@ -892,12 +892,8 @@ set_port(string_view s)
         this->string());
     s = buf.maybe_copy(s);
     check_invariants();
-    port_rule t;
-    error_code ec;
-    if(! grammar::parse_string(
-            s, ec, t))
-        detail::throw_invalid_argument(
-            BOOST_CURRENT_LOCATION);
+    auto t = grammar::parse_(
+        s, port_rule{}).value();
     auto dest =
         set_port_impl(t.str.size());
     std::memcpy(dest,

@@ -874,7 +874,7 @@ public:
 
         BOOST_TEST_THROWS(
             url().set_port("x"),
-            std::invalid_argument);
+            std::exception);
 
         remove("", "");
         remove("/", "/");
