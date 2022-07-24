@@ -66,7 +66,6 @@ in a translation unit of the program.
 
 #include <boost/url/rfc/impl/absolute_uri_rule.ipp>
 #include <boost/url/rfc/impl/authority_rule.ipp>
-#include <boost/url/rfc/impl/fragment_rule.ipp>
 #include <boost/url/rfc/impl/hier_part_rule.ipp>
 #include <boost/url/rfc/impl/host_rule.ipp>
 #include <boost/url/rfc/impl/ip_literal_rule.ipp>

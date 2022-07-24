@@ -11,11 +11,11 @@
 #define BOOST_URL_RFC_FRAGMENT_RULE_HPP
 
 #include <boost/url/detail/config.hpp>
-#include <boost/url/error_code.hpp>
+#include <boost/url/rfc/charsets.hpp>
+#include <boost/url/rfc/pct_encoded_rule.hpp>
 #include <boost/url/grammar/char_rule.hpp>
 #include <boost/url/grammar/elements_rule.hpp>
 #include <boost/url/grammar/optional_rule.hpp>
-#include <boost/url/rfc/pct_encoded_rule.hpp>
 
 namespace boost {
 namespace urls {
@@ -30,12 +30,10 @@ namespace urls {
     @par Specification
     @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.5"
         >3.5. Fragment (rfc3986)</a>
-
-    @see
-        @ref fragment_part_rule.
 */
 constexpr auto fragment_rule =
-    pct_encoded_rule(pchars + '/' + '?');
+    pct_encoded_rule(
+        pchars + '/' + '?');
 
 /** Rule for fragment-part
 
@@ -49,31 +47,12 @@ constexpr auto fragment_rule =
     @par Specification
     @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.5"
         >3.5. Fragment (rfc3986)</a>
-
-    @see
-        @ref fragment_rule.
 */
-struct fragment_part_rule_t
-{
-    struct value_type
-    {
-        bool has_fragment = false;
-        pct_encoded_view fragment;
-    };
-
-    BOOST_URL_DECL
-    result<value_type>
-    parse(
-        char const*& it,
-        char const* const end) const noexcept;
-};
-
 constexpr auto fragment_part_rule =
     grammar::optional_rule(
         grammar::elements_rule(
             grammar::char_rule('#'),
-            pct_encoded_rule(
-                pchars + '/' + '?')));
+            fragment_rule));
 
 } // urls
 } // boost
