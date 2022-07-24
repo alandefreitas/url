@@ -30,6 +30,7 @@ else()
     add_subdirectory(../../../align boostorg/align)
     add_subdirectory(../../../system boostorg/system)
     add_subdirectory(../../../container boostorg/container)
+    add_subdirectory(../../../utility boostorg/utility)
 
     # Conditional deps
     if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../../detail/CMakeLists.txt")
