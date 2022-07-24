@@ -77,8 +77,7 @@ struct tuple : tuple_impl<
     boost::mp11::index_sequence_for<
         Ts...>, Ts...>
 {
-    constexpr
-    tuple() noexcept = default;
+    constexpr tuple() = default;
 
     constexpr
     tuple(tuple const&) noexcept = default;
