@@ -32,6 +32,7 @@ public:
         class R0_,
         class... Rn_>
     friend
+    constexpr
     auto
     elements_rule(
         R0_ const& r0,
@@ -44,6 +45,7 @@ public:
         char const* end) const;
 
 private:
+    constexpr
     elements_rule_t(
         R0 const& r0,
         Rn const&... rn) noexcept
@@ -51,7 +53,7 @@ private:
     {
     }
 
-    std::tuple<R0, Rn...> rn_;
+    std::tuple<R0, Rn...> const rn_;
 };
 
 //------------------------------------------------
@@ -59,6 +61,7 @@ private:
 template<
     class R0,
     class... Rn>
+constexpr
 auto
 elements_rule(
     R0 const& r0,
@@ -66,7 +69,7 @@ elements_rule(
         elements_rule_t<
             R0, Rn...>
 {
-    return {r0, rn...};
+    return { r0, rn... };
 }
 
 } // grammar

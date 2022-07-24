@@ -909,7 +909,7 @@ grammar_parse()
             if( r2 )
             {
                 std::cout << "query: " << r1.query_part << '\n';
-                std::cout << "fragment: " << r2.value().fragment.encoded() << '\n';
+                std::cout << "fragment: " << std::get<1>(*r2.value()).encoded() << '\n';
             }
         }
         //]

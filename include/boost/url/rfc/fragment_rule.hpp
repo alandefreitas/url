@@ -12,7 +12,9 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/error_code.hpp>
-#include <boost/url/grammar/parse_tag.hpp>
+#include <boost/url/grammar/char_rule.hpp>
+#include <boost/url/grammar/elements_rule.hpp>
+#include <boost/url/grammar/optional_rule.hpp>
 #include <boost/url/rfc/pct_encoded_rule.hpp>
 
 namespace boost {
@@ -66,7 +68,12 @@ struct fragment_part_rule_t
         char const* const end) const noexcept;
 };
 
-constexpr fragment_part_rule_t fragment_part_rule{};
+constexpr auto fragment_part_rule =
+    grammar::optional_rule(
+        grammar::elements_rule(
+            grammar::char_rule('#'),
+            pct_encoded_rule(
+                pchars + '/' + '?')));
 
 } // urls
 } // boost

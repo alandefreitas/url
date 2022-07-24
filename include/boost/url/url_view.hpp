@@ -1939,7 +1939,7 @@ private:
     void apply(authority_rule const& t) noexcept;
     void apply(parsed_path const& path) noexcept;
     void apply(query_part_rule const& t) noexcept;
-    void apply(fragment_part_rule_t::value_type const& t) noexcept;
+    void apply(decltype(fragment_part_rule)::value_type const& t) noexcept;
 };
 
 //------------------------------------------------

@@ -19,6 +19,8 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
+/** Rule for an optional grammar element
+*/
 template<class R>
 class optional_rule_t
 {
@@ -40,25 +42,28 @@ public:
 
     template<class R_>
     friend
+    constexpr
     auto
     optional_rule(
         R_ const& r) ->
             optional_rule_t<R_>;
 
 private:
+    constexpr
     optional_rule_t(
         R const& r) noexcept
         : r_(r)
     {
     }
 
-    R r_;
+    R const r_;
 };
 
 //------------------------------------------------
 
 template<class R>
 auto
+constexpr
 optional_rule(
     R const& r) ->
         optional_rule_t<R>
