@@ -7,8 +7,8 @@
 // Official repository: https://github.com/boostorg/beast
 //
 
-#ifndef BOOST_URL_GRAMMAR_TUPLE_HPP
-#define BOOST_URL_GRAMMAR_TUPLE_HPP
+#ifndef BOOST_URL_GRAMMAR_DETAIL_TUPLE_HPP
+#define BOOST_URL_GRAMMAR_DETAIL_TUPLE_HPP
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/error_code.hpp>
@@ -22,6 +22,7 @@
 namespace boost {
 namespace urls {
 namespace grammar {
+namespace detail {
 
 template<std::size_t I, class T>
 struct tuple_element_impl
@@ -86,10 +87,13 @@ struct tuple : tuple_impl<
     tuple&
     operator=(tuple const&) noexcept = default;
 
-    template<class U,
-        typename std::enable_if<
+    template<class U
+    #if 0
+        ,typename std::enable_if<
             ! std::is_same<
-        U, error_code>::value>::type = 0>
+        U, error_code>::value>::type = 0
+    #endif
+    >
     constexpr
     explicit
     tuple(U&& u) noexcept
@@ -155,8 +159,21 @@ template <std::size_t I, class T>
 using tuple_element = typename boost::copy_cv<
     mp11::mp_at_c<typename remove_cv<T>::type, I>, T>::type;
 
+} // detail
 } // grammar
 } // urls
 } // boost
+
+namespace std {
+template<class T>
+struct tuple_size;
+template<class... Ts>
+struct tuple_size<
+    ::boost::urls::grammar::detail::tuple<Ts...>>
+    : std::integral_constant<
+        std::size_t, sizeof...(Ts)>
+{
+};
+} // std
 
 #endif

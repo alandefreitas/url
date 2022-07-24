@@ -29,8 +29,9 @@ parse_element(
     char const*&,
     char const*,
     error_code&,
-    tuple<R0, Rn...> const&,
-    tuple<
+    detail::tuple<
+        R0, Rn...> const&,
+    std::tuple<
         result<typename
             R0::value_type>,
         result<typename
@@ -51,8 +52,9 @@ parse_element(
     char const*& it,
     char const* end,
     error_code& ec,
-    tuple<R0, Rn...> const& rn,
-    tuple<
+    detail::tuple<
+        R0, Rn...> const& rn,
+    std::tuple<
         result<typename
             R0::value_type>,
         result<typename
@@ -102,7 +104,7 @@ parse(
         result<value_type>
 {
     error_code ec;
-    tuple<
+    std::tuple<
         result<typename
             R0::value_type>,
         result<typename
