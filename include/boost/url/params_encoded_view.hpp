@@ -115,14 +115,13 @@ public:
 
         This type does not make a copy of a parameter
         and ownership is retained by the container.
-
     */
-    using reference = query_param_view;
+    using reference = query_param_encoded_view;
 
     /// @copydoc reference
-    using const_reference = query_param_view;
+    using const_reference = reference;
 
-    /** An unsigned integer type used to represent size.
+    /** An unsigned integer type to represent sizes.
     */
     using size_type = std::size_t;
 

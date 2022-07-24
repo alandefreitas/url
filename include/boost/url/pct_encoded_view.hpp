@@ -392,6 +392,13 @@ public:
         return r;
     }
 
+    /// @copydoc to_string()
+    explicit
+    operator std::string() const
+    {
+        return to_string();
+    }
+
     //--------------------------------------------
     //
     // Comparison

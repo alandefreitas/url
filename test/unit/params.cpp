@@ -471,6 +471,19 @@ public:
         BOOST_TEST_EQ((*(std::next(it))).value, "333");
         BOOST_TEST_EQ((*it).value, "22");
         BOOST_TEST_EQ((*std::next(it)).value, "333");
+
+        // value_type outlives reference
+        {
+            params::value_type v;
+            {
+                params ps = u.params();
+                params::reference r = *ps.begin();
+                v = params::value_type(r);
+            }
+            BOOST_TEST_EQ(v.key, "a");
+            BOOST_TEST_EQ(v.value, "1");
+            BOOST_TEST_EQ(v.has_value, true);
+        }
     }
 
     void

@@ -16,6 +16,7 @@
 #include <boost/url.hpp>
 //]
 
+#include <algorithm>
 #include <iostream>
 #include <cctype>
 
@@ -148,11 +149,14 @@ using_url_views()
         std::cout << "path: " << p << "\n";
         //]
     }
+// transparent std::equal_to<> required
+#if BOOST_CXX_VERSION >= 201402L && !defined(BOOST_CLANG)
     {
         auto handle_route = [](
             std::vector<std::string> const&,
             urls::url_view)
         {};
+
         //[snippet_decoding_4a
         auto match = [](
             std::vector<std::string> const& route,
@@ -167,7 +171,6 @@ using_url_views()
                 segs.begin());
         };
         //]
-
         //[snippet_decoding_4b
         std::vector<std::string> route =
             {"community", "reviews.html"};
@@ -177,6 +180,7 @@ using_url_views()
         }
         //]
     }
+#endif
     {
         //[snippet_decoding_5a
         auto function = [](urls::string_view str)

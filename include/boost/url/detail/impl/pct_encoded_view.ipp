@@ -28,6 +28,7 @@ construct(
     std::size_t n,
     pct_decode_opts const& opt) noexcept
 {
+    // AFREITAS: move that inline
     return pct_encoded_view(s, n, opt);
 }
 

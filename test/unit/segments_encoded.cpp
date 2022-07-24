@@ -15,9 +15,6 @@
 #include <boost/static_assert.hpp>
 #include <initializer_list>
 #include <iterator>
-#if __cpp_lib_ranges >= 201911
-//#include <ranges>
-#endif
 #include "test_suite.hpp"
 
 namespace boost {
@@ -31,12 +28,6 @@ public:
     BOOST_STATIC_ASSERT(
         std::is_default_constructible<
             segments_encoded::iterator>::value);
-
-#if __cpp_lib_ranges >= 201911
-    BOOST_STATIC_ASSERT(
-        std::forward_iterator<
-            segments_encoded::iterator>);
-#endif
 
     void
     testMembers()
@@ -190,10 +181,9 @@ public:
             BOOST_TEST_NE(it, cs.begin());
         }
 
-        // value_type does not outlive reference
-        // as both are views
+        // value_type outlives reference
         {
-            std::string v;
+            segments_encoded::value_type v;
             {
                 url u = u0;
                 segments_encoded se = u.encoded_segments();

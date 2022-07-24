@@ -17,8 +17,8 @@
 namespace boost {
 namespace urls {
 
-query_param::
-query_param(
+query_param_encoded_view::
+query_param_encoded_view(
     char const* s,
     std::size_t nk,
     std::size_t const nv)
@@ -28,17 +28,14 @@ query_param(
         has_value = false;
         return;
     }
-    // key
-    string_view ek{s, nk};
-    key = pct_encoded_view(ek);
+    // key;
+    key = {s, nk};
     if(nv > 0)
     {
         // value
         BOOST_ASSERT(s[nk] == '=');
         has_value = true;
-        string_view ev{
-            s + nk + 1, nv - 1 };
-        value = pct_encoded_view(ev);
+        value = {s + nk + 1, nv - 1 };
     }
     else
     {

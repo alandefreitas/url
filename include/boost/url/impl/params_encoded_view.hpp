@@ -49,7 +49,7 @@ class params_encoded_view::iterator
 
 public:
     using value_type = query_param;
-    using reference = query_param_view;
+    using reference = query_param_encoded_view;
     using pointer = void const*;
     using difference_type = std::ptrdiff_t;
     using iterator_category =

@@ -150,7 +150,7 @@ public:
     {
         if(it_ == end_)
             return false;
-        query_param_view v(*it_++);
+        query_param_encoded_view v(*it_++);
         if(v.has_value)
             measure_impl(v.key,
                 &v.value, n, ec);
@@ -166,7 +166,7 @@ public:
         char const* end
             ) noexcept override
     {
-        query_param_view v(*it_++);
+        query_param_encoded_view v(*it_++);
         if(v.has_value)
             copy_impl(v.key,
                 &v.value, dest, end);

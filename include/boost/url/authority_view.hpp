@@ -495,8 +495,7 @@ public:
     /** Return the userinfo
 
         This function returns the userinfo as a
-        string with percent-decoding applied, using
-        the optionally specified allocator.
+        string with percent-decoding applied.
 
         @par Example
         @code
@@ -511,16 +510,6 @@ public:
 
         authority   = [ userinfo "@" ] host [ ":" port ]
         @endcode
-
-        @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used.
-
-        @return A @ref pct_encoded_view using the
-        specified allocator.
 
         @par Specification
         <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -587,8 +576,7 @@ public:
 
         This function returns the user portion of
         the userinfo as a string with percent-decoding
-        applied, using the optionally specified
-        allocator.
+        applied.
 
         @par Example
         @code
@@ -602,16 +590,6 @@ public:
         user        = *( unreserved / pct-encoded / sub-delims )
         password    = *( unreserved / pct-encoded / sub-delims / ":" )
         @endcode
-
-        @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used.
-
-        @return A @ref pct_encoded_view using the
-        specified allocator.
 
         @par Specification
         <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -711,19 +689,7 @@ public:
     /** Return the password
 
         This function returns the password from the
-        userinfo with percent-decoding applied,
-        using the optionally specified allocator.
-
-        @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An allocator to use for the string.
-        If this parameter is omitted, the default
-        allocator is used, and the return type of
-        the function becomes `std::string`.
-
-        @return A @ref pct_encoded_view using the
-        specified allocator.
+        userinfo with percent-decoding applied.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1"
@@ -839,8 +805,7 @@ public:
 
         This function returns the host portion of
         the authority as a string with percent-decoding
-        applied, using the optionally specified
-        allocator.
+        applied.
 
         @par Example
         @code
@@ -861,17 +826,6 @@ public:
 
         reg-name    = *( unreserved / pct-encoded / "-" / ".")
         @endcode
-
-        @par Exception Safety
-        Calls to allocate may throw.
-
-        @param a An optional allocator the returned
-        string will use. If this parameter is omitted,
-        the default allocator is used, and the return
-        type of the function becomes `std::string`.
-
-        @return A @ref pct_encoded_view using the
-        specified allocator.
 
         @par Specification
         @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2"

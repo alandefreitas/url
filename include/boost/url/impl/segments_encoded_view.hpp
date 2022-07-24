@@ -44,7 +44,7 @@ class segments_encoded_view::iterator
     }
 
 public:
-    using value_type = string_view;
+    using value_type = std::string;
     using reference = string_view;
     using pointer = void const*;
     using difference_type = std::ptrdiff_t;

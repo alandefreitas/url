@@ -24,17 +24,6 @@ namespace urls {
 class segments_encoded_view_test
 {
 public:
-#if __cpp_lib_ranges >= 201911
-    /*
-    BOOST_STATIC_ASSERT(
-        std::bidirectional_range<
-            segments_encoded_view>);
-    */
-
-    BOOST_STATIC_ASSERT(
-        std::bidirectional_iterator<
-            segments_encoded_view::iterator>);
-#endif
 
     template<class It>
     static
@@ -225,10 +214,9 @@ public:
             BOOST_TEST_NE(it++, sv.end());
         }
 
-        // value_type does not outlive reference
-        // as both are views
+        // value_type outlives reference
         {
-            std::string v;
+            segments_encoded_view::value_type v;
             {
                 segments_encoded_view sv = parse_path(
                     "/path/to/file.txt").value();

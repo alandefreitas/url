@@ -24,18 +24,6 @@ namespace urls {
 class segments_view_test
 {
 public:
-#if __cpp_lib_ranges >= 201911
-    /*
-    BOOST_STATIC_ASSERT(
-        std::bidirectional_range<
-            segments_view>);
-    */
-
-    BOOST_STATIC_ASSERT(
-        std::bidirectional_iterator<
-            segments_view::iterator>);
-#endif
-
     static_pool<4096> sp_;
 
     template<class It>
@@ -246,6 +234,19 @@ public:
             BOOST_TEST_NE(it, sv.end());
             BOOST_TEST_NE(++it, sv.begin());
             BOOST_TEST_NE(it++, sv.end());
+        }
+
+        // value_type outlives reference
+        {
+            segments_view::value_type v;
+            {
+                segments_view se = parse_path(
+                    "path/to/the/file.txt").value();
+                segments_view::reference r =
+                    *se.begin();
+                v = segments_view::value_type(r);
+            }
+            BOOST_TEST_EQ(v, "path");
         }
     }
 

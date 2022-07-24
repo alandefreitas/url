@@ -51,7 +51,7 @@ class segments::iterator
     }
 
 public:
-    using value_type = pct_encoded_view;
+    using value_type = std::string;
     using reference = pct_encoded_view;
     using pointer = void const*;
     using difference_type = std::ptrdiff_t;

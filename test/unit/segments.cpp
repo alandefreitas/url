@@ -17,9 +17,6 @@
 #include <boost/core/ignore_unused.hpp>
 #include <initializer_list>
 #include <iterator>
-#if __cpp_lib_ranges >= 201911
-//#include <ranges>
-#endif
 #include "test_suite.hpp"
 
 namespace boost {
@@ -30,18 +27,6 @@ namespace urls {
 class segments_test
 {
 public:
-#if __cpp_lib_ranges >= 201911
-    /*
-    BOOST_STATIC_ASSERT(
-        std::forward_range<
-            segments>);
-    */
-
-    BOOST_STATIC_ASSERT(
-        std::forward_iterator<
-            segments::iterator>);
-#endif
-
     static_pool<4096> p_;
 
     void
@@ -236,6 +221,19 @@ public:
             BOOST_TEST_EQ(*std::next(it), "the");
             BOOST_TEST_NE(it, se.begin());
             BOOST_TEST_NE(it, cs.begin());
+        }
+
+        // value_type outlives reference
+        {
+            segments::value_type v;
+            {
+                url u = u0;
+                segments se = u.segments();
+                segments::reference r =
+                    *se.begin();
+                v = segments::value_type(r);
+            }
+            BOOST_TEST_EQ(v, "path");
         }
     }
 

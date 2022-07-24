@@ -18,6 +18,24 @@
 namespace boost {
 namespace urls {
 
+// Transparent equal_to
+template <class T = void>
+struct equal_to {
+    bool operator()( const T& lhs, const T& rhs ) const
+    {
+        return lhs == rhs;
+    }
+};
+
+template <>
+struct equal_to<void> {
+    template <class T1, class T2>
+    bool operator()( const T1& lhs, const T2& rhs ) const
+    {
+        return lhs == rhs;
+    }
+};
+
 class url_test
 {
 public:
@@ -35,7 +53,8 @@ public:
         BOOST_TEST(std::equal(
             segs.begin(),
             segs.end(),
-            init.begin()));
+            init.begin(),
+            equal_to<>{}));
     }
 
     static

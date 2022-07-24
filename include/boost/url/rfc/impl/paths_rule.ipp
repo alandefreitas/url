@@ -48,7 +48,7 @@ parse(
         it, end, ec, t0))
         return;
     t.v = t0.s;
-    if(t.v.encoded().empty())
+    if(t.v.empty())
     {
         // can't be empty
         ec = grammar::error::syntax;
@@ -80,7 +80,7 @@ parse(
     if(! grammar::parse(
         it, end, ec, t0))
         return;
-    if(t0.s.encoded().empty())
+    if(t0.s.empty())
     {
         // can't be empty
         ec = error::empty_path_segment;

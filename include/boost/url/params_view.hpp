@@ -67,13 +67,17 @@ public:
     */
     using value_type = query_param;
 
-    /// @copydoc value_type
-    using reference = query_param;
+    /** A type which can represent a parameter as a const reference
 
-    /// @copydoc value_type
-    using const_reference = value_type;
+        This type does not make a copy of a parameter
+        and ownership is retained by the container.
+    */
+    using reference = query_param_view;
 
-    /** An unsigned integer type used to represent size.
+    /// @copydoc reference
+    using const_reference = reference;
+
+    /** An unsigned integer type to represent sizes.
     */
     using size_type = std::size_t;
 

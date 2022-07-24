@@ -97,12 +97,16 @@ public:
         a segment where ownership is retained
         in the copy.
     */
-    using value_type = pct_encoded_view;
+    using value_type = std::string;
 
-    /// @copydoc value_type
+    /** A type which can represent a segment as a reference
+
+        This type does not make a copy of a segment
+        and ownership is retained by the container.
+    */
     using reference = pct_encoded_view;
 
-    /// @copydoc value_type
+    /// @copydoc reference
     using const_reference = pct_encoded_view;
 
     /** An unsigned integer type

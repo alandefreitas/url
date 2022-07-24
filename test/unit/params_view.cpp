@@ -165,6 +165,21 @@ public:
             BOOST_TEST_EQ(v.value, "3");
             BOOST_TEST_EQ(v.has_value, true);
         }
+
+        // value_type outlives reference
+        {
+            url_view u = parse_uri_reference(
+                             "/?a=1&bb=22&ccc=333&dddd=4444#f").value();
+            params_view::value_type v;
+            {
+                params_view ps = u.params();
+                params_view::reference r = *ps.begin();
+                v = params_view::value_type(r);
+            }
+            BOOST_TEST_EQ(v.key, "a");
+            BOOST_TEST_EQ(v.value, "1");
+            BOOST_TEST_EQ(v.has_value, true);
+        }
     }
 
     void

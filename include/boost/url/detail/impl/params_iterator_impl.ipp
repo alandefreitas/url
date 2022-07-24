@@ -71,8 +71,6 @@ params_iterator_impl(
 {
 }
 
-
-
 params_view::reference
 params_iterator_impl::
 dereference() const noexcept
@@ -84,14 +82,14 @@ dereference() const noexcept
 
     int prefix = pos_ != begin_ || i_ != 0;
     if(nv_ > 0)
-        return params_view::reference{
+        return query_param_encoded_view(
             pos_ + prefix,
             nk_ - prefix,
-            nv_};
-    return params_view::reference{
+            nv_);
+    return query_param_encoded_view(
         pos_ + prefix,
         nk_ - prefix,
-        nv_};
+        nv_);
 }
 
 
