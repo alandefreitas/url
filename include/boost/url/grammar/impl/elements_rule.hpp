@@ -11,6 +11,7 @@
 #define BOOST_URL_GRAMMAR_IMPL_ELEMENTS_RULE_HPP
 
 #include <boost/url/grammar/parse.hpp>
+#include <boost/mp11/tuple.hpp>
 
 namespace boost {
 namespace urls {
@@ -30,8 +31,10 @@ parse_element(
     error_code&,
     std::tuple<R0, Rn...> const&,
     std::tuple<
-        typename R0::value_type,
-        typename Rn::value_type...>&,
+        result<typename
+            R0::value_type>,
+        result<typename
+            Rn::value_type>...>&,
     std::integral_constant<
         std::size_t, I> const&,
     std::false_type const&)
@@ -50,24 +53,22 @@ parse_element(
     error_code& ec,
     std::tuple<R0, Rn...> const& rn,
     std::tuple<
-        typename R0::value_type,
-        typename Rn::value_type...>& tn,
+        result<typename
+            R0::value_type>,
+        result<typename
+            Rn::value_type>...>& tn,
     std::integral_constant<
         std::size_t, I> const&,
     std::true_type const&)
 {
-    auto rv = grammar::parse_(
+    auto& rv = std::get<I>(tn);
+    rv = grammar::parse_(
         it, end, std::get<I>(rn));
-    if(! rv)
+    if(rv.has_error())
     {
         ec = rv.error();
         return;
     }
-    else
-    {
-        ec = {}; // VFALCO REMOVE
-    }
-    std::get<I>(tn) = rv.value();
     parse_element(
         it, end, ec, rn, tn,
         std::integral_constant<
@@ -76,6 +77,17 @@ parse_element(
             ((I + 1) < (
                 1 + sizeof...(Rn)))>{});
 }
+
+struct deref
+{
+    template<class R>
+    auto
+    operator()(R const& r) const ->
+        decltype(*r)
+    {
+        return *r;
+    }
+};
 
 } // detail
 
@@ -90,15 +102,20 @@ parse(
         result<value_type>
 {
     error_code ec;
-    value_type t;
+    std::tuple<
+        result<typename
+            R0::value_type>,
+        result<typename
+            Rn::value_type>...> tn;
     detail::parse_element(
-        it, end, ec, rn_, t,
+        it, end, ec, rn_, tn,
         std::integral_constant<
             std::size_t, 0>{},
         std::true_type{});
     if(ec.failed())
         return ec;
-    return t;
+    return mp11::tuple_transform(
+        detail::deref{}, tn);
 }
 
 //------------------------------------------------
