@@ -29,8 +29,8 @@ parse_element(
     char const*&,
     char const*,
     error_code&,
-    std::tuple<R0, Rn...> const&,
-    std::tuple<
+    tuple<R0, Rn...> const&,
+    tuple<
         result<typename
             R0::value_type>,
         result<typename
@@ -51,8 +51,8 @@ parse_element(
     char const*& it,
     char const* end,
     error_code& ec,
-    std::tuple<R0, Rn...> const& rn,
-    std::tuple<
+    tuple<R0, Rn...> const& rn,
+    tuple<
         result<typename
             R0::value_type>,
         result<typename
@@ -61,9 +61,9 @@ parse_element(
         std::size_t, I> const&,
     std::true_type const&)
 {
-    auto& rv = std::get<I>(tn);
+    auto& rv = get<I>(tn);
     rv = grammar::parse_(
-        it, end, std::get<I>(rn));
+        it, end, get<I>(rn));
     if(rv.has_error())
     {
         ec = rv.error();
@@ -102,7 +102,7 @@ parse(
         result<value_type>
 {
     error_code ec;
-    std::tuple<
+    tuple<
         result<typename
             R0::value_type>,
         result<typename

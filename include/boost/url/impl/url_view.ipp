@@ -704,9 +704,9 @@ apply(
     {
         set_size(
             id_frag,
-            std::get<1>(*t).encoded().size() + 1);
+            grammar::get<1>(*t).encoded().size() + 1);
         decoded_[id_frag] =
-            std::get<1>(*t).size();
+            grammar::get<1>(*t).size();
     }
     else
     {

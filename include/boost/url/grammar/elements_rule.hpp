@@ -12,7 +12,7 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/grammar/error.hpp>
-#include <tuple>
+#include <boost/url/grammar/tuple.hpp>
 
 namespace boost {
 namespace urls {
@@ -24,7 +24,7 @@ template<
 class elements_rule_t
 {
 public:
-    using value_type = std::tuple<
+    using value_type = tuple<
         typename R0::value_type,
         typename Rn::value_type...>;
 
@@ -53,7 +53,7 @@ private:
     {
     }
 
-    std::tuple<R0, Rn...> const rn_;
+    tuple<R0, Rn...> const rn_;
 };
 
 //------------------------------------------------
