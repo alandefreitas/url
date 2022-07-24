@@ -220,13 +220,10 @@ set_scheme_impl(
     urls::scheme id)
 {
     check_invariants();
-    scheme_rule b;
     error_code ec;
-    grammar::parse_string(s, ec, b);
-    if(ec.failed())
-        detail::throw_invalid_argument(
+    auto b = grammar::parse_(
+        s, scheme_rule()).value(
             BOOST_CURRENT_LOCATION);
-
     auto const n = s.size();
     auto const p = offset(id_path);
 

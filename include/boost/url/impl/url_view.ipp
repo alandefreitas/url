@@ -552,7 +552,7 @@ compare(const url_view& other) const noexcept
 void
 url_view::
 apply(
-    scheme_part_rule const& t) noexcept
+    scheme_part_rule::value_type const& t) noexcept
 {
     scheme_ = t.scheme_id;
     if(t.scheme_id !=

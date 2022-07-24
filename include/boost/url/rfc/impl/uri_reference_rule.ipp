@@ -29,36 +29,40 @@ parse(
     auto const start = it;
 
     // scheme ":"
-    if(! grammar::parse(
-        it, end, ec,
-            t.scheme_part))
     {
-        // rewind
-        it = start;
+        auto rv = grammar::parse_(
+            it, end, scheme_part_rule());
+        if(! rv)
+        {
+            // rewind
+            it = start;
 
-        // relative-ref
-        relative_part_rule t0;
-        if(! grammar::parse(
-            it, end, ec,t0))
-            return;
+            // relative-ref
+            relative_part_rule t0;
+            if(! grammar::parse(
+                it, end, ec,t0))
+                return;
 
-        t.has_authority =
-            t0.has_authority;
-        t.authority = t0.authority;
-        t.path = t0.path;
-    }
-    else
-    {
-        // hier-part
-        hier_part_rule t0;
-        if(! grammar::parse(
-            it, end, ec, t0))
-            return;
+            t.has_authority =
+                t0.has_authority;
+            t.authority = t0.authority;
+            t.path = t0.path;
+        }
+        else
+        {
+            t.scheme_part = *rv;
 
-        t.has_authority =
-            t0.has_authority;
-        t.authority = t0.authority;
-        t.path = t0.path;
+            // hier-part
+            hier_part_rule t0;
+            if(! grammar::parse(
+                it, end, ec, t0))
+                return;
+
+            t.has_authority =
+                t0.has_authority;
+            t.authority = t0.authority;
+            t.path = t0.path;
+        }
     }
 
     // [ "?" query ]
@@ -68,14 +72,16 @@ parse(
         return;
 
     // [ "#" fragment ]
-    auto rv = grammar::parse_(
-        it, end, fragment_part_rule);
-    if(! rv)
     {
-        ec = rv.error();
-        return;
+        auto rv = grammar::parse_(
+            it, end, fragment_part_rule);
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.fragment_part = rv.value();
     }
-    t.fragment_part = rv.value();
 }
 
 } // urls

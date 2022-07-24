@@ -886,12 +886,12 @@ grammar_parse()
     {
         //[snippet_parse_1
         urls::string_view s = "http:after_scheme";
-        urls::scheme_rule r;
         const char* it = s.begin();
         urls::error_code ec;
-        if (urls::grammar::parse(it, s.end(), ec, r))
+        auto rv = urls::grammar::parse_(it, s.end(), urls::scheme_rule() );
+        if( ! rv )
         {
-            std::cout << "scheme: " << r.scheme << '\n';
+            std::cout << "scheme: " << rv->scheme << '\n';
             std::cout << "suffix: " << it << '\n';
         }
         //]
@@ -977,6 +977,8 @@ grammar_customization()
 {
     {
         //[snippet_customization_2
+        // VFALCO THIS NEEDS TO BE PORTED
+        /*
         urls::string_view s = "http:somelowercase";
         urls::scheme_rule r1;
         lowercase_rule r2;
@@ -986,6 +988,7 @@ grammar_customization()
             std::cout << "scheme: " << r1.scheme << '\n';
             std::cout << "lower:  " << r2.str << '\n';
         }
+        */
         //]
     }
 }

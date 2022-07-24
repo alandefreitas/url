@@ -26,10 +26,16 @@ parse(
     uri_rule& t) noexcept
 {
     // scheme ":"
-    if(! grammar::parse(
-        it, end, ec,
-            t.scheme_part))
-        return;
+    {
+        auto rv = grammar::parse_(
+            it, end, scheme_part_rule());
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.scheme_part = rv.value();
+    }
 
     // hier-part
     if(! grammar::parse(
@@ -44,14 +50,16 @@ parse(
         return;
 
     // [ "#" fragment ]
-    auto rv = grammar::parse_(
-        it, end, fragment_part_rule);
-    if(! rv)
     {
-        ec = rv.error();
-        return;
+        auto rv = grammar::parse_(
+            it, end, fragment_part_rule);
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.fragment_part = rv.value();
     }
-    t.fragment_part = rv.value();
 }
 
 } // urls

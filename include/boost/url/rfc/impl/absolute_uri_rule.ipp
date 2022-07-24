@@ -24,9 +24,17 @@ parse(
     error_code& ec,
     absolute_uri_rule& t) noexcept
 {
+    auto rv = grammar::parse_(
+        it, end, scheme_part_rule());
+    if(! rv)
+    {
+        ec = rv.error();
+        return;
+    }
+
+    t.scheme_part = *rv;
     grammar::parse(
         it, end, ec,
-        t.scheme_part,
         t.hier_part,
         t.query_part);
 }

@@ -203,7 +203,7 @@ public:
 
         BOOST_TEST_THROWS(
             url().set_scheme(""),
-            std::invalid_argument);
+            std::exception);
 
         BOOST_TEST_THROWS(
             url().set_scheme(scheme::unknown),

@@ -230,7 +230,7 @@ parse_(
     auto it = s.data();
     auto const end = it + s.size();
     auto rv = (parse_)(it, end, r);
-    if( ! rv &&
+    if( rv.has_value() &&
         it != end)
         return error::leftover;
     return rv;

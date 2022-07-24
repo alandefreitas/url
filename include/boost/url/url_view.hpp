@@ -1932,9 +1932,8 @@ public:
     BOOST_URL_DECL friend result<url_view>
         parse_uri_reference(string_view s);
 
-
 private:
-    void apply(scheme_part_rule const& t) noexcept;
+    void apply(scheme_part_rule::value_type const& t) noexcept;
     void apply(host_rule const& h) noexcept;
     void apply(authority_rule const& t) noexcept;
     void apply(parsed_path const& path) noexcept;
