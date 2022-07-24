@@ -35,11 +35,10 @@ parse_element(
         I < 1 + sizeof...(Rn)
             >::type const* = nullptr)
 {
-    tag_invoke(
-        parse_tag{},
-        it, end, ec,
-        std::get<I>(rn),
-        std::get<I>(tn));
+    std::get<I>(tn) =
+        parse_(
+            it, end, ec,
+            std::get<I>(rn));
     if(ec.failed())
         return;
     parse_element(
