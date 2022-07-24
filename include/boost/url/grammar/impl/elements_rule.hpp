@@ -10,6 +10,8 @@
 #ifndef BOOST_URL_GRAMMAR_IMPL_ELEMENTS_RULE_HPP
 #define BOOST_URL_GRAMMAR_IMPL_ELEMENTS_RULE_HPP
 
+#include <boost/url/grammar/parse.hpp>
+
 namespace boost {
 namespace urls {
 namespace grammar {
@@ -31,12 +33,10 @@ parse_element(
         typename Rn::value_type...>& tn,
     std::integral_constant<
         std::size_t, I> const&,
-    typename std::enable_if<
-        I < 1 + sizeof...(Rn)
-            >::type const* = nullptr)
+    std::true_type const&)
 {
     std::get<I>(tn) =
-        parse_(
+        grammar::parse_(
             it, end, ec,
             std::get<I>(rn));
     if(ec.failed())
@@ -44,7 +44,9 @@ parse_element(
     parse_element(
         it, end, ec, rn, tn,
         std::integral_constant<
-            std::size_t, I + 1>{});
+            std::size_t, I + 1>{},
+        std::integral_constant<bool,
+            I + 1 < (1 + sizeof...(Rn))>{});
 }
 
 template<
@@ -62,9 +64,7 @@ parse_element(
         typename Rn::value_type...>&,
     std::integral_constant<
         std::size_t, I> const&,
-    typename std::enable_if<
-        I >= 1 + sizeof...(Rn)
-            >::type const* = nullptr)
+    std::false_type const&)
 {
     // end
 }
@@ -85,7 +85,8 @@ parse(
     detail::parse_element(
         it, end, ec, rn_, t,
         std::integral_constant<
-            std::size_t, 0>{});
+            std::size_t, 0>{},
+        std::true_type{});
 }
 
 //------------------------------------------------
