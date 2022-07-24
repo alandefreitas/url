@@ -18,6 +18,7 @@
 #include <boost/url/grammar/elements_rule.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/lut_chars.hpp>
+#include <boost/url/grammar/optional_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
 #include <boost/url/grammar/range.hpp>

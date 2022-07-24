@@ -24,6 +24,7 @@ set(BOOST_URL_TESTS_FILES
     host_type.cpp
     ipv4_address.cpp
     ipv6_address.cpp
+    optional.cpp
     params.cpp
     params_encoded.cpp
     params_encoded_view.cpp
@@ -50,6 +51,7 @@ set(BOOST_URL_TESTS_FILES
     grammar/elements_rule.cpp
     grammar/error.cpp
     grammar/lut_chars.cpp
+    grammar/optional_rule.cpp
     grammar/parse.cpp
     grammar/parse_tag.cpp
     grammar/range.cpp

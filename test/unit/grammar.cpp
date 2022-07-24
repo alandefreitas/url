@@ -22,7 +22,6 @@
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/error.hpp>
 #include <boost/url/grammar/parse.hpp>
-#include <boost/url/detail/optional.hpp>
 #include <type_traits>
 
 namespace boost {
