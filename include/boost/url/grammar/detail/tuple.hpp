@@ -83,10 +83,6 @@ struct tuple : tuple_impl<
     constexpr
     tuple(tuple const&) noexcept = default;
 
-    constexpr
-    tuple&
-    operator=(tuple const&) noexcept = default;
-
     template<class U
     #if 0
         ,typename std::enable_if<
@@ -164,6 +160,7 @@ using tuple_element = typename boost::copy_cv<
 } // urls
 } // boost
 
+#if 0
 namespace std {
 template<class T>
 struct tuple_size;
@@ -175,5 +172,6 @@ struct tuple_size<
 {
 };
 } // std
+#endif
 
 #endif
