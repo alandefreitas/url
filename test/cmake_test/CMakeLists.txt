@@ -30,6 +30,8 @@ else()
     add_subdirectory(../../../align boostorg/align)
     add_subdirectory(../../../system boostorg/system)
     add_subdirectory(../../../container boostorg/container)
+
+    add_subdirectory(../../../io boostorg/io)
     add_subdirectory(../../../utility boostorg/utility)
 
     # Conditional deps
