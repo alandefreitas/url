@@ -213,41 +213,56 @@ increment(
 
 //------------------------------------------------
 
-bool
+auto
+path_noscheme_rule::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    return grammar::parse_range(
+        it, end, *this,
+        &path_noscheme_rule::begin,
+        &path_noscheme_rule::increment);
+}
+
+auto
 path_noscheme_rule::
 begin(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
+    error_code ec;
+    pct_encoded_view t;
     if(grammar::parse(
         it, end, ec,
         segment_nz_nc_rule{t}))
-        return true;
+        return t;
     // bad segment-nz-nc
-    ec = error::bad_schemeless_path_segment;
-    return false;
+    return error::bad_schemeless_path_segment;
 }
 
-bool
+auto
 path_noscheme_rule::
 increment(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
-    auto const start = it;
+    error_code ec;
+    pct_encoded_view t;
+    auto const it0 = it;
     if(grammar::parse(
         it, end, ec,
         '/', segment_rule{t}))
-        return true;
-    ec = grammar::error::end;
-    it = start;
-    return false;
+        return t;
+    it = it0;
+    return grammar::error::end;
 }
-
 
 //------------------------------------------------
 

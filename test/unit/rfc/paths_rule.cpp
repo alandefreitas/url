@@ -20,8 +20,6 @@ namespace boost {
 namespace urls {
 
 BOOST_STATIC_ASSERT(
-    grammar::is_range<path_noscheme_rule>::value);
-BOOST_STATIC_ASSERT(
     grammar::is_range<path_rootless_rule>::value);
 
 class paths_rule_test
@@ -125,31 +123,31 @@ public:
         // path-noscheme = segment-nz-nc *( "/" segment )
         using T = path_noscheme_rule;
 
-        good<T>(".");
-        good<T>("x");
-        good<T>("%20");
-        good<T>("%2f");
-        good<T>("a/");
-        good<T>("a//");
-        good<T>("a/x");
-        good<T>("a/x/");
-        good<T>("a/x//");
-        good<T>("a///");
+        ok(".", T{});
+        ok("x", T{});
+        ok("%20", T{});
+        ok("%2f", T{});
+        ok("a/", T{});
+        ok("a//", T{});
+        ok("a/x", T{});
+        ok("a/x/", T{});
+        ok("a/x//", T{});
+        ok("a///", T{});
 
-        bad<T>("");
-        bad<T>(" ");
-        bad<T>(":");
-        bad<T>("/");
-        bad<T>("/x");
-        bad<T>("//");
-        bad<T>("/x/");
-        bad<T>("/:/");
-        bad<T>("/x//");
-        bad<T>("/%20");
-        bad<T>("/:%20");
-        bad<T>("/%20");
-        bad<T>("/%25");
-        bad<T>("/%25%2e");
+        bad_("", T{});
+        bad_(" ", T{});
+        bad_(":", T{});
+        bad_("/", T{});
+        bad_("/x", T{});
+        bad_("//", T{});
+        bad_("/x/", T{});
+        bad_("/:/", T{});
+        bad_("/x//", T{});
+        bad_("/%20", T{});
+        bad_("/:%20", T{});
+        bad_("/%20", T{});
+        bad_("/%25", T{});
+        bad_("/%25%2e", T{});
     }
 
     void

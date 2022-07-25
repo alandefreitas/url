@@ -35,13 +35,15 @@ parse(
     }
     if(it[0] != '/')
     {
-        path_noscheme_rule t0;
-        if(grammar::parse(
-            it, end, ec, t0))
+        auto rv = grammar::parse_(
+            it, end,
+            path_noscheme_rule{});
+        if(rv.has_value())
         {
             // path-noscheme
-            t.path.path = t0.str;
-            t.path.count = t0.count;
+            auto const& v = rv.value();
+            t.path.path = v.string();
+            t.path.count = v.size();
             t.has_authority = false;
             return;
         }
