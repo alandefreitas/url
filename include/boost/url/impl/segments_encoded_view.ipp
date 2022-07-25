@@ -124,13 +124,15 @@ result<segments_encoded_view>
 parse_path_rootless(
     string_view s) noexcept
 {
-    error_code ec;
-    path_rootless_rule t;
-    if(! grammar::parse_string(s, ec, t))
-        return ec;
+    auto rv = grammar::parse_(
+        s, path_rootless_rule{});
+    if(! rv)
+        return rv.error();
+    auto const& v = rv.value();
     return segments_encoded_view(
-        t.str, detail::path_segments(
-            t.str, t.count));
+        v.string(), detail::path_segments(
+            v.string(),
+            v.size()));
 }
 
 } // urls

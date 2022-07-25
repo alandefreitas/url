@@ -266,35 +266,54 @@ increment(
 
 //------------------------------------------------
 
-bool
+auto
+path_rootless_rule::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    return grammar::parse_range(
+        it, end, *this,
+        &path_rootless_rule::begin,
+        &path_rootless_rule::increment);
+}
+
+auto
 path_rootless_rule::
 begin(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end
+        ) const noexcept ->
+     result<pct_encoded_view>
 {
-    return grammar::parse(
+    error_code ec;
+    pct_encoded_view t;
+    if(! grammar::parse(
         it, end, ec,
-        segment_nz_rule{t});
+        segment_nz_rule{t}))
+        return ec;
+    return t;
 }
 
-bool
+auto
 path_rootless_rule::
 increment(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
-    auto const start = it;
+    error_code ec;
+    pct_encoded_view t;
+    auto const it0 = it;
     if(grammar::parse(
         it, end, ec,
         '/', segment_rule{t}))
-        return true;
-    ec = grammar::error::end;
-    it = start;
-    return false;
+        return t;
+    it = it0;
+    return grammar::error::end;
 }
 
 } // urls
