@@ -20,59 +20,6 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
-template<class T>
-void
-range_::
-parse_impl(
-    char const*& it,
-    char const* end,
-    error_code& ec,
-    range_& t)
-{
-    typename T::value_type t0;
-    auto start = it;
-    std::size_t n = 0;
-    T::begin(it, end, ec, t0);
-    if(ec.failed())
-    {
-        if(ec == error::end)
-        {
-            ec = {};
-            goto finish;
-        }
-        return;
-    }
-    for(;;)
-    {
-        ++n;
-        T::increment(
-            it, end, ec, t0);
-        if(ec.failed())
-        {
-            if(ec == error::end)
-            {
-                ec = {};
-                break;
-            }
-            return;
-        }
-    }
-finish:
-    t.str = string_view(
-        start, it - start);
-    t.count = n;
-}
-
-template<class T>
-range_::
-range_(T const*) noexcept
-    : fp_(&range_::parse_impl<T>)
-{
-    // Type requirements not met!
-    BOOST_STATIC_ASSERT(
-        is_range<T>::value);
-}
-
 //------------------------------------------------
 
 template<class R>

@@ -61,55 +61,6 @@ struct is_range<T, boost::void_t<
 
 //------------------------------------------------
 
-class range_
-{
-    void(*fp_)(
-        char const*&,
-        char const*,
-        error_code&,
-        range_&);
-
-    template<class T>
-    static
-    void
-    parse_impl(
-        char const*& it,
-        char const* end,
-        error_code& ec,
-        range_& t);
-
-protected:
-    template<class T>
-    explicit
-    range_(T const*) noexcept;
-
-public:
-    string_view str;
-    std::size_t count;
-
-    template<class T>
-    class iterator;
-
-    range_() noexcept
-        : fp_(nullptr)
-    {
-    }
-
-    friend
-    void
-    tag_invoke(
-        parse_tag const&,
-        char const*& it,
-        char const* end,
-        error_code& ec,
-        range_& t)
-    {
-        t.fp_(it, end, ec, t);
-    }
-};
-
-//------------------------------------------------
-
 /** Rule for a repeating number of rules.
 */
 template<class R>
