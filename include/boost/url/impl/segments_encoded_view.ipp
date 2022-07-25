@@ -92,13 +92,16 @@ result<segments_encoded_view>
 parse_path_absolute(
     string_view s) noexcept
 {
-    error_code ec;
-    path_absolute_rule t;
-    if(! grammar::parse_string(s, ec, t))
-        return ec;
+    auto rv = grammar::parse_(
+        s, path_absolute_rule{});
+    if(! rv)
+        return rv.error();
+    auto const& v = rv.value();
     return segments_encoded_view(
-        t.str, detail::path_segments(
-            t.str, t.count));
+        v.string(),
+        detail::path_segments(
+            v.string(),
+            v.size()));
 }
 
 result<segments_encoded_view>

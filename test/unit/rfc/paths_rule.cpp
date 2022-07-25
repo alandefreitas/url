@@ -20,8 +20,6 @@ namespace boost {
 namespace urls {
 
 BOOST_STATIC_ASSERT(
-    grammar::is_range<path_absolute_rule>::value);
-BOOST_STATIC_ASSERT(
     grammar::is_range<path_noscheme_rule>::value);
 BOOST_STATIC_ASSERT(
     grammar::is_range<path_rootless_rule>::value);
@@ -43,20 +41,6 @@ public:
     {
         BOOST_TEST(grammar::parse_(
             s, r).has_error());
-    }
-
-    template<class T>
-    void
-    good(string_view s)
-    {
-        T t;
-        error_code ec;
-        if(! BOOST_TEST(
-            grammar::parse_string(s,
-                ec, t)))
-            BOOST_TEST(ec.failed());
-        else
-            BOOST_TEST(! ec.failed());
     }
 
     template<class T>
@@ -113,26 +97,26 @@ public:
         // path-absolute = "/" [ segment-nz *( "/" segment ) ]
         using T = path_absolute_rule;
 
-        good<T>("/");
-        good<T>("/x");
-        good<T>("/x/");
-        good<T>("/:/");
-        good<T>("/x//");
-        good<T>("/%20");
-        good<T>("/:%20");
-        good<T>("/%20");
-        good<T>("/%25");
-        good<T>("/%25%2e");
+        ok("/", T{});
+        ok("/x", T{});
+        ok("/x/", T{});
+        ok("/:/", T{});
+        ok("/x//", T{});
+        ok("/%20", T{});
+        ok("/:%20", T{});
+        ok("/%20", T{});
+        ok("/%25", T{});
+        ok("/%25%2e", T{});
 
-        bad<T>("");
-        bad<T>("//");
-        bad<T>(".");
-        bad<T>(":");
-        bad<T>("x");
-        bad<T>("%20");
-        bad<T>("%2f");
-        bad<T>("a/");
-        bad<T>(" ");
+        bad_("", T{});
+        bad_("//", T{});
+        bad_(".", T{});
+        bad_(":", T{});
+        bad_("x", T{});
+        bad_("%20", T{});
+        bad_("%2f", T{});
+        bad_("a/", T{});
+        bad_(" ", T{});
     }
 
     void

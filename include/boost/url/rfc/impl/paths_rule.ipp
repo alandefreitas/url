@@ -112,8 +112,9 @@ auto
 path_abempty_rule::
 begin(
     char const*& it,
-    char const* end) const noexcept ->
-        result<pct_encoded_view>
+    char const* end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
     return increment(it, end);
 }
@@ -122,8 +123,9 @@ auto
 path_abempty_rule::
 increment(
     char const*& it,
-    char const* end) const noexcept ->
-        result<pct_encoded_view>
+    char const* end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
     error_code ec;
     pct_encoded_view t;
@@ -141,60 +143,72 @@ increment(
 
 //------------------------------------------------
 
-bool
+auto
+path_absolute_rule::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    return grammar::parse_range(
+        it, end, *this,
+        &path_absolute_rule::begin,
+        &path_absolute_rule::increment);
+}
+
+auto
 path_absolute_rule::
 begin(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* const end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
     if(it == end)
     {
         // expected '/'
-        ec = BOOST_URL_ERR(
-            error::missing_path_segment);
-        return false;
+        return error::missing_path_segment;
     }
     if(*it != '/')
     {
         // expected '/'
-        ec = BOOST_URL_ERR(
-            error::missing_path_separator);
-        return false;
+        return error::missing_path_separator;
     }
     ++it;
     if(it == end)
-        return true;
+        return pct_encoded_view{};
     if(*it == '/')
     {
         // can't begin with "//"
-        ec = BOOST_URL_ERR(
-            error::empty_path_segment);
-        return false;
+        return error::empty_path_segment;
     }
-    return grammar::parse(
+    error_code ec;
+    pct_encoded_view t;
+    if(! grammar::parse(
         it, end, ec,
-        segment_rule{t});
+        segment_rule{t}))
+        return ec;
+    return t;
 }
 
-bool
+auto
 path_absolute_rule::
 increment(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    pct_encoded_view& t) noexcept
+    char const* const end
+        ) const noexcept ->
+    result<pct_encoded_view>
 {
     auto const start = it;
+    error_code ec;
+    pct_encoded_view t;
     if(grammar::parse(
         it, end, ec,
         '/', segment_rule{t}))
-        return true;
-    ec = BOOST_URL_ERR(
-        grammar::error::end);
+        return t;
     it = start;
-    return false;
+    return grammar::error::end;
 }
 
 //------------------------------------------------

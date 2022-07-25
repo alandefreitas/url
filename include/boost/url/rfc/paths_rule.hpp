@@ -273,33 +273,33 @@ private:
 #ifdef BOOST_URL_DOCS
 using path_absolute_rule = __see_below__;
 #else
-struct path_absolute_rule : grammar::range_
+struct path_absolute_rule
 {
     using value_type =
-        pct_encoded_view;
-
-    path_absolute_rule()
-        : grammar::range_(this)
-    {
-    }
+        grammar::range__<
+            pct_encoded_view>;
 
     BOOST_URL_DECL
-    static
-    bool
+    result<value_type>
+    parse(
+        char const*& it,
+        char const* end
+            ) const noexcept;
+
+private:
+    BOOST_URL_DECL
+    result<pct_encoded_view>
     begin(
         char const*& it,
-        char const* const end,
-        error_code& ec,
-        pct_encoded_view& t) noexcept;
+        char const* end
+            ) const noexcept;
 
     BOOST_URL_DECL
-    static
-    bool
+    result<pct_encoded_view>
     increment(
         char const*& it,
-        char const* const end,
-        error_code& ec,
-        pct_encoded_view& t) noexcept;
+        char const* end
+            ) const noexcept;
 };
 #endif
 

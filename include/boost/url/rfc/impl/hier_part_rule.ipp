@@ -50,12 +50,17 @@ parse(
         it[1] != '/')
     {
         // path-absolute
-        path_absolute_rule t0;
-        if(! grammar::parse(
-                it, end, ec, t0))
+        auto rv = grammar::parse_(
+            it, end,
+            path_absolute_rule{});
+        if(! rv)
+        {
+            ec = rv.error();
             return;
-        t.path.path = t0.str;
-        t.path.count = t0.count;
+        }
+        auto const& p = rv.value();
+        t.path.path = p.string();
+        t.path.count = p.size();
         t.has_authority = false;
         return;
     }
