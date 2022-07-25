@@ -259,6 +259,108 @@ public:
     }
 };
 
+//------------------------------------------------
+
+/** A forward range of parsed elements
+
+    @tparam R The rule used to parse each element
+*/
+template<class R>
+class range__
+{
+    static_assert(
+        is_rule<R>::value,
+        "Rule requirements not met");
+
+public:
+    using value_type =
+        typename R::value_type;
+    using reference = value_type;
+    using const_reference = value_type;
+    using pointer = void const*;
+    using size_type = std::size_t;
+    using difference_type =
+        std::ptrdiff_t;
+
+    // pointer to member
+    using fn =
+        result<value_type>(R::*)(
+            char const*&,
+            char const*) const;
+
+    class iterator;
+    using const_iterator = iterator;
+
+    ~range__() = default;
+    range__() = default;
+    range__(
+        range__ const&) noexcept = default;
+    range__& operator=(
+        range__ const& v) noexcept = default;
+
+    iterator begin() const noexcept;
+    iterator end() const noexcept;
+
+    /** Return the parsed string
+    */
+    string_view
+    string() const noexcept
+    {
+        return s_;
+    }
+
+    /** Return the number of elements in the range
+    */
+    std::size_t
+    size() const noexcept
+    {
+        return n_;
+    }
+
+    /** Return true if the range is empty
+    */
+    bool
+    empty() const noexcept
+    {
+        return n_ == 0;
+    }
+
+private:
+    R const r_;
+    string_view s_;
+    std::size_t n_ = 0;
+    fn begin_ = nullptr;
+    fn increment_ = nullptr;
+
+    range__(
+        string_view s,
+        std::size_t n,
+        R const& r,
+        fn begin,
+        fn increment) noexcept
+        : s_(s)
+        , n_(n)
+        , r_(r)
+        , begin_(begin)
+        , increment_(increment)
+    {
+    }
+
+    template<class R_>
+    friend
+    range<R_>
+    parse_range(
+        char const*& it,
+        char const* end,
+        R_ const& r,
+        typename range__<
+            R_>::fn begin,
+        typename range__<
+            R_>::fn increment,
+        std::size_t N,
+        std::size_t M);
+};
+
 } // grammar
 } // urls
 } // boost
