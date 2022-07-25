@@ -261,44 +261,46 @@ public:
 
 //------------------------------------------------
 
+template<class R>
+using range_fn = result<
+    typename R::value_type>(R::*)(
+        char const*&, char const*);
+
 /** A forward range of parsed elements
 
-    @tparam R The rule used to parse each element
+    @tparam T The value type of the range
 */
-template<class R>
+template<class T>
 class range__
 {
-    static_assert(
-        is_rule<R>::value,
-        "Rule requirements not met");
+    struct any_rule;
+
+    any_rule const&
+    get() const noexcept;
 
 public:
-    using value_type =
-        typename R::value_type;
-    using reference = value_type;
-    using const_reference = value_type;
+    using value_type = T;
+    using reference = T const&;
+    using const_reference = T const&;
     using pointer = void const*;
     using size_type = std::size_t;
     using difference_type =
         std::ptrdiff_t;
 
-    // pointer to member
-    using fn =
-        result<value_type>(R::*)(
-            char const*&,
-            char const*) const;
-
     class iterator;
+
     using const_iterator = iterator;
 
-    ~range__() = default;
-    range__() = default;
-    range__(
-        range__ const&) noexcept = default;
-    range__& operator=(
-        range__ const& v) noexcept = default;
+    /** Destructor
+    */
+    ~range__();
+
+    /** Constructor
+    */
+    range__(range__ const&) noexcept;
 
     iterator begin() const noexcept;
+
     iterator end() const noexcept;
 
     /** Return the parsed string
@@ -326,39 +328,37 @@ public:
     }
 
 private:
-    R const r_;
+    // buffer size for type-erased rule
+    static
+    constexpr
+    std::size_t
+    BufferSize = 64;
+
     string_view s_;
     std::size_t n_ = 0;
-    fn begin_ = nullptr;
-    fn increment_ = nullptr;
+    char buf_[BufferSize];
 
+    template<class R>
     range__(
         string_view s,
         std::size_t n,
         R const& r,
-        fn begin,
-        fn increment) noexcept
-        : s_(s)
-        , n_(n)
-        , r_(r)
-        , begin_(begin)
-        , increment_(increment)
-    {
-    }
+        range_fn<R> begin,
+        range_fn<R> increment) noexcept;
 
-    template<class R_>
+    template<class R>
     friend
-    range<R_>
+    auto
     parse_range(
         char const*& it,
         char const* end,
-        R_ const& r,
-        typename range__<
-            R_>::fn begin,
-        typename range__<
-            R_>::fn increment,
+        R const& r,
+        range_fn<R> begin,
+        range_fn<R> increment,
         std::size_t N,
-        std::size_t M);
+        std::size_t M) ->
+            range<typename
+                R::value_type>;
 };
 
 } // grammar

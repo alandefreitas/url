@@ -14,6 +14,7 @@
 #include <boost/url/grammar/error.hpp>
 #include <boost/assert.hpp>
 #include <iterator>
+#include <new>
 
 namespace boost {
 namespace urls {
@@ -240,15 +241,36 @@ parse(
 }
 
 //------------------------------------------------
+//
+// range
+//
+//------------------------------------------------
 
-template<class R>
-class range__<R>::iterator
+// base class for the type-erased rule
+template<class T>
+struct range__<T>::
+    any_rule
+{
+    virtual ~any_rule() = default;
+    virtual void copy(
+        void*) const noexcept = 0;
+    virtual result<T> begin(
+        char const*&, char const*)
+            const noexcept = 0;
+    virtual result<T> increment(
+        char const*&, char const*)
+            const noexcept = 0;
+};
+
+//------------------------------------------------
+
+template<class T>
+class range__<T>::
+    iterator
 {
 public:
-    using value_type =
-        typename R::value_type;
-    using reference =
-        value_type const&;
+    using value_type = T;
+    using reference = T const&;
     using pointer = void const*;
     using difference_type =
         std::ptrdiff_t;
@@ -288,12 +310,16 @@ public:
     iterator&
     operator++() noexcept
     {
-        BOOST_ASSERT(p_ != nullptr);
-        error_code ec;
+        BOOST_ASSERT(
+            p_ != nullptr);
         auto const end =
             r_->s_.data() +
             r_->s_.size();
-        rv_ = r_->*increment_(p_, end);
+        auto const p =
+            reinterpret_cast<
+                any_rule const*>(
+                    r_->buf_);
+        r_->get().increment(p_, end);
         if(rv_.has_error())
         {
             BOOST_ASSERT(
@@ -313,21 +339,25 @@ public:
     }
 
 private:
-    friend class range<R>;
+    friend class range<T>;
 
-    range__<R> const* r_ = nullptr;
+    range__<T> const* r_ = nullptr;
     char const* p_ = nullptr;
-    result<typename R::value_type> rv_;
+    result<T> rv_;
 
     iterator(
-        range__<R> const& r) noexcept
+        range__<T> const& r) noexcept
         : r_(&r)
         , p_(r.s_.data())
     {
         auto const end =
             r_->s_.data() +
             r_->s_.size();
-        rv_ = r_->*begin_(p_, end);
+        auto const p =
+            reinterpret_cast<
+                any_rule const*>(
+                    r_->buf_);
+        rv_ = r_->get().begin_(p_, end);
         if(rv_.has_error())
         {
             BOOST_ASSERT(
@@ -339,13 +369,32 @@ private:
 
     constexpr
     iterator(
-        range<R> const& r,
+        range__<T> const& r,
         int) noexcept
         : p_(nullptr)
         , r_(&r)
     {
     }
 };
+
+//------------------------------------------------
+
+template<class T>
+auto
+range__<T>::
+get() const noexcept ->
+    any_rule const&
+{
+    return *reinterpret_cast<
+        any_rule const*>(buf_);
+}
+
+template<class T>
+range__<T>::
+~range__()
+{
+    get().~any_base();
+}
 
 template<class T>
 auto
@@ -365,16 +414,73 @@ end() const noexcept ->
     return { *this, 0 };
 }
 
+template<class T>
 template<class R>
-range__<R>
+range__<T>::
+range__(
+    string_view s,
+    std::size_t n,
+    R const& r,
+    range_fn<R> begin,
+    range_fn<R> increment) noexcept
+    : s_(s)
+    , n_(n)
+{
+    static_assert(
+        is_rule<R>::value,
+        "Rule requirements not met");
+
+    static_assert(
+        sizeof(R) <= BufferSize,
+        "sizeof(R) is unsupported");
+
+    struct impl : any_rule
+    {
+        R const r_;
+        range_fn<R> begin_;
+        range_fn<R> increment_;
+
+        void
+        copy(void* dest)
+            const noexcept override
+        {
+            ::new(dest) impl(*this);
+        }
+
+        result<T>
+        begin(
+            char const*& it,
+            char const* end)
+                const noexcept override
+        {
+            return r_.*begin_(it, end);
+        }
+
+        result<T>
+        increment(
+            char const*& it,
+            char const* end)
+                const noexcept override
+        {
+            return r_.*increment_(it, end);
+        }
+    };
+
+    ::new(buf_) impl{
+        r, begin, increment};
+}
+
+template<class R>
+auto
 parse_range(
     char const*& it,
     char const* end,
     R const& r,
-    typename range__<R>::fn begin,
-    typename range__<R>::fn increment,
+    range_fn<R> begin,
+    range_fn<R> increment,
     std::size_t N = 0,
-    std::size_t M = std::size_t(-1))
+    std::size_t M = std::size_t(-1)) ->
+        range<typename R::value_type>
 {
     std::size_t n = 0;
     auto const it0 = it;

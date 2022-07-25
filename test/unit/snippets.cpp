@@ -887,7 +887,6 @@ grammar_parse()
         //[snippet_parse_1
         urls::string_view s = "http:after_scheme";
         const char* it = s.begin();
-        urls::error_code ec;
         auto rv = urls::grammar::parse_(it, s.end(), urls::scheme_rule() );
         if( ! rv )
         {
@@ -1043,7 +1042,6 @@ grammar_charset()
         //[snippet_charset_3
         urls::string_view s = "key=the%20value";
         
-        urls::error_code ec;
         urls::result<urls::pct_encoded_view> rv = urls::grammar::parse_(s, urls::pct_encoded_rule(urls::query_chars));
         if( ! rv.has_error() )
         {
