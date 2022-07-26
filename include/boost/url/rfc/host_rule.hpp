@@ -19,6 +19,8 @@
 #include <boost/url/ipv6_address.hpp>
 #include <boost/url/grammar/parse_tag.hpp>
 
+#include <boost/variant2.hpp>
+
 namespace boost {
 namespace urls {
 

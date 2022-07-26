@@ -45,6 +45,7 @@ set(BOOST_URL_TESTS_FILES
     url.cpp
     url_view.cpp
     urls.cpp
+    variant.cpp
     grammar/ascii.cpp
     grammar/char_rule.cpp
     grammar/charset.cpp
@@ -59,6 +60,7 @@ set(BOOST_URL_TESTS_FILES
     grammar/token_rule.cpp
     grammar/type_traits.cpp
     grammar/unsigned_decimal.cpp
+    grammar/variant_rule.cpp
     rfc/absolute_uri_rule.cpp
     rfc/authority_rule.cpp
     rfc/charsets.cpp
