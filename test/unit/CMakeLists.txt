@@ -63,6 +63,7 @@ set(BOOST_URL_TESTS_FILES
     rfc/authority_rule.cpp
     rfc/charsets.cpp
     rfc/fragment_rule.cpp
+    rfc/h16_rule.cpp
     rfc/hier_part_rule.cpp
     rfc/host_rule.cpp
     rfc/ip_literal_rule.cpp
