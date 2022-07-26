@@ -12,9 +12,11 @@
 
 #include <boost/url/rfc/ip_literal_rule.hpp>
 #include <boost/url/ipv6_address.hpp>
+#include <boost/url/grammar/char_rule.hpp>
+#include <boost/url/grammar/parse.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <boost/url/rfc/ipv_future_rule.hpp>
-#include <boost/url/grammar/parse.hpp>
 
 namespace boost {
 namespace urls {
@@ -40,11 +42,19 @@ parse(
     if(*it != 'v')
     {
         // IPv6address
-        if(! grammar::parse(
-                it, end, ec,
-                t.ipv6, ']'))
+        auto rv = grammar::parse_(
+            it, end,
+            grammar::sequence_rule(
+                ipv6_address_rule,
+                grammar::char_rule(']')));
+        if(! rv)
+        {
+            ec = rv.error();
             return;
+        }
+        t.ipv6 = std::get<0>(*rv);
         t.is_ipv6 = true;
+        return;
     }
     else
     {

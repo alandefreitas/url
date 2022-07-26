@@ -255,13 +255,15 @@ print_impl(
     return dest - dest0;
 }
 
-void
-ipv6_address::
+//------------------------------------------------
+
+auto
+ipv6_address_rule_t::
 parse(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    ipv6_address& t) noexcept
+    char const* const end
+        ) const noexcept ->
+    result<ipv6_address>
 {
     int n = 8;      // words needed
     int b = -1;     // value of n
@@ -281,8 +283,7 @@ parse(
             }
             BOOST_ASSERT(n > 0);
             // not enough words
-            ec = error::missing_words;
-            return;
+            return error::missing_words;
         }
         if(*it == ':')
         {
@@ -290,8 +291,7 @@ parse(
             if(it == end)
             {
                 // missing ':'
-                ec = error::missing_char_literal;
-                return;
+                return error::missing_char_literal;
             }
             if(*it == ':')
             {
@@ -307,8 +307,7 @@ parse(
                     continue;
                 }
                 // two "::"
-                ec = error::bad_ipv6;
-                return;
+                return error::bad_ipv6;
             }
             if(c)
             {
@@ -316,10 +315,7 @@ parse(
                 rv = grammar::parse_(
                     it, end, h16_rule);
                 if(! rv)
-                {
-                    ec = rv.error();
-                    return;
-                }
+                    return rv.error();
                 bytes[2*(8-n)+0] = rv.value().hi;
                 bytes[2*(8-n)+1] = rv.value().lo;
                 --n;
@@ -328,23 +324,20 @@ parse(
                 continue;
             }
             // expected h16
-            ec = error::missing_words;
-            return;
+            return error::missing_words;
         }
         if(*it == '.')
         {
             if(b == -1 && n > 1)
             {
                 // not enough h16
-                ec = error::bad_ipv6;
-                return;
+                return error::bad_ipv6;
             }
             if(! detail::maybe_octet(
                 &bytes[2*(7-n)]))
             {
                 // invalid octet
-                ec = error::bad_octet;
-                return;
+                return error::bad_octet;
             }
             // rewind the h16 and
             // parse it as ipv4
@@ -352,10 +345,7 @@ parse(
             auto rv1 = grammar::parse_(
                 it, end, ipv4_address_rule);
             if(! rv1)
-            {
-                ec = rv1.error();
-                return;
-            }
+                return rv1.error();
             auto v4 = rv1.value();
             auto const b4 =
                 v4.to_bytes();
@@ -379,10 +369,7 @@ parse(
             rv = grammar::parse_(
                 it, end, h16_rule);
             if(! rv)
-            {
-                ec = rv.error();
-                return;
-            }
+                return rv.error();
             bytes[2*(8-n)+0] = rv.value().hi;
             bytes[2*(8-n)+1] = rv.value().lo;
             --n;
@@ -392,15 +379,10 @@ parse(
             continue;
         }
         // ':' divides a word
-        ec = error::bad_ipv6;
-        return;
+        return error::bad_ipv6;
     }
-    ec = {};
     if(b == -1)
-    {
-        t = bytes;
-        return;
-    }
+        return ipv6_address{bytes};
     if(b == n)
     {
         // "::" last
@@ -438,19 +420,16 @@ parse(
             &bytes[i0],
             0, 16 - (i0 + i1));
     }
-    t = bytes;
+    return ipv6_address{bytes};
 }
 
-result<ipv6_address>
+auto
 parse_ipv6_address(
-    string_view s) noexcept
+    string_view s) noexcept ->
+        result<ipv6_address>
 {
-    error_code ec;
-    ipv6_address addr;
-    if(! grammar::parse_string(
-            s, ec, addr))
-        return ec;
-    return addr;
+    return grammar::parse_(
+        s, ipv6_address_rule);
 }
 
 } // urls
