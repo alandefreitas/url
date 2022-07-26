@@ -399,7 +399,7 @@ parse(
             // parse it as ipv4
             it = prev;
             auto rv = grammar::parse_(
-                it, end, ipv4_address::rule);
+                it, end, ipv4_address_rule);
             if(! rv)
             {
                 ec = rv.error();

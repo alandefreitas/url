@@ -64,7 +64,7 @@ parse(
     // IPv4address
     {
         auto rv = grammar::parse_(
-            it, end, ipv4_address::rule);
+            it, end, ipv4_address_rule);
         if(rv.has_value())
         {
             t.ipv4 = rv.value();

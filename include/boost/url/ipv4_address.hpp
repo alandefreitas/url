@@ -15,7 +15,6 @@
 #include <boost/url/error.hpp>
 #include <boost/url/result.hpp>
 #include <boost/url/string_view.hpp>
-#include <boost/url/grammar/parse_tag.hpp>
 #include <string>
 #include <array>
 #include <cstdint>
@@ -53,24 +52,6 @@ namespace urls {
 class ipv4_address
 {
 public:
-    /** A Rule for parsing
-    */
-    struct rule_t
-    {
-        using value_type =
-            ipv4_address;
-
-        BOOST_URL_DECL
-        auto
-        parse(
-            char const*& it,
-            char const* end
-                ) const noexcept ->
-        result<ipv4_address>;
-    };
-
-    static constexpr rule_t rule{};
-
     /** The number of characters in the longest possible IPv4 string.
 
         The longest ipv4 address string is "255.255.255.255".
@@ -311,6 +292,24 @@ private:
 };
 
 //------------------------------------------------
+
+/** A Rule for parsing
+*/
+struct ipv4_address_rule_t
+{
+    using value_type =
+        ipv4_address;
+
+    BOOST_URL_DECL
+    auto
+    parse(
+        char const*& it,
+        char const* end
+            ) const noexcept ->
+    result<ipv4_address>;
+};
+
+constexpr ipv4_address_rule_t ipv4_address_rule{};
 
 /** Return an IPv4 address from an IP address string in dotted decimal form
 */

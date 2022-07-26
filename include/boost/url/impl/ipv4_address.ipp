@@ -21,37 +21,6 @@
 namespace boost {
 namespace urls {
 
-auto
-ipv4_address::
-rule_t::
-parse(
-    char const*& it,
-    char const* end
-        ) const noexcept ->
-    result<value_type>
-{
-    auto rv = grammar::parse_(
-        it, end,
-        grammar::sequence_rule(
-            grammar::dec_octet_rule,
-            grammar::char_rule('.'),
-            grammar::dec_octet_rule,
-            grammar::char_rule('.'),
-            grammar::dec_octet_rule,
-            grammar::char_rule('.'),
-            grammar::dec_octet_rule));
-    if(! rv)
-        return rv.error();
-    std::array<unsigned char, 4> v;
-    v[0] = std::get<0>(*rv);
-    v[1] = std::get<2>(*rv);
-    v[2] = std::get<4>(*rv);
-    v[3] = std::get<6>(*rv);
-    return ipv4_address(v);
-}
-
-//------------------------------------------------
-
 ipv4_address::
 ipv4_address(
     uint_type addr) noexcept
@@ -174,13 +143,43 @@ print_impl(
     return dest - start;
 }
 
+//------------------------------------------------
+
+auto
+ipv4_address_rule_t::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    auto rv = grammar::parse_(
+        it, end,
+        grammar::sequence_rule(
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule));
+    if(! rv)
+        return rv.error();
+    std::array<unsigned char, 4> v;
+    v[0] = std::get<0>(*rv);
+    v[1] = std::get<2>(*rv);
+    v[2] = std::get<4>(*rv);
+    v[3] = std::get<6>(*rv);
+    return ipv4_address(v);
+}
+
 auto
 parse_ipv4_address(
     string_view s) noexcept ->
         result<ipv4_address>
 {
     return grammar::parse_(
-        s, ipv4_address::rule);
+        s, ipv4_address_rule);
 }
 
 } // urls
