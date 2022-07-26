@@ -17,7 +17,9 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
-struct dec_octet_rule
+/** Rule for parsing a decimal octe
+*/
+struct dec_octet_rule_t
 {
     using value_type =
         unsigned char;
@@ -30,6 +32,8 @@ struct dec_octet_rule
             ) const noexcept ->
         result<value_type>;
 };
+
+constexpr dec_octet_rule_t dec_octet_rule{};
 
 } // grammar
 } // urls

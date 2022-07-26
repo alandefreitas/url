@@ -18,7 +18,7 @@ namespace urls {
 namespace grammar {
 
 auto
-dec_octet_rule::
+dec_octet_rule_t::
 parse(
     char const*& it,
     char const* const end

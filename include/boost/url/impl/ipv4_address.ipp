@@ -11,8 +11,10 @@
 #define BOOST_URL_IMPL_IPV4_ADDRESS_IPP
 
 #include <boost/url/ipv4_address.hpp>
-#include <boost/url/rfc/detail/dec_octet.hpp>
+#include <boost/url/grammar/char_rule.hpp>
+#include <boost/url/grammar/dec_octet_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/detail/except.hpp>
 #include <cstring>
 
@@ -28,17 +30,23 @@ parse(
         ) const noexcept ->
     result<value_type>
 {
-    error_code ec;
+    auto rv = grammar::parse_(
+        it, end,
+        grammar::sequence_rule(
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule,
+            grammar::char_rule('.'),
+            grammar::dec_octet_rule));
+    if(! rv)
+        return rv.error();
     std::array<unsigned char, 4> v;
-    if(! grammar::parse(
-        it, end, ec,
-        detail::dec_octet{v[0]}, '.',
-        detail::dec_octet{v[1]}, '.',
-        detail::dec_octet{v[2]}, '.',
-        detail::dec_octet{v[3]}))
-    {
-        return ec;
-    }
+    v[0] = std::get<0>(*rv);
+    v[1] = std::get<2>(*rv);
+    v[2] = std::get<4>(*rv);
+    v[3] = std::get<6>(*rv);
     return ipv4_address(v);
 }
 
