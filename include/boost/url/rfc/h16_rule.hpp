@@ -11,6 +11,7 @@
 #define BOOST_URL_RFC_H16_RULE_HPP
 
 #include <boost/url/detail/config.hpp>
+#include <boost/url/result.hpp>
 #include <cstdint>
 
 namespace boost {

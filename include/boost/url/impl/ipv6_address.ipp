@@ -12,6 +12,7 @@
 
 #include <boost/url/ipv6_address.hpp>
 #include <boost/url/ipv4_address.hpp>
+#include <boost/url/rfc/h16_rule.hpp>
 #include <boost/url/detail/except.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <cstring>
@@ -21,82 +22,27 @@ namespace urls {
 
 namespace detail {
 
-struct h16
+// return `true` if the hex
+// word could be 0..255 if
+// interpreted as decimal
+static
+bool
+maybe_octet(
+    unsigned char const* p) noexcept
 {
-    unsigned char* p;
-
-    // return `true` if the hex
-    // word could be 0..255 if
-    // interpreted as decimal
-    static
-    bool
-    is_octet(unsigned char const* p) noexcept
-    {
-        unsigned short word =
-            static_cast<unsigned short>(
-                p[0]) * 256 +
-            static_cast<unsigned short>(
-                p[1]);
-        if(word > 0x255)
-            return false;
-        if(((word >>  4) & 0xf) > 9)
-            return false;
-        if((word & 0xf) > 9)
-            return false;
-        return true;
-    }
-
-    friend
-    void
-    tag_invoke(
-        grammar::parse_tag const&,
-        char const*& it,
-        char const* const end,
-        error_code& ec,
-        h16 const& t) noexcept
-    {
-        BOOST_ASSERT(it != end);
-        std::uint16_t v;
-        for(;;)
-        {
-            char d;
-            if(!grammar::hexdig_value(*it, d))
-            {
-                // not a HEXDIG
-                ec = error::bad_hexdig;
-                return;
-            }
-            v = d;
-            ++it;
-            if(it == end)
-                break;
-            if(!grammar::hexdig_value(*it, d))
-                break;
-            v = (16 * v) + d;
-            ++it;
-            if(it == end)
-                break;
-            if(!grammar::hexdig_value(*it, d))
-                break;
-            v = (16 * v) + d;
-            ++it;
-            if(it == end)
-                break;
-            if(!grammar::hexdig_value(*it, d))
-                break;
-            v = (16 * v) + d;
-            ++it;
-            break;
-        }
-        ec = {};
-        t.p[0] = static_cast<
-            unsigned char>(
-                v / 256);
-        t.p[1] = static_cast<
-            unsigned char>(
-                v % 256);
-    }
-};
+    unsigned short word =
+        static_cast<unsigned short>(
+            p[0]) * 256 +
+        static_cast<unsigned short>(
+            p[1]);
+    if(word > 0x255)
+        return false;
+    if(((word >>  4) & 0xf) > 9)
+        return false;
+    if((word & 0xf) > 9)
+        return false;
+    return true;
+}
 
 } // detail
 
@@ -323,6 +269,7 @@ parse(
     bool c = false; // need colon
     auto prev = it;
     ipv6_address::bytes_type bytes;
+    result<h16_rule_t::value_type> rv;
     for(;;)
     {
         if(it == end)
@@ -366,11 +313,15 @@ parse(
             if(c)
             {
                 prev = it;
-                if(! grammar::parse(
-                    it, end, ec, 
-                    detail::h16{
-                        &bytes[2*(8-n)]}))
+                rv = grammar::parse_(
+                    it, end, h16_rule);
+                if(! rv)
+                {
+                    ec = rv.error();
                     return;
+                }
+                bytes[2*(8-n)+0] = rv.value().hi;
+                bytes[2*(8-n)+1] = rv.value().lo;
                 --n;
                 if(n == 0)
                     break;
@@ -388,7 +339,7 @@ parse(
                 ec = error::bad_ipv6;
                 return;
             }
-            if(! detail::h16::is_octet(
+            if(! detail::maybe_octet(
                 &bytes[2*(7-n)]))
             {
                 // invalid octet
@@ -398,14 +349,14 @@ parse(
             // rewind the h16 and
             // parse it as ipv4
             it = prev;
-            auto rv = grammar::parse_(
+            auto rv1 = grammar::parse_(
                 it, end, ipv4_address_rule);
-            if(! rv)
+            if(! rv1)
             {
-                ec = rv.error();
+                ec = rv1.error();
                 return;
             }
-            auto v4 = rv.value();
+            auto v4 = rv1.value();
             auto const b4 =
                 v4.to_bytes();
             bytes[2*(7-n)+0] = b4[0];
@@ -425,11 +376,15 @@ parse(
         if(! c)
         {
             prev = it;
-            if(! grammar::parse(
-                it, end, ec,
-                detail::h16{
-                    &bytes[2*(8-n)]}))
+            rv = grammar::parse_(
+                it, end, h16_rule);
+            if(! rv)
+            {
+                ec = rv.error();
                 return;
+            }
+            bytes[2*(8-n)+0] = rv.value().hi;
+            bytes[2*(8-n)+1] = rv.value().lo;
             --n;
             if(n == 0)
                 break;
