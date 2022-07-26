@@ -68,10 +68,6 @@ public:
 
     /** Constructor
     */
-    range() noexcept = default;
-
-    /** Constructor
-    */
     range(range const&) noexcept;
 
     iterator begin() const noexcept;
