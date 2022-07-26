@@ -15,6 +15,7 @@
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/config/workaround.hpp>
 #include <boost/type_traits/make_void.hpp>
 #include <cstddef>
 #include <iterator>
@@ -57,6 +58,13 @@ public:
     /** Destructor
     */
     ~range();
+
+#ifndef BOOST_URL_DECL
+#if BOOST_WORKAROUND( BOOST_GCC_VERSION, < 50000 ) || \
+    BOOST_WORKAROUND( BOOST_CLANG_VERSION, < 40000 )
+    range() noexcept = default;
+#endif
+#endif
 
     /** Constructor
     */

@@ -26,8 +26,8 @@ parse(
 {
     // scheme
     {
-        auto rv = grammar::parse_(
-            it, end, scheme_part_rule());
+        auto rv(grammar::parse_(
+            it, end, scheme_part_rule()));
         if(! rv)
         {
             ec = rv.error();
@@ -44,8 +44,8 @@ parse(
 
     // [ "?" query ]
     {
-        auto rv = grammar::parse_(
-            it, end, query_part_rule);
+        auto rv(grammar::parse_(
+            it, end, query_part_rule));
         if(! rv)
         {
             ec = rv.error();
