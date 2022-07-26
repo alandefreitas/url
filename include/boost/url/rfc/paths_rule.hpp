@@ -223,7 +223,7 @@ using path_abempty_rule = __see_below__;
 struct path_abempty_rule
 {
     using value_type =
-        grammar::range__<
+        grammar::range<
             pct_encoded_view>;
 
     BOOST_URL_DECL
@@ -276,7 +276,7 @@ using path_absolute_rule = __see_below__;
 struct path_absolute_rule
 {
     using value_type =
-        grammar::range__<
+        grammar::range<
             pct_encoded_view>;
 
     BOOST_URL_DECL
@@ -329,7 +329,7 @@ using path_noscheme_rule = __see_below__;
 struct path_noscheme_rule
 {
     using value_type =
-        grammar::range__<
+        grammar::range<
             pct_encoded_view>;
 
     BOOST_URL_DECL
@@ -388,7 +388,7 @@ using path_rootless_rule = __see_below__;
 struct path_rootless_rule
 {
     using value_type =
-        grammar::range__<
+        grammar::range<
             pct_encoded_view>;
 
     BOOST_URL_DECL

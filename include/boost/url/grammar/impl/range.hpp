@@ -24,7 +24,7 @@ namespace grammar {
 
 // base class for the type-erased rule
 template<class T>
-struct range__<T>::
+struct range<T>::
     any_rule
 {
     virtual ~any_rule() = default;
@@ -41,7 +41,7 @@ struct range__<T>::
 //------------------------------------------------
 
 template<class T>
-class range__<T>::
+class range<T>::
     iterator
 {
 public:
@@ -111,14 +111,14 @@ public:
     }
 
 private:
-    friend class range__<T>;
+    friend class range<T>;
 
-    range__<T> const* r_ = nullptr;
+    range<T> const* r_ = nullptr;
     char const* p_ = nullptr;
     result<T> rv_;
 
     iterator(
-        range__<T> const& r) noexcept
+        range<T> const& r) noexcept
         : r_(&r)
         , p_(r.s_.data())
     {
@@ -137,7 +137,7 @@ private:
 
     constexpr
     iterator(
-        range__<T> const& r,
+        range<T> const& r,
         int) noexcept
         : p_(nullptr)
         , r_(&r)
@@ -149,7 +149,7 @@ private:
 
 template<class T>
 auto
-range__<T>::
+range<T>::
 get() const noexcept ->
     any_rule const&
 {
@@ -158,16 +158,16 @@ get() const noexcept ->
 }
 
 template<class T>
-range__<T>::
-~range__()
+range<T>::
+~range()
 {
     get().~any_rule();
 }
 
 template<class T>
-range__<T>::
-range__(
-    range__ const& other) noexcept
+range<T>::
+range(
+    range const& other) noexcept
     : s_(other.s_)
     , n_(other.n_)
 {
@@ -176,7 +176,7 @@ range__(
 
 template<class T>
 auto
-range__<T>::
+range<T>::
 begin() const noexcept ->
     iterator
 {
@@ -185,7 +185,7 @@ begin() const noexcept ->
 
 template<class T>
 auto
-range__<T>::
+range<T>::
 end() const noexcept ->
     iterator
 {
@@ -194,8 +194,8 @@ end() const noexcept ->
 
 template<class T>
 template<class R>
-range__<T>::
-range__(
+range<T>::
+range(
     string_view s,
     std::size_t n,
     R const& r,
@@ -270,7 +270,7 @@ parse_range(
     range_fn<typename std::remove_cv<R>::type, T> increment,
     std::size_t N = 0,
     std::size_t M = std::size_t(-1)) ->
-        result<range__<T>>
+        result<range<T>>
 {
     std::size_t n = 0;
     auto const it0 = it;
@@ -286,7 +286,7 @@ parse_range(
         }
 
         // good
-        return range__<T>(
+        return range<T>(
             string_view(it0, it - it0),
                 n, r, begin, increment);
     }
@@ -309,7 +309,7 @@ parse_range(
     }
 
     // good
-    return range__<T>(
+    return range<T>(
         string_view(it0, it - it0),
             n, r, begin, increment);
 }

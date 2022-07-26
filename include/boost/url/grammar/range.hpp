@@ -34,7 +34,7 @@ using range_fn = result<T>(R::*)(
     @tparam T The value type of the range
 */
 template<class T>
-class range__
+class range
 {
     struct any_rule;
 
@@ -56,11 +56,11 @@ public:
 
     /** Destructor
     */
-    ~range__();
+    ~range();
 
     /** Constructor
     */
-    range__(range__ const&) noexcept;
+    range(range const&) noexcept;
 
     iterator begin() const noexcept;
 
@@ -102,7 +102,7 @@ private:
     char buf_[BufferSize];
 
     template<class R>
-    range__(
+    range(
         string_view s,
         std::size_t n,
         R const& r,
@@ -122,7 +122,7 @@ private:
         range_fn<typename std::remove_cv<R_>::type, T_> increment,
         std::size_t N,
         std::size_t M) ->
-            result<range__<T_>>;
+            result<range<T_>>;
 };
 
 } // grammar

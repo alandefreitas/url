@@ -50,7 +50,7 @@ namespace urls {
 struct query_rule
 {
     using value_type =
-        grammar::range__<
+        grammar::range<
             query_param_view>;
 
     BOOST_URL_DECL
