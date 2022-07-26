@@ -71,7 +71,6 @@ void
 segments_iterator_impl::
 increment() noexcept
 {
-    using bnf_t = path_rootless_rule;
     BOOST_ASSERT(next_ != nullptr);
     ++i_;
     pos_ = next_;
