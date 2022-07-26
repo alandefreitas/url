@@ -19,6 +19,31 @@
 namespace boost {
 namespace urls {
 
+auto
+ipv4_address::
+rule_t::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    error_code ec;
+    std::array<unsigned char, 4> v;
+    if(! grammar::parse(
+        it, end, ec,
+        detail::dec_octet{v[0]}, '.',
+        detail::dec_octet{v[1]}, '.',
+        detail::dec_octet{v[2]}, '.',
+        detail::dec_octet{v[3]}))
+    {
+        return ec;
+    }
+    return ipv4_address(v);
+}
+
+//------------------------------------------------
+
 ipv4_address::
 ipv4_address(
     uint_type addr) noexcept
@@ -106,25 +131,6 @@ is_multicast() const noexcept
         0xE0000000;
 }
 
-void
-ipv4_address::
-parse(
-    char const*& it,
-    char const* const end,
-    error_code& ec,
-    ipv4_address& t) noexcept
-{
-    std::array<unsigned char, 4> v;
-    if(! grammar::parse(
-        it, end, ec,
-        detail::dec_octet{v[0]}, '.',
-        detail::dec_octet{v[1]}, '.',
-        detail::dec_octet{v[2]}, '.',
-        detail::dec_octet{v[3]}))
-        return;
-    t = ipv4_address(v);
-}
-
 std::size_t
 ipv4_address::
 print_impl(
@@ -160,16 +166,13 @@ print_impl(
     return dest - start;
 }
 
-result<ipv4_address>
+auto
 parse_ipv4_address(
-    string_view s) noexcept
+    string_view s) noexcept ->
+        result<ipv4_address>
 {
-    error_code ec;
-    ipv4_address addr;
-    if(! grammar::parse_string(
-            s, ec, addr))
-        return ec;
-    return addr;
+    return grammar::parse_(
+        s, ipv4_address::rule);
 }
 
 } // urls

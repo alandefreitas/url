@@ -397,11 +397,15 @@ parse(
             }
             // rewind the h16 and
             // parse it as ipv4
-            ipv4_address v4;
             it = prev;
-            if(! grammar::parse(
-                    it, end, ec, v4))
+            auto rv = grammar::parse_(
+                it, end, ipv4_address::rule);
+            if(! rv)
+            {
+                ec = rv.error();
                 return;
+            }
+            auto v4 = rv.value();
             auto const b4 =
                 v4.to_bytes();
             bytes[2*(7-n)+0] = b4[0];

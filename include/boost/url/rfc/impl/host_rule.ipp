@@ -63,9 +63,11 @@ parse(
     }
     // IPv4address
     {
-        if(grammar::parse(
-            it, end, ec, t.ipv4))
+        auto rv = grammar::parse_(
+            it, end, ipv4_address::rule);
+        if(rv.has_value())
         {
+            t.ipv4 = rv.value();
             t.host_type =
                 urls::host_type::ipv4;
             t.host_part = string_view(
@@ -76,20 +78,21 @@ parse(
         it = start;
     }
     // reg-name
-    auto rv = grammar::parse_(
-        it, end, reg_name_rule);
-    if(! rv)
     {
-        ec = rv.error();
-        return;
+        auto rv = grammar::parse_(
+            it, end, reg_name_rule);
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        ec = {}; // VFALCO REMOVE THIS
+        t.name = rv.value();
+        t.host_type =
+            urls::host_type::name;
+        t.host_part = string_view(
+            start, it - start);
     }
-    ec = {}; // VFALCO REMOVE THIS
-    t.name = rv.value();
-
-    t.host_type =
-        urls::host_type::name;
-    t.host_part = string_view(
-        start, it - start);
 }
 
 } // urls
