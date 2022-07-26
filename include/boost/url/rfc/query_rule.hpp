@@ -15,7 +15,7 @@
 #include <boost/url/query_param.hpp>
 #include <boost/url/string_view.hpp>
 #include <boost/url/grammar/char_rule.hpp>
-#include <boost/url/grammar/elements_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/optional_rule.hpp>
 #include <boost/url/grammar/range.hpp>
 #include <cstddef>
@@ -103,7 +103,7 @@ private:
 */
 auto constexpr query_part_rule =
     grammar::optional_rule(
-        grammar::elements_rule(
+        grammar::sequence_rule(
             grammar::char_rule('?'),
             query_rule{}));
 

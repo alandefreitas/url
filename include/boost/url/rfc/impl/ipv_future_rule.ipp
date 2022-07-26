@@ -14,7 +14,7 @@
 #include <boost/url/rfc/charsets.hpp>
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/parse.hpp>
-#include <boost/url/grammar/token.hpp>
+#include <boost/url/grammar/token_rule.hpp>
 
 namespace boost {
 namespace urls {

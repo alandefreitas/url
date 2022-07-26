@@ -7,8 +7,8 @@
 // Official repository: https://github.com/CPPAlliance/url
 //
 
-#ifndef BOOST_URL_GRAMMAR_ELEMENTS_RULE_HPP
-#define BOOST_URL_GRAMMAR_ELEMENTS_RULE_HPP
+#ifndef BOOST_URL_GRAMMAR_SEQUENCE_RULE_HPP
+#define BOOST_URL_GRAMMAR_SEQUENCE_RULE_HPP
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/grammar/error.hpp>
@@ -35,7 +35,7 @@ public:
     friend
     constexpr
     auto
-    elements_rule(
+    sequence_rule(
         R0_ const& r0,
         Rn_ const&... rn) noexcept ->
             elements_rule_t<R0_, Rn_...>;
@@ -64,7 +64,7 @@ template<
     class... Rn>
 constexpr
 auto
-elements_rule(
+sequence_rule(
     R0 const& r0,
     Rn const&... rn) noexcept ->
         elements_rule_t<
@@ -77,6 +77,6 @@ elements_rule(
 } // urls
 } // boost
 
-#include <boost/url/grammar/impl/elements_rule.hpp>
+#include <boost/url/grammar/impl/sequence_rule.hpp>
 
 #endif

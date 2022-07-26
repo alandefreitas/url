@@ -8,7 +8,7 @@
 //
 
 // Test that header file is self-contained.
-#include <boost/url/grammar/elements_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 
 #include <boost/url/grammar/char_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
@@ -19,7 +19,7 @@ namespace boost {
 namespace urls {
 namespace grammar {
 
-struct elements_rule_test
+struct sequence_rule_test
 {
     template<class R>
     static
@@ -44,23 +44,23 @@ struct elements_rule_test
     }
 
     void
-    testElements()
+    testSequence()
     {
-        ok("$", elements_rule(char_rule('$')));
-        ok("$!", elements_rule(char_rule('$'), char_rule('!')));
-        bad("$", elements_rule(char_rule('!')));
+        ok("$", sequence_rule(char_rule('$')));
+        ok("$!", sequence_rule(char_rule('$'), char_rule('!')));
+        bad("$", sequence_rule(char_rule('!')));
     }
 
     void
     run()
     {
-        testElements();
+        testSequence();
     }
 };
 
 TEST_SUITE(
-    elements_rule_test,
-    "boost.url.grammar.elements_rule");
+    sequence_rule_test,
+    "boost.url.grammar.sequence_rule");
 
 } // grammar
 } // urls

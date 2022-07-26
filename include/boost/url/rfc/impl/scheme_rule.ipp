@@ -13,7 +13,7 @@
 #include <boost/url/rfc/scheme_rule.hpp>
 #include <boost/url/rfc/charsets.hpp>
 #include <boost/url/grammar/char_rule.hpp>
-#include <boost/url/grammar/elements_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 
 namespace boost {
@@ -64,7 +64,7 @@ parse(
     auto const it0 = it;
     auto rv = grammar::parse_(
         it, end,
-        grammar::elements_rule(
+        grammar::sequence_rule(
             scheme_rule(),
             grammar::char_rule(':')));
     if(! rv)

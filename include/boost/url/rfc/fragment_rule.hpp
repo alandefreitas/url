@@ -14,7 +14,7 @@
 #include <boost/url/rfc/charsets.hpp>
 #include <boost/url/rfc/pct_encoded_rule.hpp>
 #include <boost/url/grammar/char_rule.hpp>
-#include <boost/url/grammar/elements_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/optional_rule.hpp>
 
 namespace boost {
@@ -50,7 +50,7 @@ constexpr auto fragment_rule =
 */
 constexpr auto fragment_part_rule =
     grammar::optional_rule(
-        grammar::elements_rule(
+        grammar::sequence_rule(
             grammar::char_rule('#'),
             fragment_rule));
 

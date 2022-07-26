@@ -8,7 +8,7 @@
 //
 
 // Test that header file is self-contained.
-#include <boost/url/grammar/token.hpp>
+#include <boost/url/grammar/token_rule.hpp>
 
 #include "test_suite.hpp"
 #include "test_rule.hpp"
@@ -28,7 +28,7 @@ public:
 
 TEST_SUITE(
     token_rule_test,
-    "boost.url.grammar.token");
+    "boost.url.grammar.token_rule");
 
 } // rfc
 } // urls
