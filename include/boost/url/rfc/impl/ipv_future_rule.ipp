@@ -13,8 +13,10 @@
 #include <boost/url/rfc/ipv_future_rule.hpp>
 #include <boost/url/rfc/charsets.hpp>
 #include <boost/url/grammar/charset.hpp>
+#include <boost/url/grammar/char_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <boost/url/grammar/token_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
 
 namespace boost {
 namespace urls {
@@ -27,31 +29,26 @@ parse(
     error_code& ec,
     ipv_future_rule& t) noexcept
 {
-    auto const start = it;
-    struct minor_chars_t
-        : grammar::lut_chars
+    static constexpr auto
+        minor_chars = 
+            unreserved_chars +
+            subdelim_chars + ':';
+    auto const it0 = it;
+    auto rv = grammar::parse_(
+        it, end,
+        grammar::sequence_rule(
+            grammar::char_rule('v'),
+            grammar::token_rule(
+                grammar::hexdig_chars),
+            grammar::char_rule('.'),
+            grammar::token_rule(minor_chars)));
+    if(! rv)
     {
-        constexpr
-        minor_chars_t() noexcept
-            : grammar::lut_chars(
-                unreserved_chars +
-                subdelim_chars + ':')
-        {
-        }
-    };
-    grammar::token<
-        grammar::hexdig_chars_t> major;
-    grammar::token<
-        minor_chars_t> minor;
-    if(! grammar::parse(
-        it, end, ec,
-            'v',
-            major,
-            '.',
-            minor))
+        ec = rv.error();
         return;
-    t.major = *major;
-    t.minor = *minor;
+    }
+    t.major = std::get<1>(rv.value());
+    t.minor = std::get<3>(rv.value());
     if(t.major.empty())
     {
         // can't be empty
@@ -65,7 +62,7 @@ parse(
         return;
     }
     t.str = string_view(
-        start, it - start);
+        it0, it - it0);
 }
 
 } // urls
