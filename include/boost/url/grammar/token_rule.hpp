@@ -32,8 +32,9 @@ struct token_rule_t
     using value_type = string_view;
     //using value_type = std::string;
 
-    BOOST_STATIC_ASSERT(
-        is_charset<CharSet>::value);
+    static_assert(
+        is_charset<CharSet>::value,
+        "CharSet requirements not met");
 
     auto
     parse(
