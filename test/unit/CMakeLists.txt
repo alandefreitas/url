@@ -48,6 +48,7 @@ set(BOOST_URL_TESTS_FILES
     grammar/ascii.cpp
     grammar/char_rule.cpp
     grammar/charset.cpp
+    grammar/dec_octet_rule.cpp
     grammar/error.cpp
     grammar/lut_chars.cpp
     grammar/optional_rule.cpp
