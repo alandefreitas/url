@@ -24,19 +24,35 @@ parse(
     error_code& ec,
     absolute_uri_rule& t) noexcept
 {
-    auto rv = grammar::parse_(
-        it, end, scheme_part_rule());
-    if(! rv)
+    // scheme
     {
-        ec = rv.error();
-        return;
+        auto rv = grammar::parse_(
+            it, end, scheme_part_rule());
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.scheme_part = *rv;
     }
 
-    t.scheme_part = *rv;
     grammar::parse(
         it, end, ec,
-        t.hier_part,
-        t.query_part);
+        t.hier_part);
+    if(ec.failed())
+        return;
+
+    // [ "?" query ]
+    {
+        auto rv = grammar::parse_(
+            it, end, query_part_rule);
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.query_part = rv.value();
+    }
 }
 
 } // urls

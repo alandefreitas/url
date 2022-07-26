@@ -34,9 +34,11 @@ public:
         char const* end) const ->
             result<value_type>
     {
+        auto const it0 = it;
         auto rv = r_.parse(it, end);
         if(! rv.has_error())
             return value_type(*rv);
+        it = it0;
         return value_type();
     }
 

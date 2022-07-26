@@ -36,22 +36,40 @@ operator==(
 class query_rule_test
 {
 public:
+    template<class R>
+    void
+    ok(string_view s, R const& r)
+    {
+        BOOST_TEST(grammar::parse_(
+            s, r).has_value());
+    }
+
+    template<class R>
+    void
+    bad_(string_view s, R const& r)
+    {
+        BOOST_TEST(grammar::parse_(
+            s, r).has_error());
+    }
+
     void
     check(
         string_view s,
         std::initializer_list<
             query_param_view> i)
     {
-        query_rule t;
-        if(! BOOST_TEST_NO_THROW(
-            grammar::parse_string(s, t)))
+        auto rv = grammar::parse_(
+            s, query_rule{});
+        if(! BOOST_TEST(! rv.has_error()))
             return;
-        if(! BOOST_TEST(t.v.size() == i.size()))
+        auto const& t = *rv;
+        if(! BOOST_TEST_EQ(
+            t.size(), i.size()))
             return;
         BOOST_TEST(std::equal(
             i.begin(),
             i.end(),
-            t.v.begin()));
+            t.begin()));
     }
 
     void
@@ -73,22 +91,22 @@ public:
 
         using T = query_rule;
 
-        bad <T>("%");
+        bad("%", T{});
 
-        good<T>("");
-        good<T>("x");
-        good<T>("x=");
-        good<T>("x=y");
-        good<T>("x=y&");
-        good<T>("x=y&a");
-        good<T>("x=y&a=b&");
-        good<T>("keys[]=value1&keys[]=value2");
+        ok("", T{});
+        ok("x", T{});
+        ok("x=", T{});
+        ok("x=y", T{});
+        ok("x=y&", T{});
+        ok("x=y&a", T{});
+        ok("x=y&a=b&", T{});
+        ok("keys[]=value1&keys[]=value2", T{});
 
         // some gen-delims
-        bad<T>("#");
+        bad("#", T{});
 
         // pchar / "/" / "?"
-        good<T>(
+        ok(
             // unreserved
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz"
@@ -100,7 +118,7 @@ public:
             ":@"
             // "/" / "?"
             "/?"
-            );
+            , T{});
     }
 };
 

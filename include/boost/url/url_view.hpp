@@ -1937,7 +1937,7 @@ private:
     void apply(host_rule const& h) noexcept;
     void apply(authority_rule const& t) noexcept;
     void apply(parsed_path const& path) noexcept;
-    void apply(query_part_rule const& t) noexcept;
+    void apply(decltype(query_part_rule)::value_type const& t) noexcept;
     void apply(decltype(fragment_part_rule)::value_type const& t) noexcept;
 };
 

@@ -44,10 +44,16 @@ parse(
         return;
 
     // [ "?" query ]
-    if(! grammar::parse(
-        it, end, ec,
-            t.query_part))
-        return;
+    {
+        auto rv = grammar::parse_(
+            it, end, query_part_rule);
+        if(! rv)
+        {
+            ec = rv.error();
+            return;
+        }
+        t.query_part = rv.value();
+    }
 
     // [ "#" fragment ]
     {

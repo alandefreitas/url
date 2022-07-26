@@ -676,17 +676,20 @@ apply(
 void
 url_view::
 apply(
-    query_part_rule const& t) noexcept
+    decltype(query_part_rule)::value_type const& t) noexcept
 {
-    if(t.has_query)
+    if(t.has_value())
     {
-        set_size(
-            id_query,
-            t.query_part.size());
+        auto const& v = std::get<1>(*t);
+        set_size(id_query,
+            1 + v.string().size());
+        // VFALCO we are doing two passes over
+        // the string. once for the range and
+        // again for the decoded size.
         decoded_[id_query] =
             pct_decode_bytes_unchecked(
-                t.query_part.substr(1));
-        nparam_ = t.query.v.size();
+                v.string());
+        nparam_ = v.size();
     }
     else
     {

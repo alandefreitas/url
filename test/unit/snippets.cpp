@@ -902,8 +902,9 @@ grammar_parse()
 
     {
         //[snippet_parse_2
+        // VFALCO This needs refactoring
+        /*
         urls::string_view s = "?key=value#anchor";
-        urls::query_part_rule r1;
         const char* it = s.begin();
         urls::error_code ec;
         if (urls::grammar::parse(it, s.end(), ec, r1))
@@ -915,6 +916,7 @@ grammar_parse()
                 std::cout << "fragment: " << std::get<1>(*r2.value()).encoded() << '\n';
             }
         }
+        */
         //]
     }
 

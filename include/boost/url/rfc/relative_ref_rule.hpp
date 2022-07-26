@@ -39,8 +39,8 @@ namespace urls {
 struct relative_ref_rule
 {
     relative_part_rule   relative_part;
-    query_part_rule      query_part;
-    decltype(fragment_part_rule)::value_type   fragment_part;
+    decltype(query_part_rule)::value_type query_part;
+    decltype(fragment_part_rule)::value_type fragment_part;
 
     friend
     void

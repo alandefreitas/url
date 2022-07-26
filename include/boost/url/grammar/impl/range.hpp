@@ -262,11 +262,7 @@ public:
         auto const end =
             r_->s_.data() +
             r_->s_.size();
-        auto const p =
-            reinterpret_cast<
-                any_rule const*>(
-                    r_->buf_);
-        r_->get().increment(p_, end);
+        rv_ = r_->get().increment(p_, end);
         if(rv_.has_error())
         {
             BOOST_ASSERT(
@@ -286,7 +282,7 @@ public:
     }
 
 private:
-    friend class range<T>;
+    friend class range__<T>;
 
     range__<T> const* r_ = nullptr;
     char const* p_ = nullptr;
@@ -300,11 +296,7 @@ private:
         auto const end =
             r_->s_.data() +
             r_->s_.size();
-        auto const p =
-            reinterpret_cast<
-                any_rule const*>(
-                    r_->buf_);
-        rv_ = r_->get().begin_(p_, end);
+        rv_ = r_->get().begin(p_, end);
         if(rv_.has_error())
         {
             BOOST_ASSERT(

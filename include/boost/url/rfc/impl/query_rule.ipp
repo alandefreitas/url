@@ -34,123 +34,101 @@ value_chars = pchars
     + '/' + '?'
     - '&';
 
-bool
+auto
+query_rule::
+parse(
+    char const*& it,
+    char const* end
+        ) const noexcept ->
+    result<value_type>
+{
+    return grammar::parse_range(
+        it, end, *this,
+        &query_rule::begin,
+        &query_rule::increment);
+}
+
+auto
 query_rule::
 begin(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    query_param_view& t) noexcept
+    char const* const end
+        ) const noexcept ->
+    result<query_param_view>
 {
-    // key
-    // VFALCO Why not pct_encoded_view?
-    auto rv = grammar::parse_(it, end,
-        pct_encoded_rule(key_chars));
-    if(! rv)
-    {
-        ec = rv.error();
-        return false;
-    }
-    t.key = rv.value();
+    // VFALCO we don't return error::end
+    // here, because the empty string still
+    // counts as a 1-element range with
+    // key="" and value=(none)
 
-    // "="
-    t.has_value = grammar::parse(
-        it, end, ec, '=');
-    if(t.has_value)
-    {
-        // value
-        rv = grammar::parse_(it, end,
-            pct_encoded_rule(value_chars));
-        if(! rv)
-        {
-            ec = rv.error();
-            return false;
-        }
-        t.value = rv.value();
-    }
-    else
-    {
-        // key with no value
-        ec = {};
-    }
-    return true;
+    return parse_query_param(it, end);
 }
 
-bool
+auto
 query_rule::
 increment(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    query_param_view& t) noexcept
+    char const* const end
+        ) const noexcept ->
+    result<query_param_view>
 {
-    if(! grammar::parse(
-        it, end, ec, '&'))
+    // "&"
     {
-        // end of list
-        ec = grammar::error::end;
-        return false;
-    }
-
-    // key
-    auto rv = grammar::parse_(it, end,
-        pct_encoded_rule(key_chars));
-    if(! rv)
-    {
-        ec = rv.error();
-        return false;
-    }
-    t.key = rv.value();
-
-    // "="
-    t.has_value = grammar::parse(
-        it, end, ec, '=');
-    if(t.has_value)
-    {
-        // value
-        rv = grammar::parse_(it, end,
-            pct_encoded_rule(value_chars));
+        auto rv = grammar::parse_(
+            it, end,
+            grammar::char_rule('&'));
         if(! rv)
         {
-            ec = rv.error();
-            return false;
+            // end of list
+            return grammar::error::end;
         }
-        t.value = rv.value();
-    }
-    else
-    {
-        // key with no value
-        ec = {};
     }
 
-    return true;
+    return parse_query_param(it, end);
 }
 
-//------------------------------------------------
-
-void
-query_part_rule::
-parse(
+auto
+query_rule::
+parse_query_param(
     char const*& it,
-    char const* const end,
-    error_code& ec,
-    query_part_rule& t) noexcept
+    char const* end
+        ) const noexcept ->
+    result<query_param_view>
 {
-    auto start = it;
-    if( it == end ||
-        *it != '?')
+    query_param_view t;
+
+    // key
     {
-        ec = {};
-        t.has_query = false;
-        return;
+        auto rv = grammar::parse_(it, end,
+            pct_encoded_rule(key_chars));
+        if(! rv)
+            return rv.error();    
+        t.key = rv.value();
     }
-    ++it;
-    if(! grammar::parse(
-        it, end, ec, t.query))
-        return;
-    t.has_query = true;
-    t.query_part = string_view(
-        start, it - start);
+
+    // "="
+    {
+        auto rv = grammar::parse_(
+            it, end,
+            grammar::char_rule('='));
+        t.has_value = rv.has_value();
+        if(! t.has_value)
+        {
+            // key with no value
+            return t;
+        }
+    }
+
+    // value
+    {
+        auto rv = grammar::parse_(it, end,
+            pct_encoded_rule(value_chars));
+        if(! rv)
+            return rv.error();
+        t.value = rv.value();
+    }
+
+    return t;
 }
 
 } // urls
