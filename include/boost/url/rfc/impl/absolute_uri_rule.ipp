@@ -24,6 +24,9 @@ parse(
         ) const noexcept ->
     result<value_type>
 {
+    detail::url_impl u;
+    u.cs_ = it;
+
     // scheme
     auto r0 = grammar::parse(
         it, end, scheme_part_rule());
@@ -42,7 +45,6 @@ parse(
     if(! r2)
         return r2.error();
 
-    detail::url_impl u;
     u.apply(*r0);
     if(r1->has_authority)
         u.apply(r1->authority);

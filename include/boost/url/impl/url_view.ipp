@@ -764,32 +764,7 @@ parse_uri(
         detail::throw_length_error(
             "url_view::max_size exceeded",
             BOOST_CURRENT_LOCATION);
-
-    auto rv = grammar::parse(
-        s, uri_rule);
-    if(! rv)
-        return rv.error();
-    auto const& t = *rv;
-
-    url_view u(0, s.data());
-
-    // scheme
-    u.apply(t.scheme_part);
-
-    // authority
-    if(t.hier_part.has_authority)
-        u.apply(t.hier_part.authority);
-
-    // path
-    u.apply(t.hier_part.path);
-
-    // query
-    u.apply(t.query_part);
-
-    // fragment
-    u.apply(t.fragment_part);
-
-    return u;
+    return grammar::parse(s, uri_rule);
 }
 
 result<url_view>
