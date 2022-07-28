@@ -11,13 +11,27 @@
 #define BOOST_URL_DETAIL_IMPL_URL_IMPL_IPP
 
 #include <boost/url/detail/url_impl.hpp>
+#include <boost/assert.hpp>
 
 namespace boost {
 namespace urls {
 namespace detail {
 
+void
+url_impl::
+set_scheme(
+    scheme id,
+    std::size_t n) noexcept
+{
+    scheme_ = id;
+    BOOST_ASSERT(
+        (id == scheme::none) == (n == 0));
+    set_size(id_scheme, n);
+}
 //------------------------------------------------
 
 } // detail
 } // urls
 } // boost
+
+#endif

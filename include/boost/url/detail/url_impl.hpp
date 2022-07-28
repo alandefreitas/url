@@ -78,6 +78,10 @@ struct url_impl : parts_base
     void collapse(
         int first, int last,
         std::size_t n) noexcept;
+
+    void set_scheme(
+        scheme id,
+        std::size_t n) noexcept;
 };
 
 //------------------------------------------------
