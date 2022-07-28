@@ -24,36 +24,31 @@ parse(
         ) const noexcept ->
     result<value_type>
 {
-    value_type t;
-
     // scheme
-    {
-        auto rv = grammar::parse(
-            it, end, scheme_part_rule());
-        if(! rv)
-            return rv.error();
-        t.scheme_part = *rv;
-    }
+    auto r0 = grammar::parse(
+        it, end, scheme_part_rule());
+    if(! r0)
+        return r0.error();
 
     // hier_part
-    {
-        auto rv = grammar::parse(
-            it, end, hier_part_rule);
-        if(! rv)
-            return rv.error();
-        t.hier_part = *rv;
-    }
+    auto r1 = grammar::parse(
+        it, end, hier_part_rule);
+    if(! r1)
+        return r1.error();
 
     // [ "?" query ]
-    {
-        auto rv = grammar::parse(
-            it, end, query_part_rule);
-        if(! rv)
-            return rv.error();
-        t.query_part = *rv;
-    }
+    auto r2 = grammar::parse(
+        it, end, query_part_rule);
+    if(! r2)
+        return r2.error();
 
-    return t;
+    detail::url_impl u;
+    u.apply(*r0);
+    if(r1->has_authority)
+        u.apply(r1->authority);
+    u.apply(r1->path);
+    u.apply(*r2);
+    return u.construct();
 }
 
 } // urls
