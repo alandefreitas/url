@@ -776,28 +776,8 @@ parse_relative_ref(
             "url_view::max_size exceeded",
             BOOST_CURRENT_LOCATION);
 
-    auto rv = grammar::parse(
+    return grammar::parse(
         s, relative_ref_rule);
-    if(! rv)
-        return rv.error();
-    auto const& t = *rv;
-
-    url_view u(0, s.data());
-
-    // authority
-    if(t.relative_part.has_authority)
-        u.apply(t.relative_part.authority);
-
-    // path
-    u.apply(t.relative_part.path);
-
-    // query
-    u.apply(t.query_part);
-
-    // fragment
-    u.apply(t.fragment_part);
-
-    return u;
 }
 
 result<url_view>

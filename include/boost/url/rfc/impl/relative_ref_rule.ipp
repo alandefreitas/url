@@ -27,36 +27,33 @@ parse(
         ) const noexcept ->
     result<value_type>
 {
-    value_type t;
+    detail::url_impl u;
+    u.cs_ = it;
 
     // relative-part
-    {
-        auto rv = grammar::parse(
-            it, end, relative_part_rule);
-        if(! rv)
-            return rv.error();
-        t.relative_part = *rv;
-    }
+    auto r0 = grammar::parse(
+        it, end, relative_part_rule);
+    if(! r0)
+        return r0.error();
 
     // [ "?" query ]
-    {
-        auto rv = grammar::parse(
-            it, end, query_part_rule);
-        if(! rv)
-            return rv.error();
-        t.query_part = *rv;
-    }
+    auto r1 = grammar::parse(
+        it, end, query_part_rule);
+    if(! r1)
+        return r1.error();
 
     // [ "#" fragment ]
-    {
-        auto rv = grammar::parse(
-            it, end, fragment_part_rule);
-        if(! rv)
-            return rv.error();
-        t.fragment_part = *rv;
-    }
+    auto r2 = grammar::parse(
+        it, end, fragment_part_rule);
+    if(! r2)
+        return r2.error();
 
-    return t;
+    if(r0->has_authority)
+        u.apply(r0->authority);
+    u.apply(r0->path);
+    u.apply(*r1);
+    u.apply(*r2);
+    return u.construct();
 }
 
 } // urls

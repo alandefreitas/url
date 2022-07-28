@@ -11,11 +11,11 @@
 #define BOOST_URL_IMPL_URI_RULE_IPP
 
 #include <boost/url/rfc/uri_rule.hpp>
-#include <boost/url/grammar/parse.hpp>
 #include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/hier_part_rule.hpp>
 #include <boost/url/rfc/query_rule.hpp>
 #include <boost/url/rfc/scheme_rule.hpp>
+#include <boost/url/grammar/parse.hpp>
 
 namespace boost {
 namespace urls {
