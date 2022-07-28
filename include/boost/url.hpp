@@ -45,6 +45,8 @@
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/ip_literal_rule.hpp>
 #include <boost/url/rfc/ipv_future_rule.hpp>
+#include <boost/url/rfc/ipv4_address_rule.hpp>
+#include <boost/url/rfc/ipv6_address_rule.hpp>
 #include <boost/url/rfc/paths_rule.hpp>
 #include <boost/url/rfc/pct_encoded_rule.hpp>
 #include <boost/url/rfc/port_rule.hpp>

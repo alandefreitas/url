@@ -70,6 +70,8 @@ set(BOOST_URL_TESTS_FILES
     rfc/host_rule.cpp
     rfc/ip_literal_rule.cpp
     rfc/ipv_future_rule.cpp
+    rfc/ipv4_address_rule.cpp
+    rfc/ipv6_address_rule.cpp
     rfc/paths_rule.cpp
     rfc/pct_encoded_rule.cpp
     rfc/port_rule.cpp

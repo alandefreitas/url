@@ -73,6 +73,8 @@ in a translation unit of the program.
 #include <boost/url/rfc/impl/host_rule.ipp>
 #include <boost/url/rfc/impl/ip_literal_rule.ipp>
 #include <boost/url/rfc/impl/ipv_future_rule.ipp>
+#include <boost/url/rfc/impl/ipv4_address_rule.ipp>
+#include <boost/url/rfc/impl/ipv6_address_rule.ipp>
 #include <boost/url/rfc/impl/paths_rule.ipp>
 #include <boost/url/rfc/impl/port_rule.ipp>
 #include <boost/url/rfc/impl/query_rule.ipp>
