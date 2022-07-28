@@ -40,7 +40,6 @@
 #include <boost/url/rfc/absolute_uri_rule.hpp>
 #include <boost/url/rfc/authority_rule.hpp>
 #include <boost/url/rfc/charsets.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/hier_part_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/ip_literal_rule.hpp>

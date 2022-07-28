@@ -18,7 +18,6 @@
 #include <boost/url/grammar/parse.hpp>
 #include <boost/url/grammar/ascii.hpp>
 #include <boost/url/rfc/authority_rule.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/paths_rule.hpp>
 #include <boost/url/rfc/pct_encoded_rule.hpp>

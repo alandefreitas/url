@@ -22,7 +22,6 @@
 #include <boost/url/detail/print.hpp>
 #include <boost/url/rfc/authority_rule.hpp>
 #include <boost/url/rfc/charsets.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/paths_rule.hpp>
 #include <boost/url/rfc/port_rule.hpp>
@@ -30,6 +29,7 @@
 #include <boost/url/rfc/scheme_rule.hpp>
 #include <boost/url/rfc/userinfo_rule.hpp>
 #include <boost/url/rfc/detail/charsets.hpp>
+#include <boost/url/rfc/detail/fragment_rule.hpp>
 #include <boost/align/align_up.hpp>
 #include <cstring>
 #include <iostream>
@@ -1933,15 +1933,14 @@ remove_fragment() noexcept
 
 url&
 url::
-set_encoded_fragment(
-    string_view s)
+set_encoded_fragment(string_view s)
 {
     detail::copied_strings buf(
         this->string());
     s = buf.maybe_copy(s);
     check_invariants();
     auto t = grammar::parse(
-        s, fragment_rule).value(
+        s, detail::fragment_rule).value(
             BOOST_CURRENT_LOCATION);
     auto dest = set_fragment_impl(s.size());
     u_.decoded_[id_frag] = t.size();
@@ -1954,8 +1953,7 @@ set_encoded_fragment(
 
 url&
 url::
-set_fragment(
-    string_view s)
+set_fragment(string_view s)
 {
     detail::copied_strings buf(
         this->string());

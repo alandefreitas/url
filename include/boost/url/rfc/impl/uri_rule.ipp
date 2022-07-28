@@ -11,10 +11,10 @@
 #define BOOST_URL_IMPL_URI_RULE_IPP
 
 #include <boost/url/rfc/uri_rule.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/hier_part_rule.hpp>
 #include <boost/url/rfc/query_rule.hpp>
 #include <boost/url/rfc/scheme_rule.hpp>
+#include <boost/url/rfc/detail/fragment_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 
 namespace boost {
@@ -51,7 +51,7 @@ parse(
 
     // [ "#" fragment ]
     auto r3 = grammar::parse(
-        it, end, fragment_part_rule);
+        it, end, detail::fragment_part_rule);
     if(! r3)
         return r3.error();
 
@@ -60,7 +60,9 @@ parse(
         u.apply(r1->authority);
     u.apply(r1->path);
     u.apply(*r2);
-    u.apply(*r3);
+    if(r3->has_value())
+        u.apply_frag(
+            std::get<1>(**r3));
     return u.construct();
 }
 

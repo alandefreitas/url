@@ -21,11 +21,11 @@
 // declared, but the parsers now use a
 // nested type.
 #include <boost/url/rfc/authority_rule.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/paths_rule.hpp>
 #include <boost/url/rfc/query_rule.hpp>
 #include <boost/url/rfc/scheme_rule.hpp>
+#include <boost/url/pct_encoded_view.hpp>
 
 namespace boost {
 namespace urls {
@@ -100,7 +100,8 @@ struct url_impl : parts_base
     void apply(decltype(authority_rule)::value_type const& t) noexcept;
     void apply(parsed_path const& path) noexcept;
     void apply(decltype(query_part_rule)::value_type const& t) noexcept;
-    void apply(decltype(fragment_part_rule)::value_type const& t) noexcept;
+
+    void apply_frag(pct_encoded_view s) noexcept;
 };
 
 //------------------------------------------------

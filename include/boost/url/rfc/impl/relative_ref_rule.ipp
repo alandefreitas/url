@@ -11,9 +11,9 @@
 #define BOOST_URL_IMPL_RELATIVE_REF_RULE_IPP
 
 #include <boost/url/rfc/relative_ref_rule.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
 #include <boost/url/rfc/query_rule.hpp>
 #include <boost/url/rfc/relative_part_rule.hpp>
+#include <boost/url/rfc/detail/fragment_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 
 namespace boost {
@@ -44,7 +44,7 @@ parse(
 
     // [ "#" fragment ]
     auto r2 = grammar::parse(
-        it, end, fragment_part_rule);
+        it, end, detail::fragment_part_rule);
     if(! r2)
         return r2.error();
 
@@ -52,7 +52,9 @@ parse(
         u.apply(r0->authority);
     u.apply(r0->path);
     u.apply(*r1);
-    u.apply(*r2);
+    if(r2->has_value())
+        u.apply_frag(
+            std::get<1>(**r2));
     return u.construct();
 }
 

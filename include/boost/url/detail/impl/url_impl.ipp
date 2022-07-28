@@ -186,21 +186,12 @@ apply(
 
 void
 url_impl::
-apply(
-    decltype(fragment_part_rule)::value_type const& t) noexcept
+apply_frag(
+    pct_encoded_view s) noexcept
 {
-    if(t.has_value())
-    {
-        set_size(
-            id_frag,
-            std::get<1>(*t).encoded().size() + 1);
-        decoded_[id_frag] =
-            std::get<1>(*t).size();
-    }
-    else
-    {
-        decoded_[id_frag] = 0;
-    }
+    set_size(id_frag,
+        s.encoded().size() + 1);
+    decoded_[id_frag] = s.size();
 }
 
 } // detail
