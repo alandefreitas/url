@@ -116,9 +116,6 @@ protected:
         detail::url_impl const& impl) noexcept;
 
     BOOST_URL_DECL
-    url_view(int, char const* cs) noexcept;
-
-    BOOST_URL_DECL
     url_view(
         url_view const& u,
         char const* cs) noexcept;
@@ -1863,29 +1860,6 @@ public:
     {
         return os << u.string();
     }
-
-    //--------------------------------------------
-    //
-    // Parsing
-    //
-    //--------------------------------------------
-
-    BOOST_URL_DECL friend result<url_view>
-        parse_absolute_uri(string_view s);
-    BOOST_URL_DECL friend result<url_view>
-        parse_relative_ref(string_view s);
-    BOOST_URL_DECL friend result<url_view>
-        parse_uri(string_view s);
-    BOOST_URL_DECL friend result<url_view>
-        parse_uri_reference(string_view s);
-
-private:
-    void apply(scheme_part_rule::value_type const& t) noexcept;
-    void apply(decltype(host_rule)::value_type const& h) noexcept;
-    void apply(decltype(authority_rule)::value_type const& t) noexcept;
-    void apply(parsed_path const& path) noexcept;
-    void apply(decltype(query_part_rule)::value_type const& t) noexcept;
-    void apply(decltype(fragment_part_rule)::value_type const& t) noexcept;
 };
 
 //------------------------------------------------
