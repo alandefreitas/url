@@ -23,26 +23,10 @@
 namespace boost {
 namespace urls {
 
-struct authority_view::shared_impl :
-    authority_view
-{
-    virtual
-    ~shared_impl()
-    {
-    }
-
-    shared_impl(
-        authority_view const& u) noexcept
-        : authority_view(u, reinterpret_cast<
-            char const*>(this + 1))
-    {
-    }
-};
-
 authority_view::
 authority_view(
     char const* cs) noexcept
-    : cs_(cs)
+    : u_(cs)
 {
 }
 
@@ -52,7 +36,7 @@ authority_view(
     char const* cs) noexcept
     : authority_view(u)
 {
-    cs_ = cs;
+    u_.cs_ = cs;
 }
 
 //------------------------------------------------
@@ -74,29 +58,6 @@ authority_view::
 operator=(
     authority_view const&) noexcept = default;
 
-//------------------------------------------------
-//
-// Observers
-//
-//------------------------------------------------
-
-std::shared_ptr<
-    authority_view const>
-authority_view::
-persist() const
-{
-    using T = shared_impl;
-    using Alloc = std::allocator<char>;
-    Alloc a;
-    auto p = std::allocate_shared<T>(
-        detail::over_allocator<T, Alloc>(
-            size(), a), *this);
-    std::memcpy(
-        reinterpret_cast<char*>(
-            p.get() + 1), data(), size());
-    return p;
-}
-
 //----------------------------------------------------------
 //
 // Authority
@@ -109,10 +70,10 @@ bool
 authority_view::
 has_userinfo() const noexcept
 {
-    auto n = len(id_pass);
+    auto n = u_.len(id_pass);
     if(n == 0)
         return false;
-    BOOST_ASSERT(get(
+    BOOST_ASSERT(u_.get(
         id_pass).ends_with('@'));
     return true;
 }
@@ -121,7 +82,7 @@ string_view
 authority_view::
 encoded_userinfo() const noexcept
 {
-    auto s = get(
+    auto s = u_.get(
         id_user, id_host);
     if(s.empty())
         return s;
@@ -137,16 +98,16 @@ bool
 authority_view::
 has_password() const noexcept
 {
-    auto const n = len(id_pass);
+    auto const n = u_.len(id_pass);
     if(n > 1)
     {
-        BOOST_ASSERT(get(id_pass
+        BOOST_ASSERT(u_.get(id_pass
             ).starts_with(':'));
-        BOOST_ASSERT(get(id_pass
+        BOOST_ASSERT(u_.get(id_pass
             ).ends_with('@'));
         return true;
     }
-    BOOST_ASSERT(n == 0 || get(
+    BOOST_ASSERT(n == 0 || u_.get(
         id_pass).ends_with('@'));
     return false;
 }
@@ -155,7 +116,7 @@ string_view
 authority_view::
 encoded_password() const noexcept
 {
-    auto s = get(id_pass);
+    auto s = u_.get(id_pass);
     switch(s.size())
     {
     case 1:
@@ -181,21 +142,21 @@ string_view
 authority_view::
 encoded_host() const noexcept
 {
-    return get(id_host);
+    return u_.get(id_host);
 }
 
 urls::ipv4_address
 authority_view::
 ipv4_address() const noexcept
 {
-    if(host_type_ !=
+    if(u_.host_type_ !=
         urls::host_type::ipv4)
         return {};
     std::array<
         unsigned char, 4> bytes;
     std::memcpy(
         &bytes[0],
-        &ip_addr_[0], 4);
+        &u_.ip_addr_[0], 4);
     return urls::ipv4_address(
         bytes);
 }
@@ -204,14 +165,14 @@ urls::ipv6_address
 authority_view::
 ipv6_address() const noexcept
 {
-    if(host_type_ ==
+    if(u_.host_type_ ==
         urls::host_type::ipv6)
     {
         std::array<
             unsigned char, 16> bytes;
         std::memcpy(
             &bytes[0],
-            &ip_addr_[0], 16);
+            &u_.ip_addr_[0], 16);
         return urls::ipv6_address(
             bytes);
     }
@@ -222,9 +183,9 @@ string_view
 authority_view::
 ipvfuture() const noexcept
 {
-    if(host_type_ ==
+    if(u_.host_type_ ==
         urls::host_type::ipvfuture)
-        return get(id_host);
+        return u_.get(id_host);
     return {};
 }
 
@@ -234,11 +195,11 @@ bool
 authority_view::
 has_port() const noexcept
 {
-    auto const n = len(id_port);
+    auto const n = u_.len(id_port);
     if(n == 0)
         return false;
     BOOST_ASSERT(
-        get(id_port).starts_with(':'));
+        u_.get(id_port).starts_with(':'));
     return true;
 }
 
@@ -246,7 +207,7 @@ string_view
 authority_view::
 port() const noexcept
 {
-    auto s = get(id_port);
+    auto s = u_.get(id_port);
     if(s.empty())
         return s;
     BOOST_ASSERT(has_port());
@@ -259,15 +220,15 @@ port_number() const noexcept
 {
     BOOST_ASSERT(
         has_port() ||
-        port_number_ == 0);
-    return port_number_;
+        u_.port_number_ == 0);
+    return u_.port_number_;
 }
 
 string_view
 authority_view::
 encoded_host_and_port() const noexcept
 {
-    return get(id_host, id_end);
+    return u_.get(id_host, id_end);
 }
 
 //------------------------------------------------
@@ -281,7 +242,7 @@ authority_view::
 apply(
     decltype(host_rule)::value_type const& t) noexcept
 {
-    host_type_ = t.host_type;
+    u_.host_type_ = t.host_type;
     switch(t.host_type)
     {
     default:
@@ -291,7 +252,7 @@ apply(
     }
     case urls::host_type::name:
     {
-        decoded_[id_host] =
+        u_.decoded_[id_host] =
             t.name.size();
         break;
     }
@@ -300,9 +261,9 @@ apply(
         auto const bytes =
             t.ipv4.to_bytes();
         std::memcpy(
-            &ip_addr_[0],
+            &u_.ip_addr_[0],
             bytes.data(), 4);
-        decoded_[id_host] =
+        u_.decoded_[id_host] =
             t.host_part.size();
         break;
     }
@@ -311,15 +272,15 @@ apply(
         auto const bytes =
             t.ipv6.to_bytes();
         std::memcpy(
-            &ip_addr_[0],
+            &u_.ip_addr_[0],
             bytes.data(), 16);
-        decoded_[id_host] =
+        u_.decoded_[id_host] =
             t.host_part.size();
         break;
     }
     case urls::host_type::ipvfuture:
     {
-        decoded_[id_host] =
+        u_.decoded_[id_host] =
             t.host_part.size();
         break;
     }
@@ -328,7 +289,7 @@ apply(
     if(t.host_type !=
         urls::host_type::none)
     {
-        set_size(
+        u_.set_size(
             id_host,
             t.host_part.size());
     }
@@ -343,32 +304,32 @@ apply(
     {
         auto const& u = t.userinfo;
 
-        set_size(
+        u_.set_size(
             id_user,
             u.user.encoded().size());
-        decoded_[id_user] = u.user.size();
+        u_.decoded_[id_user] = u.user.size();
 
         if(u.has_password)
         {
             // leading ':' for password,
             // trailing '@' for userinfo
-            set_size(
+            u_.set_size(
                 id_pass,
                 u.password.encoded().size() + 2);
-            decoded_[id_pass] =
+            u_.decoded_[id_pass] =
                 u.password.size();
         }
         else
         {
             // trailing '@' for userinfo
-            set_size(id_pass, 1);
-            decoded_[id_pass] = 0;
+            u_.set_size(id_pass, 1);
+            u_.decoded_[id_pass] = 0;
         }
     }
     else
     {
-        set_size(id_user, 0);
-        decoded_[id_user] = 0;
+        u_.set_size(id_user, 0);
+        u_.decoded_[id_user] = 0;
     }
 
     // host
@@ -377,12 +338,12 @@ apply(
     // port
     if(t.port.has_port)
     {
-        set_size(
+        u_.set_size(
             id_port,
             t.port.port.size() + 1);
 
         if(t.port.has_number)
-            port_number_ =
+            u_.port_number_ =
                 t.port.port_number;
     }
 }

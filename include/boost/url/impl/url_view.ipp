@@ -192,22 +192,29 @@ authority_view
 url_view::
 authority() const noexcept
 {
-    string_view s = encoded_authority();
     authority_view a;
-    a.cs_ = s.data();
-    pos_t off_user = s.data() - data();
-    a.offset_[0] = u_.offset(id_pass) - off_user;
-    a.offset_[1] = u_.offset(id_host) - off_user;
-    a.offset_[2] = u_.offset(id_port) - off_user;
-    a.offset_[3] = u_.offset(id_path) - off_user;
-    a.decoded_[0] = u_.decoded_[id_user];
-    a.decoded_[1] = u_.decoded_[id_pass];
-    a.decoded_[2] = u_.decoded_[id_host];
-    a.decoded_[3] = u_.decoded_[id_port];
+    a.u_.cs_ = encoded_authority().data();
+    if(has_authority())
+    {
+        a.u_.set_size(id_user, u_.len(id_user) - 2);
+        a.u_.set_size(id_pass, u_.len(id_pass));
+        a.u_.set_size(id_host, u_.len(id_host));
+        a.u_.set_size(id_port, u_.len(id_port));
+    }
+    else
+    {
+        a.u_.set_size(id_user, u_.len(id_user));
+        BOOST_ASSERT(u_.len(id_pass) == 0);
+        BOOST_ASSERT(u_.len(id_host) == 0);
+        BOOST_ASSERT(u_.len(id_port) == 0);
+    }
+    a.u_.decoded_[id_user] = u_.decoded_[id_user];
+    a.u_.decoded_[id_pass] = u_.decoded_[id_pass];
+    a.u_.decoded_[id_host] = u_.decoded_[id_host];
     for (int i = 0; i < 16; ++i)
-        a.ip_addr_[i] = u_.ip_addr_[i];
-    a.port_number_ = u_.port_number_;
-    a.host_type_ = u_.host_type_;
+        a.u_.ip_addr_[i] = u_.ip_addr_[i];
+    a.u_.port_number_ = u_.port_number_;
+    a.u_.host_type_ = u_.host_type_;
     return a;
 }
 

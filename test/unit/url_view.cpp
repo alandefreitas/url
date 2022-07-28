@@ -191,15 +191,17 @@ public:
         auto const yes =
             [](string_view s, string_view m)
         {
-            BOOST_TEST_NO_THROW(
-            [&]{
+            //BOOST_TEST_NO_THROW(
+            //[&]
+            {
                 url_view u(s);
                 BOOST_TEST(u.has_authority());
                 BOOST_TEST_EQ(
                     u.encoded_authority(), m);
                 BOOST_TEST_EQ(
                     u.authority().encoded_authority(), m);
-            }());
+            }
+            //());
         };
 
         no("http:xyz/");
@@ -249,14 +251,14 @@ public:
             [&]{
                 url_view u(s);
                 BOOST_TEST(u.has_userinfo());
-                BOOST_TEST(
-                    u.encoded_userinfo() == m1);
-                BOOST_TEST(
-                    u.userinfo() == m2);
-                BOOST_TEST(
-                    u.authority().encoded_userinfo() == m1);
-                BOOST_TEST(
-                    u.authority().userinfo() == m2);
+                BOOST_TEST_EQ(
+                    u.encoded_userinfo(), m1);
+                BOOST_TEST_EQ(
+                    u.userinfo(), m2);
+                BOOST_TEST_EQ(
+                    u.authority().encoded_userinfo(), m1);
+                BOOST_TEST_EQ(
+                    u.authority().userinfo(), m2);
             }());
         };
 

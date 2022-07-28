@@ -13,34 +13,6 @@
 namespace boost {
 namespace urls {
 
-// return length of [first, last)
-inline
-auto
-authority_view::
-len(
-    int first,
-    int last) const noexcept ->
-        pos_t
-{
-    BOOST_ASSERT(first <= last);
-    BOOST_ASSERT(last <= id_end);
-    return offset(last) - offset(first);
-}
-
-// change id to size n
-inline
-void
-authority_view::
-set_size(
-    int id,
-    pos_t n) noexcept
-{
-    auto d = n - len(id);
-    for(auto i = id;
-        i <= id_end; ++i)
-        offset_[i] += d;
-}
-
 } // urls
 } // boost
 
