@@ -12,6 +12,7 @@
 
 #include <boost/url/rfc/absolute_uri_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
+#include <utility>
 
 namespace boost {
 namespace urls {
@@ -49,7 +50,14 @@ parse(
     if(r1->has_authority)
         u.apply(r1->authority);
     u.apply(r1->path);
-    u.apply(*r2);
+    if(r2->has_value())
+    {
+        auto const& v =
+            std::get<1>(**r2);
+        u.apply_query(
+            v.encoded_string(),
+            v.size());
+    }
     return u.construct();
 }
 

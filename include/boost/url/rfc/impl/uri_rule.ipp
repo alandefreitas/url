@@ -59,7 +59,14 @@ parse(
     if(r1->has_authority)
         u.apply(r1->authority);
     u.apply(r1->path);
-    u.apply(*r2);
+    if(r2->has_value())
+    {
+        auto const& v =
+            std::get<1>(**r2);
+        u.apply_query(
+            v.encoded_string(),
+            v.size());
+    }
     if(r3->has_value())
         u.apply_frag(
             std::get<1>(**r3));

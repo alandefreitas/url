@@ -12,8 +12,8 @@
 
 #include <boost/url/detail/config.hpp>
 #include <boost/url/error_code.hpp>
+#include <boost/url/params_encoded_view.hpp>
 #include <boost/url/query_param.hpp>
-#include <boost/url/string_view.hpp>
 #include <boost/url/grammar/char_rule.hpp>
 #include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/optional_rule.hpp>
@@ -50,8 +50,7 @@ namespace urls {
 struct query_rule
 {
     using value_type =
-        grammar::range<
-            query_param_view>;
+        params_encoded_view;
 
     BOOST_URL_DECL
     result<value_type>
@@ -75,7 +74,6 @@ private:
         char const* end
             ) const noexcept;
 
-private:
     result<query_param_view>
     parse_query_param(
         char const*& it,

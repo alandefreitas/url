@@ -78,6 +78,7 @@ class params_encoded_view
     : private detail::parts_base
 {
     friend class url_view;
+    friend struct query_rule;
 
     string_view s_;
     std::size_t n_ = 0;
@@ -152,6 +153,16 @@ public:
     */
     params_encoded_view&
     operator=(params_encoded_view const&) & = default;
+
+    //--------------------------------------------
+
+    /** Return the encoded string referenced by the container
+    */
+    string_view
+    encoded_string() const noexcept
+    {
+        return s_;
+    }
 
     /** Return a view of this container as percent-decoded query parameters
 
@@ -336,16 +347,6 @@ public:
     */
     bool
     contains(string_view key) const noexcept;
-
-    //--------------------------------------------
-    //
-    // Parsing
-    //
-    //--------------------------------------------
-
-    BOOST_URL_DECL friend
-    result<params_encoded_view>
-    parse_query_params(string_view s) noexcept;
 };
 
 //------------------------------------------------

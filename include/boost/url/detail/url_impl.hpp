@@ -99,8 +99,9 @@ struct url_impl : parts_base
     void apply(decltype(host_rule)::value_type const& h) noexcept;
     void apply(decltype(authority_rule)::value_type const& t) noexcept;
     void apply(parsed_path const& path) noexcept;
-    void apply(decltype(query_part_rule)::value_type const& t) noexcept;
 
+    void apply_query(
+        string_view s, std::size_t nparam) noexcept;
     void apply_frag(pct_encoded_view s) noexcept;
 };
 
