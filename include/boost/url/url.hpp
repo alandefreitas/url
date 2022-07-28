@@ -33,7 +33,6 @@ namespace boost {
 namespace urls {
 
 #ifndef BOOST_URL_DOCS
-class url_view;
 namespace detail {
 struct any_path_iter;
 }

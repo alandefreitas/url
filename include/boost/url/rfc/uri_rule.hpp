@@ -27,12 +27,6 @@ namespace urls {
     @par Specification
     @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3"
         >3. Syntax Components (rfc3986)</a>
-
-    @see
-        @ref fragment_part_rule,
-        @ref hier_part_rule,
-        @ref query_part_rule,
-        @ref scheme_part_rule.
 */
 struct uri_rule_t
 {
