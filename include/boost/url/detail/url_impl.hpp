@@ -17,6 +17,16 @@
 #include <boost/assert.hpp>
 #include <cstdint>
 
+// VFALCO These structs used to be forward
+// declared, but the parsers now use a
+// nested type.
+#include <boost/url/rfc/authority_rule.hpp>
+#include <boost/url/rfc/fragment_rule.hpp>
+#include <boost/url/rfc/host_rule.hpp>
+#include <boost/url/rfc/paths_rule.hpp>
+#include <boost/url/rfc/query_rule.hpp>
+#include <boost/url/rfc/scheme_rule.hpp>
+
 namespace boost {
 namespace urls {
 
@@ -79,9 +89,14 @@ struct url_impl : parts_base
         int first, int last,
         std::size_t n) noexcept;
 
-    void set_scheme(
-        scheme id,
-        std::size_t n) noexcept;
+    void apply_scheme(
+        string_view s) noexcept;
+    void apply(scheme_part_rule::value_type const& t) noexcept;
+    void apply(decltype(host_rule)::value_type const& h) noexcept;
+    void apply(decltype(authority_rule)::value_type const& t) noexcept;
+    void apply(parsed_path const& path) noexcept;
+    void apply(decltype(query_part_rule)::value_type const& t) noexcept;
+    void apply(decltype(fragment_part_rule)::value_type const& t) noexcept;
 };
 
 //------------------------------------------------

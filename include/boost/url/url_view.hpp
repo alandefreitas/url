@@ -26,17 +26,6 @@
 #include <boost/url/detail/except.hpp>
 #include <boost/url/detail/parts_base.hpp>
 #include <boost/url/detail/url_impl.hpp>
-
-// VFALCO These structs used to be forward
-// declared, but the parsers now use a
-// nested type.
-#include <boost/url/rfc/authority_rule.hpp>
-#include <boost/url/rfc/fragment_rule.hpp>
-#include <boost/url/rfc/host_rule.hpp>
-#include <boost/url/rfc/paths_rule.hpp>
-#include <boost/url/rfc/query_rule.hpp>
-#include <boost/url/rfc/scheme_rule.hpp>
-
 #include <boost/assert.hpp>
 #include <cstddef>
 #include <cstdint>
@@ -108,7 +97,6 @@ protected:
     detail::url_impl u_;
 
     friend class url;
-    friend class static_url_base;
     friend struct std::hash<url_view>;
     friend struct detail::url_impl;
     struct shared_impl;
