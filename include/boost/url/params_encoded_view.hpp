@@ -78,7 +78,7 @@ class params_encoded_view
     : private detail::parts_base
 {
     friend class url_view;
-    friend struct query_rule;
+    friend struct query_rule_t;
 
     string_view s_;
     std::size_t n_ = 0;

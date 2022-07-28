@@ -37,7 +37,7 @@ value_chars = pchars
     - '&';
 
 auto
-query_rule::
+query_rule_t::
 parse(
     char const*& it,
     char const* end
@@ -46,8 +46,8 @@ parse(
 {
     auto rv = grammar::parse_range(
         it, end, *this,
-        &query_rule::begin,
-        &query_rule::increment);
+        &query_rule_t::begin,
+        &query_rule_t::increment);
     if(! rv)
         return rv.error();
     return value_type(
@@ -56,7 +56,7 @@ parse(
 }
 
 auto
-query_rule::
+query_rule_t::
 begin(
     char const*& it,
     char const* const end
@@ -72,7 +72,7 @@ begin(
 }
 
 auto
-query_rule::
+query_rule_t::
 increment(
     char const*& it,
     char const* const end
@@ -95,7 +95,7 @@ increment(
 }
 
 auto
-query_rule::
+query_rule_t::
 parse_query_param(
     char const*& it,
     char const* end

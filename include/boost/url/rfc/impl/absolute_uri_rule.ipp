@@ -11,6 +11,9 @@
 #define BOOST_URL_IMPL_ABSOLUTE_URI_RULE_IPP
 
 #include <boost/url/rfc/absolute_uri_rule.hpp>
+#include <boost/url/grammar/char_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
+#include <boost/url/grammar/optional_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 #include <utility>
 
@@ -42,7 +45,11 @@ parse(
 
     // [ "?" query ]
     auto r2 = grammar::parse(
-        it, end, query_part_rule);
+        it, end,
+        grammar::optional_rule(
+            grammar::sequence_rule(
+                grammar::char_rule('?'),
+                query_rule)));
     if(! r2)
         return r2.error();
 

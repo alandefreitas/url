@@ -146,7 +146,7 @@
           <member><link linkend="url.ref.boost__urls__pct_encoded_rule_t">pct_encoded_rule_t</link></member>
           <member><link linkend="url.ref.boost__urls__port_part_rule_t">port_part_rule_t</link></member>
           <member><link linkend="url.ref.boost__urls__port_rule">port_rule</link></member>
-          <member><link linkend="url.ref.boost__urls__query_rule">query_rule</link></member>
+          <member><link linkend="url.ref.boost__urls__query_rule_t">query_rule_t</link></member>
           <member><link linkend="url.ref.boost__urls__relative_part_rule_t">relative_part_rule_t</link></member>
           <member><link linkend="url.ref.boost__urls__relative_ref_rule_t">relative_ref_rule_t</link></member>
           <member><link linkend="url.ref.boost__urls__scheme_part_rule">scheme_part_rule</link></member>
@@ -174,8 +174,6 @@
         <simplelist type="vert" columns="1">
           <member><link linkend="url.ref.boost__urls__absolute_uri_rule">absolute_uri_rule</link></member>
           <member><link linkend="url.ref.boost__urls__authority_rule">authority_rule</link></member>
-          <member><link linkend="url.ref.boost__urls__fragment_part_rule">fragment_part_rule</link></member>
-          <member><link linkend="url.ref.boost__urls__fragment_rule">fragment_rule</link></member>
           <member><link linkend="url.ref.boost__urls__h16_rule">h16_rule</link></member>
           <member><link linkend="url.ref.boost__urls__hier_part_rule">hier_part_rule</link></member>
           <member><link linkend="url.ref.boost__urls__host_rule">host_rule</link></member>
@@ -184,7 +182,7 @@
           <member><link linkend="url.ref.boost__urls__ipv6_address_rule">ipv6_address_rule</link></member>
           <member><link linkend="url.ref.boost__urls__ipvfuture_rule">ipvfuture_rule</link></member>
           <member><link linkend="url.ref.boost__urls__port_part_rule">port_part_rule</link></member>
-          <member><link linkend="url.ref.boost__urls__query_part_rule">query_part_rule</link></member>
+          <member><link linkend="url.ref.boost__urls__query_rule">query_rule</link></member>
           <member><link linkend="url.ref.boost__urls__reg_name_rule">reg_name_rule</link></member>
           <member><link linkend="url.ref.boost__urls__relative_part_rule">relative_part_rule</link></member>
           <member><link linkend="url.ref.boost__urls__relative_ref_rule">relative_ref_rule</link></member>

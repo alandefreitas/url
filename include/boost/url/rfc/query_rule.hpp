@@ -14,9 +14,6 @@
 #include <boost/url/error_code.hpp>
 #include <boost/url/params_encoded_view.hpp>
 #include <boost/url/query_param.hpp>
-#include <boost/url/grammar/char_rule.hpp>
-#include <boost/url/grammar/sequence_rule.hpp>
-#include <boost/url/grammar/optional_rule.hpp>
 #include <cstddef>
 
 namespace boost {
@@ -42,11 +39,8 @@ namespace urls {
     @par Specification
     @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
         >3.4. Query (rfc3986)</a>
-
-    @see
-        @ref query_part_rule.
 */
-struct query_rule
+struct query_rule_t
 {
     using value_type =
         params_encoded_view;
@@ -80,29 +74,7 @@ private:
             ) const noexcept;
 };
 
-//------------------------------------------------
-
-/** Rule for query-part
-
-    @par BNF
-    @code
-    query-part      = [ "?" query ]
-
-    query           = *( pchar / "/" / "?" )
-    @endcode
-
-    @par Specification
-    @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.4"
-        >3.4. Query (rfc3986)</a>
-
-    @see
-        @ref query_rule.
-*/
-auto constexpr query_part_rule =
-    grammar::optional_rule(
-        grammar::sequence_rule(
-            grammar::char_rule('?'),
-            query_rule{}));
+constexpr query_rule_t query_rule{};
 
 } // urls
 } // boost

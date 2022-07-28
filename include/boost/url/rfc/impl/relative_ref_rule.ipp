@@ -14,6 +14,9 @@
 #include <boost/url/rfc/query_rule.hpp>
 #include <boost/url/rfc/relative_part_rule.hpp>
 #include <boost/url/rfc/detail/fragment_rule.hpp>
+#include <boost/url/grammar/char_rule.hpp>
+#include <boost/url/grammar/sequence_rule.hpp>
+#include <boost/url/grammar/optional_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
 
 namespace boost {
@@ -38,7 +41,11 @@ parse(
 
     // [ "?" query ]
     auto r1 = grammar::parse(
-        it, end, query_part_rule);
+        it, end,
+        grammar::optional_rule(
+            grammar::sequence_rule(
+                grammar::char_rule('?'),
+                query_rule)));
     if(! r1)
         return r1.error();
 

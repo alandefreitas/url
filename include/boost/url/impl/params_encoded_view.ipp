@@ -126,7 +126,7 @@ parse_query_params(
     string_view s) noexcept
 {
     return grammar::parse(
-        s, query_rule{});
+        s, query_rule);
 }
 
 } // urls
