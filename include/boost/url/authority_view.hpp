@@ -17,7 +17,6 @@
 #include <boost/url/pct_encoding.hpp>
 #include <boost/url/pct_encoded_view.hpp>
 #include <boost/url/detail/except.hpp>
-#include <boost/url/detail/parts_base.hpp>
 #include <boost/url/detail/url_impl.hpp>
 #include <boost/url/rfc/authority_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>

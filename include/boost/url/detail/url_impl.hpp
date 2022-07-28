@@ -10,10 +10,10 @@
 #ifndef BOOST_URL_DETAIL_URL_IMPL_HPP
 #define BOOST_URL_DETAIL_URL_IMPL_HPP
 
-#include <boost/url/detail/parts_base.hpp>
 #include <boost/url/host_type.hpp>
 #include <boost/url/scheme.hpp>
 #include <boost/url/string_view.hpp>
+#include <boost/url/detail/parts_base.hpp>
 #include <boost/assert.hpp>
 #include <cstdint>
 
@@ -42,6 +42,10 @@ struct url_impl : parts_base
     static
     constexpr
     char const* const empty_ = "";
+ 
+    static
+    constexpr
+    pos_t const zero_ = 0;
 
     char const* cs_ = empty_;
     pos_t offset_[id_end + 1] = {};
@@ -122,9 +126,10 @@ url_impl::
 len(int id) const noexcept ->
     pos_t
 {
-    return id == id_end ? 0 : (
-        offset(id + 1) -
-        offset(id) );
+    return id == id_end
+        ? zero_
+        : ( offset(id + 1) -
+            offset(id) );
 }
 
 // return offset of id
@@ -135,8 +140,9 @@ offset(int id) const noexcept ->
     pos_t
 {
     return
-        id == id_scheme ?
-        zero_ : offset_[id];
+        id == id_scheme
+        ? zero_
+        : offset_[id];
 }
 
 // return id as string
