@@ -67,7 +67,7 @@ parse_variant(
         return variant<
             typename R0::value_type,
             typename Rn::value_type...>{
-                variant2::in_place_index<I>, *rv};
+                variant2::in_place_index_t<I>{}, *rv};
     it = it0;
     return parse_variant(
         it, end, rn,
