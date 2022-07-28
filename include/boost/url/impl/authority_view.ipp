@@ -220,7 +220,7 @@ ipv6_address() const noexcept
 
 string_view
 authority_view::
-ipv_future() const noexcept
+ipvfuture() const noexcept
 {
     if(host_type_ ==
         urls::host_type::ipvfuture)

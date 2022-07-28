@@ -242,7 +242,7 @@ public:
             BOOST_TEST(a.ipv6_address()
                 == ipv6_address());
             BOOST_TEST(
-                a.ipv_future() == "");
+                a.ipvfuture() == "");
         }
         {
             auto a = parse_authority("").value();
@@ -300,7 +300,7 @@ public:
                 "[v1.x]");
             BOOST_TEST(a.host() ==
                 "[v1.x]");
-            BOOST_TEST(a.ipv_future() ==
+            BOOST_TEST(a.ipvfuture() ==
                 "[v1.x]");
         }
     }

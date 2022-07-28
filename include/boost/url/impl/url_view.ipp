@@ -354,7 +354,7 @@ ipv6_address() const noexcept
 
 string_view
 url_view::
-ipv_future() const noexcept
+ipvfuture() const noexcept
 {
     if(u_.host_type_ ==
         urls::host_type::ipvfuture)

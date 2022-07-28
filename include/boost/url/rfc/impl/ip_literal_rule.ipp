@@ -16,7 +16,7 @@
 #include <boost/url/grammar/parse.hpp>
 #include <boost/url/grammar/sequence_rule.hpp>
 #include <boost/url/grammar/parse.hpp>
-#include <boost/url/rfc/ipv_future_rule.hpp>
+#include <boost/url/rfc/ipvfuture_rule.hpp>
 
 namespace boost {
 namespace urls {
@@ -62,7 +62,7 @@ parse(
         auto rv = grammar::parse(
             it, end, 
             grammar::sequence_rule(
-                ipv_future_rule,
+                ipvfuture_rule,
                 grammar::char_rule(']')));
         if(! rv)
             return rv.error();

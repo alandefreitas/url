@@ -944,7 +944,7 @@ public:
     */
     BOOST_URL_DECL
     string_view
-    ipv_future() const noexcept;
+    ipvfuture() const noexcept;
 
     /** Return true if the URL contains a port
 

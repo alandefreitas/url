@@ -44,7 +44,7 @@
 #include <boost/url/rfc/hier_part_rule.hpp>
 #include <boost/url/rfc/host_rule.hpp>
 #include <boost/url/rfc/ip_literal_rule.hpp>
-#include <boost/url/rfc/ipv_future_rule.hpp>
+#include <boost/url/rfc/ipvfuture_rule.hpp>
 #include <boost/url/rfc/ipv4_address_rule.hpp>
 #include <boost/url/rfc/ipv6_address_rule.hpp>
 #include <boost/url/rfc/paths_rule.hpp>

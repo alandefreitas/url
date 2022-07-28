@@ -416,7 +416,7 @@ public:
             BOOST_TEST(u.ipv6_address()
                 == ipv6_address());
             BOOST_TEST(
-                u.ipv_future() == "");
+                u.ipvfuture() == "");
             BOOST_TEST(u.authority().host_type() ==
                 host_type::none);
             BOOST_TEST(u.authority().encoded_host() ==
@@ -426,7 +426,7 @@ public:
             BOOST_TEST(u.authority().ipv6_address()
                 == ipv6_address());
             BOOST_TEST(
-                u.authority().ipv_future() == "");
+                u.authority().ipvfuture() == "");
         }
         {
             url_view u("http://");
@@ -515,7 +515,7 @@ public:
             BOOST_TEST_EQ(
                 u.host(), "[v1.x]");
             BOOST_TEST_EQ(
-                u.ipv_future(), "[v1.x]");
+                u.ipvfuture(), "[v1.x]");
             BOOST_TEST_EQ(
                 u.authority().host_type(), host_type::ipvfuture);
             BOOST_TEST_EQ(
@@ -523,7 +523,7 @@ public:
             BOOST_TEST_EQ(
                 u.authority().host(), "[v1.x]");
             BOOST_TEST_EQ(
-                u.authority().ipv_future(), "[v1.x]");
+                u.authority().ipvfuture(), "[v1.x]");
         }
     }
 

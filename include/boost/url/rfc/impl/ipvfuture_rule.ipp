@@ -10,7 +10,7 @@
 #ifndef BOOST_URL_IMPL_IPV_FUTURE_RULE_IPP
 #define BOOST_URL_IMPL_IPV_FUTURE_RULE_IPP
 
-#include <boost/url/rfc/ipv_future_rule.hpp>
+#include <boost/url/rfc/ipvfuture_rule.hpp>
 #include <boost/url/rfc/charsets.hpp>
 #include <boost/url/grammar/charset.hpp>
 #include <boost/url/grammar/char_rule.hpp>
@@ -22,7 +22,7 @@ namespace boost {
 namespace urls {
 
 auto
-ipv_future_rule_t::
+ipvfuture_rule_t::
 parse(
     char const*& it,
     char const* const end

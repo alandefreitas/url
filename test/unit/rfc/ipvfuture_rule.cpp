@@ -8,7 +8,7 @@
 //
 
 // Test that header file is self-contained.
-#include <boost/url/rfc/ipv_future_rule.hpp>
+#include <boost/url/rfc/ipvfuture_rule.hpp>
 
 #include "test_suite.hpp"
 #include "test_rule.hpp"
@@ -16,14 +16,14 @@
 namespace boost {
 namespace urls {
 
-class ipv_future_rule_test
+class ipvfuture_rule_test
 {
 public:
     void
     run()
     {
         auto const& t =
-            ipv_future_rule;
+            ipvfuture_rule;
 
         bad(t, "v");
         bad(t, "v1");
@@ -38,8 +38,8 @@ public:
 };
 
 TEST_SUITE(
-    ipv_future_rule_test,
-    "boost.url.ipv_future_rule");
+    ipvfuture_rule_test,
+    "boost.url.ipvfuture_rule");
 
 } // urls
 } // boost

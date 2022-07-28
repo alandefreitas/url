@@ -28,7 +28,7 @@ namespace urls {
     @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2"
         >3.2.2. Host (rfc3986)</a>
 */
-struct ipv_future_rule_t
+struct ipvfuture_rule_t
 {
     struct value_type
     {
@@ -46,7 +46,7 @@ struct ipv_future_rule_t
         result<value_type>;
 };
 
-constexpr ipv_future_rule_t ipv_future_rule{};
+constexpr ipvfuture_rule_t ipvfuture_rule{};
 
 } // urls
 } // boost
