@@ -25,6 +25,7 @@
 #include <boost/url/scheme.hpp>
 #include <boost/url/detail/except.hpp>
 #include <boost/url/detail/parts_base.hpp>
+#include <boost/url/detail/url_impl.hpp>
 
 // VFALCO These structs used to be forward
 // declared, but the parsers now use a
