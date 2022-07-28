@@ -60,7 +60,7 @@ begin() const noexcept ->
     iterator
 {
     if(n_ > 0)
-        return { s_ };
+        return { s_, n_ };
     return end();
 }
 
@@ -69,7 +69,7 @@ params_encoded_view::
 end() const noexcept ->
     iterator
 {
-    return { s_, n_, 0 };
+    return { s_, n_ , 0 };
 }
 
 //------------------------------------------------

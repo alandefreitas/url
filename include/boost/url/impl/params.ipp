@@ -161,14 +161,12 @@ find(
     BOOST_ASSERT(from.impl_.end_ ==
         u_->encoded_query().data() +
         u_->encoded_query().size());
+
     auto const end_ = end();
     while(from != end_)
     {
-        auto r = u_->param(
-            from.impl_.i_);
-        if( detail::key_equal_encoded(
-            key, string_view(u_->s_ +
-            r.pos + 1, r.nk - 1)))
+        auto r = *from;
+        if( r.key == key )
             break;
         ++from;
     }
