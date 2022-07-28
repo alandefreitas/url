@@ -263,7 +263,7 @@ public:
     char const*
     c_str() const noexcept
     {
-        return cs_;
+        return u_.cs_;
     }
 
     /** Returns the total number of bytes currently available to the container

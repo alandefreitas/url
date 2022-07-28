@@ -46,6 +46,15 @@ struct url_impl : parts_base
     scheme scheme_ =
         urls::scheme::none;
 
+    url_impl() = default;
+
+    // VFALCO This should no longer be needed
+    url_impl(
+        char const* cs) noexcept
+        : cs_(cs)
+    {
+    }
+
     url_view construct() const noexcept;
 
     pos_t len(

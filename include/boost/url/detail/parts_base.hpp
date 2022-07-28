@@ -36,10 +36,6 @@ struct parts_base
     static
     constexpr
     pos_t zero_ = 0;
-
-    static
-    constexpr
-    char const* const empty_ = "";
 };
 
 } // detail
