@@ -11,12 +11,13 @@
 #define BOOST_URL_IMPL_QUERY_RULE_IPP
 
 #include <boost/url/rfc/query_rule.hpp>
-#include <boost/url/grammar/lut_chars.hpp>
-#include <boost/url/grammar/parse.hpp>
-#include <boost/url/rfc/charsets.hpp>
-#include <boost/url/rfc/pct_encoded_rule.hpp>
 #include <boost/url/detail/pct_encoded_view.hpp>
 #include <boost/url/detail/pct_encoding.hpp>
+#include <boost/url/grammar/lut_chars.hpp>
+#include <boost/url/grammar/parse.hpp>
+#include <boost/url/grammar/range.hpp>
+#include <boost/url/rfc/charsets.hpp>
+#include <boost/url/rfc/pct_encoded_rule.hpp>
 
 namespace boost {
 namespace urls {

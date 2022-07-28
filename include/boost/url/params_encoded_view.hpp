@@ -397,8 +397,6 @@ parse_query_params(
 } // urls
 } // boost
 
-// VFALCO This include is at the bottom of
-// url_view.hpp because of a circular dependency
-//#include <boost/url/impl/params_encoded_view.hpp>
+#include <boost/url/impl/params_encoded_view.hpp>
 
 #endif
