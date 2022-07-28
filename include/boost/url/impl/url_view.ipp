@@ -48,6 +48,19 @@ struct url_view::shared_impl :
     }
 };
 
+namespace detail {
+
+url_view
+url_impl::
+construct() const noexcept
+{
+    return url_view(0, *this);
+}
+
+} // detail
+
+//------------------------------------------------
+
 url_view::
 url_view(url_view const&) noexcept = default;
 
@@ -69,6 +82,14 @@ url_view(
 }
 
 //------------------------------------------------
+
+url_view::
+url_view(
+    int,
+    detail::url_impl const& impl) noexcept
+    : u_(impl)
+{
+}
 
 url_view::
 ~url_view()
@@ -897,6 +918,5 @@ std::hash<::boost::urls::url_view>::operator()(
         u.u_.get(parts::id_frag), hasher);
     return hasher.digest();
 }
-
 
 #endif

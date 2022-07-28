@@ -122,6 +122,11 @@ protected:
         return *this;
     }
 
+    explicit
+    url_view(
+        int,
+        detail::url_impl const& impl) noexcept;
+
     BOOST_URL_DECL
     url_view(int, char const* cs) noexcept;
 
