@@ -89,7 +89,6 @@ decrement() noexcept
 {
     BOOST_ASSERT(i_ != 0);
     --i_;
-    error_code ec;
     if(i_ == 0)
     {
         next_ = begin_;

@@ -422,7 +422,6 @@ set_user(pct_encoded_view s)
 {
     detail::copied_strings buf(
         this->string());
-    pct_decode_opts opts;
     s = buf.maybe_copy(s);
     check_invariants();
     auto const n = detail::pct_encode_bytes(
