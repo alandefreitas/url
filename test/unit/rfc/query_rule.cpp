@@ -40,7 +40,7 @@ public:
     check(
         string_view s,
         std::initializer_list<
-            query_param_view> i)
+            query_param_encoded_view> i)
     {
         auto rv = grammar::parse(
             s, query_rule);
