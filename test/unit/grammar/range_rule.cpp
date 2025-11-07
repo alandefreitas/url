@@ -20,10 +20,65 @@
 
 #include <algorithm>
 #include <initializer_list>
+#include <utility>
 
 namespace boost {
 namespace urls {
 namespace grammar {
+
+struct stateless_range_rule
+{
+    using value_type = core::string_view;
+
+    system::result<value_type>
+    first(
+        char const*& it,
+        char const* end) const noexcept
+    {
+        if(it == end)
+            return error::mismatch;
+        return core::string_view(it, 0);
+    }
+
+    system::result<value_type>
+    next(
+        char const*&,
+        char const*) const noexcept
+    {
+        return error::end_of_range;
+    }
+};
+
+struct bad_range_rule
+{
+    using value_type = core::string_view;
+};
+
+static_assert(
+    is_range_rule<any_rule<core::string_view>>::value,
+    "any_rule must satisfy is_range_rule");
+
+static_assert(
+    is_range_rule<stateless_range_rule>::value,
+    "custom range rule must satisfy is_range_rule");
+
+static_assert(
+    ! is_range_rule<bad_range_rule>::value,
+    "trait must reject incomplete implementations");
+
+#ifdef BOOST_URL_HAS_CONCEPTS
+static_assert(
+    RangeRule<any_rule<core::string_view>>,
+    "any_rule must satisfy RangeRule concept");
+
+static_assert(
+    RangeRule<stateless_range_rule>,
+    "custom range rule must satisfy RangeRule concept");
+
+static_assert(
+    ! RangeRule<bad_range_rule>,
+    "concept must reject incomplete implementations");
+#endif
 
 struct range_rule_test
 {
@@ -47,6 +102,27 @@ struct range_rule_test
             if(*it == ';')
                 return error::mismatch;
             return core::string_view(it++, 1);
+        }
+    };
+
+    struct big_first_rule
+    {
+        char unused[4096]{};
+        using value_type = core::string_view;
+
+        system::result<value_type>
+        parse(
+            char const*& it,
+            char const* end) const noexcept
+        {
+            if(it == end)
+                return error::mismatch;
+            if(*it == ';')
+                return error::mismatch;
+            auto const start = it;
+            while(it != end && *it != ';')
+                ++it;
+            return core::string_view(start, it - start);
         }
     };
 
@@ -210,6 +286,75 @@ struct range_rule_test
                 bad(r, ";a;b;c;d", error::mismatch);
                 bad(r, ";a;b;c;d;e", error::mismatch);
             }
+        }
+
+        // big any_rule copies (single rule)
+        {
+            constexpr auto big = range_rule(
+                big_rule{}, 1, 4);
+            auto v = parse(";a;b", big).value();
+            range<core::string_view> copy(v);
+            BOOST_TEST_EQ(copy.size(), v.size());
+
+            auto other = parse(";x", big).value();
+            other = v;
+            BOOST_TEST_EQ(other.size(), v.size());
+        }
+
+        // big any_rule copies (first/next pair)
+        {
+            const auto big_pair = range_rule(
+                big_first_rule{},
+                big_rule{},
+                1, 4);
+
+            auto v = parse("a;b;c", big_pair).value();
+            range<core::string_view> copy(v);
+            BOOST_TEST_EQ(copy.size(), v.size());
+
+            auto other = parse("x;y", big_pair).value();
+            other = v;
+            BOOST_TEST_EQ(other.size(), v.size());
+        }
+
+        // any_rule and range self-assignment paths
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#pragma clang diagnostic ignored "-Wself-move"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wself-assign"
+#pragma GCC diagnostic ignored "-Wself-move"
+#endif
+        {
+            any_rule<core::string_view> ar(big_rule{});
+            auto& copy_ref = (ar = ar);
+            BOOST_TEST(&copy_ref == &ar);
+            auto& move_ref = (ar = std::move(ar));
+            BOOST_TEST(&move_ref == &ar);
+        }
+
+        {
+            auto v = parse(";a;b", r0).value();
+            auto& copy_ref = (v = v);
+            BOOST_TEST(&copy_ref == &v);
+            auto& move_ref = (v = std::move(v));
+            BOOST_TEST(&move_ref == &v);
+        }
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
+        // zero-match success path (default N == 0)
+        {
+            constexpr auto r = range_rule(
+                token_rule(alpha_chars));
+            auto rv = parse("", r);
+            BOOST_TEST(rv.has_value());
+            BOOST_TEST(rv->empty());
         }
     }
 
